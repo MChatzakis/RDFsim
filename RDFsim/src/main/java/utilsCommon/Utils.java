@@ -5,10 +5,22 @@
  */
 package utilsCommon;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
 /**
  *
  * @author manos
  */
 public class Utils {
-    
+
+    public static void writeStringToFile(String data, String filepath) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(filepath));
+            bw.write(data);
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
