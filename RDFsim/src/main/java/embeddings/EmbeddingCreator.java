@@ -5,10 +5,15 @@
  */
 package embeddings;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 /**
  *
  * @author manos
  */
 public class EmbeddingCreator {
-    
+     //public  Word2Vec vec;
+    //HashMap<String,ArrayList<String>> topEntities=new HashMap<String,ArrayList<String>>();
 }
