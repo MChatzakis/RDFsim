@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author manos
  */
-@WebServlet(name = "indexServlet", urlPatterns = {"/indexServlet"})
-public class ConfServlet extends HttpServlet {
+@WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
+public class SearchServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,7 +37,7 @@ public class ConfServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet indexServlet</title>");            
+            out.println("<title>Servlet indexServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet indexServlet at " + request.getContextPath() + "</h1>");
@@ -72,6 +72,11 @@ public class ConfServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //get the conf
+        String endpoint = request.getParameter("endpoint");
+        String embeddingAPI = request.getParameter("EmbeddingAPI");
+        String query = "";
+
         processRequest(request, response);
     }
 
