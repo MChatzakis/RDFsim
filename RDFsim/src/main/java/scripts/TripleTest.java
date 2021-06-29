@@ -5,7 +5,6 @@
  */
 package scripts;
 
-import embeddings.EmbeddingCreator_w2v;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.json.JSONObject;
