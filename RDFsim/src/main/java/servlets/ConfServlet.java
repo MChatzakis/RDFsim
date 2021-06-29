@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author manos
  */
 @WebServlet(name = "indexServlet", urlPatterns = {"/indexServlet"})
-public class LandingServlet extends HttpServlet {
+public class ConfServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

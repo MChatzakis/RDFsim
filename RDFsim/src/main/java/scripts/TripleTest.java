@@ -27,6 +27,7 @@ public class TripleTest {
         
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
         String triples = tr.getTriples(endpoint, query, false);
+        
         String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
         
 
