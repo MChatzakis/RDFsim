@@ -18,17 +18,18 @@ import utils.CommonUtils;
 public class TripleTest {
 
     public static void main(String[] args) throws MalformedURLException, MalformedURLException, IOException {
-        String endpoint="https://dbpedia.org/sparql";
+        String endpoint = "https://dbpedia.org/sparql";
         String query = "";
-        
-        query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>} limit 100";
-        //query="select  * where {?s ?p ?o } limit 1000";
-        
+
+        query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>}";
+        //query = "select  * where {?s ?p ?o }";
+        //query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
         String triples = tr.getTriples(endpoint, query, false);
-        
-        String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
-        
+        System.out.println(triples);
+        System.out.println("Total triples: " + tr.getTriples().size());
+        //String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
 
     }
 }
