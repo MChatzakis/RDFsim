@@ -5,10 +5,12 @@
  */
 package scripts;
 
+import embeddings.EmbeddingCreator_w2v;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.json.JSONObject;
 import sparql.SPARQLTripleRetriever;
+import utils.commonUtils;
 
 /**
  *
@@ -18,14 +20,17 @@ public class Main {
 
     public static void main(String[] args) throws MalformedURLException, MalformedURLException, IOException {
         String endpoint="https://dbpedia.org/sparql";
-        //endpoint = " https://query.wikidata.org/bigdata/namespace/wdq/sparql";
         String query = "";
-        //query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>} limit 100";
-        query="select  * where {?s ?p ?o } limit 5000";
+        
+        query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>} limit 100";
+        //query="select  * where {?s ?p ?o } limit 1000";
         
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
-        String triples = tr.getTriples(endpoint, query, true);
+        String triples = tr.getTriples(endpoint, query, false);
+        String path = commonUtils.writeStringToFile(triples, "triples.rdf");
         
-        System.out.println(triples);
+
+        EmbeddingCreator_w2v w2v = new EmbeddingCreator_w2v();
+        w2v.createEmbeddings(path);
     }
 }

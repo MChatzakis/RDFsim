@@ -14,14 +14,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import lombok.Data;
 import org.json.JSONArray;
 import org.json.JSONObject;
 /**
  *
  * @author manos
  */
+@Data
 public class SPARQLTripleRetriever {
 
+    private ArrayList<String>triples = null;
+    
     public JSONObject getRawJSONTriples(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, IOException {
 
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
@@ -51,10 +56,11 @@ public class SPARQLTripleRetriever {
     public String getTriplesFromRawJSON(JSONObject raw, boolean formatTriples) {
         JSONObject results = raw.getJSONObject("results");
         JSONArray bindings = results.getJSONArray("bindings");
+        triples = new ArrayList<>();
         String s = "";
         String p = "";
         String o = "";
-        String triples = "";
+        String triplesText = "";
         for (int i = 0; i < bindings.length(); i++) {
             JSONObject jsonTriple = bindings.getJSONObject(i);
 
@@ -68,9 +74,11 @@ public class SPARQLTripleRetriever {
                 o = jsonTriple.getJSONObject("o").getString("value");
             }
 
-            triples += s + " " + p + " " + o + "\n";
+            String triple = s + " " + p + " " + o + "\n";
+            triplesText += triple;
+            triples.add(triple);
         }
-        return triples;
+        return triplesText;
     }
 
     public String getTriples(String endpoint, String query, boolean formatTriples) throws MalformedURLException, IOException, IOException {

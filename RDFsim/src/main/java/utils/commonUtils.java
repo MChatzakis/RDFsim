@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utilsCommon;
+package utils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 
 /**
  *
  * @author manos
  */
-public class Utils {
+public class commonUtils {
 
-    public static void writeStringToFile(String data, String filepath) {
+    public static String writeStringToFile(String data, String filepath) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(filepath));
             bw.write(data);
@@ -22,5 +23,6 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new File(filepath).getAbsolutePath();
     }
 }
