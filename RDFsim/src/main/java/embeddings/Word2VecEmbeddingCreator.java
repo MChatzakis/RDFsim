@@ -23,7 +23,7 @@ import org.slf4j.impl.StaticLoggerBinder;
 
 /**
  *
- * @author manos
+ * @author Manos Chatzakis
  */
 @Data
 public class Word2VecEmbeddingCreator {
@@ -39,6 +39,10 @@ public class Word2VecEmbeddingCreator {
     int seed;
     int windowSize;
 
+    public Word2VecEmbeddingCreator(String path){
+        this.loadVectorFile(path);
+    }
+    
     public Word2VecEmbeddingCreator(int minWordFrequency, int layerSize, int seed, int windowSize,
             SentenceIterator iter, TokenizerFactory tokenizerFactory) {
         this.minWordFrequency = minWordFrequency;
@@ -79,6 +83,10 @@ public class Word2VecEmbeddingCreator {
 
     public double calculateCosineSimilarity(String entity1, String entity2) {
         return vec.similarity(entity1, entity2);
+    }
+
+    public void loadVectorFile(String filepath) {
+        vec = WordVectorSerializer.readWord2VecModel(filepath);
     }
 
 }
