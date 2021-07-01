@@ -16,6 +16,12 @@
     
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.5.6</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
@@ -33,9 +39,49 @@
             <type>jar</type>
         </dependency>
         
+        <!-- Word2Vec Libs -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
         
-        <!-- W2V -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
         
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-common</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
+        
+        <!--<dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-scaleout-akka-word2vec</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>-->
+        
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
+         
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>2.0.0-alpha1</version>
+            <scope>runtime</scope>
+            <type>jar</type>
+        </dependency>
+        
+        
+        
+     
+ 
     </dependencies>
     <build>
         <plugins>

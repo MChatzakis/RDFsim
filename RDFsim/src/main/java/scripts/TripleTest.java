@@ -7,7 +7,6 @@ package scripts;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import org.json.JSONObject;
 import sparql.SPARQLTripleRetriever;
 import utils.CommonUtils;
 
@@ -26,10 +25,11 @@ public class TripleTest {
         //query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
-        String triples = tr.getTriples(endpoint, query, false);
+        String triples = tr.getTriples(endpoint, query, true);
+        
         System.out.println(triples);
         System.out.println("Total triples: " + tr.getTriples().size());
-        //String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
-
+        
+        String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
     }
 }
