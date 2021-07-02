@@ -20,16 +20,17 @@ public class TripleTest {
         String endpoint = "https://dbpedia.org/sparql";
         String query = "";
 
-        query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>}";
+        query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>} limit 100000";
         //query = "select  * where {?s ?p ?o }";
         //query = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
         String triples = tr.getTriples(endpoint, query, true);
         
-        System.out.println(triples);
+        //System.out.println(triples);
         System.out.println("Total triples: " + tr.getTriples().size());
         
         String path = CommonUtils.writeStringToFile(triples, "triples.rdf");
+        
     }
 }

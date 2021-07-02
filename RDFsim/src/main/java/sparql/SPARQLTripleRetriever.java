@@ -83,6 +83,7 @@ public class SPARQLTripleRetriever {
     }
 
     public String getTriples(String endpoint, String query, boolean formatTriples) throws MalformedURLException, IOException, IOException {
+        //NOTE: for now only select queries are supported
         JSONObject raw = getRawJSONTriples(endpoint, query);
         //System.out.println(raw.toString(2));
         String triples = getTriplesFromRawJSON(raw, formatTriples);

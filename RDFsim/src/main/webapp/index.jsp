@@ -8,18 +8,18 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="css/Doctor.css">
+    <link rel="stylesheet" href="css/.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <script type="text/javascript" src="js/Nurse_controller.js"></script>
+    <script type="text/javascript" src="js/conf.js"></script>
     <link
         rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         />
-    
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>RDFsim</title>
@@ -29,6 +29,12 @@
     <body>
 
         <div class="row  justify-content-center " style="margin:5px";>
+            <h3>RDFsim Configuration</h3>
+        </div>
+        <div class="row  justify-content-center " style="margin:5px";>
+
+
+
             <form  id="conf-form" class="row col-6  justify-content-center mt-3 table-dark ">
 
                 <div class="row">

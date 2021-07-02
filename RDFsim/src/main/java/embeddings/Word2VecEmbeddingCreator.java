@@ -87,6 +87,7 @@ public class Word2VecEmbeddingCreator {
 
     public void loadVectorFile(String filepath) {
         vec = WordVectorSerializer.readWord2VecModel(filepath);
+        assert(vec != null);
     }
 
 }
