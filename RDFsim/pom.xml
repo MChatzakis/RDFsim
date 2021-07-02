@@ -77,10 +77,6 @@
             <scope>runtime</scope>
             <type>jar</type>
         </dependency>
-        
-        
-        
-     
  
     </dependencies>
     <build>

@@ -31,7 +31,3 @@ function sendForm(jsonForm, id) {
     });
 }
 
-function beginRDFsim(){
-    
-}
-

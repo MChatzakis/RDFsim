@@ -25,14 +25,13 @@
         <title>RDFsim</title>
     </head>
 
-
     <body>
         <div>
             <h3>RDFsim Configuration</h3>
         </div>
 
         <div>
-            <form  id="conf-form" >
+            <form  id="conf-form" action  = "http://localhost:8080/RDFsim/SearchServlet">
                 <!-- Endpoint Selection -->
                 <label for="sparql-endpoint">SPARQL Endpoint: </label>
                 <input type="text" name="sparql" value="https://dbpedia.org/sparql" class="form-control" id="sparql" placeholder="">
@@ -51,11 +50,6 @@
                 <!-- Submit -->
                 <input type="submit" value="Apply" class="btn btn-primary" id="submitButton"  onClick="sendConf()">
             </form>
-            
-       
-            
         </div>
-
-
     </body>
 </html>
