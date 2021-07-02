@@ -15,7 +15,8 @@ function sendConf() {
 }
 
 function sendForm(jsonForm, id) {
-    console.log("sending form...");
+    
+    console.log("Sending Form");
     $(id).submit(function (event) {
         $.ajax({
             type: 'POST', /*POST request*/
@@ -28,5 +29,9 @@ function sendForm(jsonForm, id) {
             console.log(data);
         });
     });
+}
+
+function beginRDFsim(){
+    
 }
 

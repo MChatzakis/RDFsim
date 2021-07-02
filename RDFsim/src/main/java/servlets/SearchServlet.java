@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author manos
  */
-@WebServlet(name = "ConfServlet", urlPatterns = {"/ConfServlet"})
-public class ConfServlet extends HttpServlet {
+@WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
+public class SearchServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +37,10 @@ public class ConfServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet indexServlet</title>");
+            out.println("<title>Servlet SearchServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet indexServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,7 +58,10 @@ public class ConfServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        System.out.println("DoGet -- Search");
+        request.getRequestDispatcher("search.jsp").forward(request, response);
+        //response.sendRedirect("/search.jsp");
+        return;
     }
 
     /**
@@ -72,18 +75,8 @@ public class ConfServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //get the conf
-        System.out.println("Getting post request");
-        String endpoint = request.getParameter("sparql_endpoint");
-        String embeddingAPI = request.getParameter("EmbeddingAPI");
-        String query = "";
-
-        System.out.println("Endpoint Selected: "+endpoint);
-        
+        System.out.println("DoPost -- Search");
         //processRequest(request, response);
-        //response.sendRedirect(request.getContextPath() + "/SearchServlet");
-        //System.out.println("Conf -- Redirect send");
-        return;
     }
 
     /**

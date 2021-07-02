@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 
-    <link rel="stylesheet" href="css/.css">
+    <!--<link rel="stylesheet" href="css/.css">-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -27,61 +27,33 @@
 
 
     <body>
-
-        <!--<div class="row  justify-content-center " style="margin:5px";>
-            <h3>RDFsim Configuration</h3>
-        </div>
-
-        <div class="row  justify-content-center " style="margin:5px";>
-            <form  id="conf-form" class="row col-2  justify-content-center mt-3 table-dark ">
-                <div class="form-group col ">
-                    <label for="sparql-endpoint">SPARQL Endpoint</label>
-                    <input type="text" name="sparql" value="https://dbpedia.org/sparql" class="form-control" id="sparql" placeholder="">
-                </div>
-                <div class="row">
-                    <div class="form-group col ">
-                        <label for="emb-api">Embedding API</label>
-                        <select id="apis" name="apis">
-                            <option value="word2vec">word2vec</option>
-                            <option value="BERT">BERT</option>
-                            <option value="GloVe">GloVe</option>
-                        </select>
-
-                    </div>
-                </div>
-
-
-                <div>
-                    <input type="submit" value="Apply" class="btn btn-primary" id="submitButton"  onClick="sendConf()">
-                </div>
-
-            </form>
-        </div>-->
-
         <div>
             <h3>RDFsim Configuration</h3>
         </div>
 
         <div>
-            <form  id="conf-form">
+            <form  id="conf-form" >
                 <!-- Endpoint Selection -->
                 <label for="sparql-endpoint">SPARQL Endpoint: </label>
                 <input type="text" name="sparql" value="https://dbpedia.org/sparql" class="form-control" id="sparql" placeholder="">
                 <br>
-                
+
                 <!-- API Selection -->
                 <label for="emb-api">Embedding API</label>
                 <select id="apis" name="apis">
                     <option value="word2vec">word2vec</option>
                     <option value="BERT">BERT</option>
                     <option value="GloVe">GloVe</option>
-                </select>
-                
+                </select><br>
+
                 <!-- API Parameters -->
-                
+
                 <!-- Submit -->
                 <input type="submit" value="Apply" class="btn btn-primary" id="submitButton"  onClick="sendConf()">
             </form>
+            
+       
+            
         </div>
 
 

@@ -5,6 +5,7 @@
  */
 package embeddings;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,14 +45,14 @@ public class Word2VecEmbeddingCreator {
     }
     
     public Word2VecEmbeddingCreator(int minWordFrequency, int layerSize, int seed, int windowSize,
-            SentenceIterator iter, TokenizerFactory tokenizerFactory) {
+           String filepath) {
         this.minWordFrequency = minWordFrequency;
         this.layerSize = layerSize;
         this.seed = seed;
         this.windowSize = windowSize;
-        this.iter = iter;
-        this.tokenizerFactory = tokenizerFactory;
-
+        this.iter = new LineSentenceIterator(new File(filepath));;
+        this.tokenizerFactory = new DefaultTokenizerFactory();
+        
         topEntities = new HashMap<String, ArrayList<String>>();
     }
 
