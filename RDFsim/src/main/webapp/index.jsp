@@ -35,17 +35,23 @@
 
 
 
-            <form  id="conf-form" class="row col-6  justify-content-center mt-3 table-dark ">
+            <form  id="conf-form" class="row col-2  justify-content-center mt-3 table-dark ">
 
-                <div class="row">
-                    <div class="form-group col ">
-                        <label for="sparql-endpoint">SPARQL Endpoint</label>
-                        <input type="text" name="sparql" value="https://dbpedia.org/sparql" class="form-control" id="sparql" placeholder="">
-                    </div>
-                    <div class="form-group col ">
-                        <label for="sparql-endpoint">API</label>
-                        <input type="text" name="type" value="word2vec" class="form-control" id="sparql" placeholder="">
-                    </div>
+
+                <div class="form-group col ">
+                    <label for="sparql-endpoint">SPARQL Endpoint</label>
+                    <input type="text" name="sparql" value="https://dbpedia.org/sparql" class="form-control" id="sparql" placeholder="">
+                </div>
+
+
+                <div class="form-group col ">
+                    <label for="emb-api">Embedding API</label>
+                    <select id="apis" name="apis">
+                        <option value="word2vec">word2vec</option>
+                        <option value="BERT">BERT</option>
+                        <option value="GloVe">GloVe</option>
+                    </select>
+
                 </div>
 
                 <div>

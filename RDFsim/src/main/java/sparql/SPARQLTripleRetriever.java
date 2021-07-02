@@ -66,9 +66,9 @@ public class SPARQLTripleRetriever {
             JSONObject jsonTriple = bindings.getJSONObject(i);
 
             if (formatTriples) {
-                s = formatURI(jsonTriple.getJSONObject("s").getString("value"));
-                p = formatURI(jsonTriple.getJSONObject("p").getString("value"));
-                o = formatURI(jsonTriple.getJSONObject("o").getString("value"));
+                s = formatDBpediaURI(jsonTriple.getJSONObject("s").getString("value"));
+                p = formatDBpediaURI(jsonTriple.getJSONObject("p").getString("value"));
+                o = formatDBpediaURI(jsonTriple.getJSONObject("o").getString("value"));
             } else {
                 s = jsonTriple.getJSONObject("s").getString("value");
                 p = jsonTriple.getJSONObject("p").getString("value");
@@ -90,7 +90,7 @@ public class SPARQLTripleRetriever {
         return triples;
     }
 
-    public String formatURI(String URI) {
+    public String formatDBpediaURI(String URI) {
         String[] parts = URI.split("/");
         String remainingStr = parts[parts.length - 1];
         String[] str = remainingStr.split("#");
