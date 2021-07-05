@@ -23,28 +23,48 @@
     </head>
     <body>
 
-        <div class = "rdfSim">
-
+        <!-- Top K similars -->
+        <div class = "topKsimilarContainer">
             <div class = "searchContainer">
                 <div class  = "search">
-                    <p class="search-title">Search Entities</p>
+                    <p class="search-title">Find top 10 similar entities</p>
                     <input
                         type="input"
                         id="inputEntity"
-                        autocomplete="off"
-                        placeholder="Hit Enter to Search"
+                        placeholder="Insert entity"
                         />
+                    <button onclick="searchEntity();" >Search</button>
                 </div>
             </div>
+
 
             <div class = "resultsContainer">
 
             </div>
 
             <div class = "graphContainer" id ="graphContainer" >
-
             </div>
+        </div>
 
+        <!-- Cosine Similarity -->
+        <div class = "cosineSimilarityContainer">
+            <div class ="cosineSearch">
+                <p class="cosine-title">Cosine Similarity</p>
+                <input
+                    type="input"
+                    id="cosineEntity1"
+                    placeholder="Entity1"
+                    />
+                <input
+                    type="input"
+                    id="cosineEntity2"
+                    placeholder="Entity2"
+                    />
+                <button onclick="compareEntities();" >Search</button>
+            </div>
+            <div class = "cosineAnswer">
+                <p id = "cosineAnswer"></p>
+            </div>
         </div>
 
     </body>

@@ -1,4 +1,9 @@
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
+var TOP_K = 0;
+var COS_SIM = 1;
+var currentEntity = "";
+
+
 function getElem(id) {
     return document.getElementById(id);
 }
@@ -15,6 +20,17 @@ function showElem(id) {
     getElem(id).style.display = "block";
 }
 
+function sendAjaxWithPromise(jsonData) {
+    console.log("Getting the promise ready. Entity to search is: " + getEntityGiven());
+    // returns a promise that can be used later. 
+    return $.ajax({
+        type: "POST",
+        url: URL,
+        data: jsonData,
+        dataType: "json"
+    });
+}
+
 function sendAjaxPromiseEntitySearch() {
     console.log("Getting the promise ready. Entity to search is: " + getEntityGiven());
     // returns a promise that can be used later. 
@@ -22,6 +38,7 @@ function sendAjaxPromiseEntitySearch() {
         type: "POST",
         url: URL,
         data: {
+            type: TOP_K,
             entity: getEntityGiven()
         },
         dataType: "json"
@@ -30,16 +47,21 @@ function sendAjaxPromiseEntitySearch() {
 
 function sendAjaxGetResponseEntitySearch() {
     sendAjaxPromiseEntitySearch().then(function (data) {
-// Run this when your request was successful
+        // Run this when your request was successful
         var dataAsJSON = JSON.stringify(data, null, 4);
         console.log("Data response from the server now: " + dataAsJSON);
         drawGraph(data);
+        showElem("graphContainer");
         //dummyGraphCreation();
     });
 }
 
 function getEntityGiven() {
     return getElem("inputEntity").value;
+}
+
+function getElemValue(id) {
+    return getElem(id).value;
 }
 
 function drawGraph(entitiesJSON) {
@@ -52,17 +74,19 @@ function drawGraph(entitiesJSON) {
      console.log(key, value);
      }*/
 
+    nodeArr.push({id: 0, label: currentEntity});
+
     for (var k in entitiesJSON) {
 
-        console.log("Adding k = " + k + " to arrays..");
+        // console.log("Adding k = " + k + " to arrays..");
 
-        if (k === "self") {
-            nodeArr.push({id: 0, label: k});
-        } else {
-            nodeArr.push({id: counter, label: k});
-            edgeArr.push({from: counter, to: 0});
-            counter++;
-        }
+        /* if (k === "self") {
+         nodeArr.push({id: 0, label: k});
+         } else {*/
+        nodeArr.push({id: counter, label: k});
+        edgeArr.push({from: counter, to: 0});
+        counter++;
+        //}
     }
 
     console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
@@ -107,6 +131,29 @@ function dummyGraphCreation() {
     var network = new vis.Network(container, data, options);
 }
 
+function searchEntity() {
+    currentEntity = getEntityGiven();
+    sendAjaxGetResponseEntitySearch();
+}
+
+function compareEntities() {
+    var ent1 = getElemValue("cosineEntity1");
+    var ent2 = getElemValue("cosineEntity2");
+    
+    var jsonData = {
+        type: COS_SIM,
+        en1: getElemValue("cosineEntity1"),
+        en2: getElemValue("cosineEntity2"),
+    };
+
+    sendAjaxWithPromise(jsonData).then(function (data) {
+        var dataAsJSON = JSON.stringify(data, null, 4);        
+        console.log("Data response from the server for cosine similarity: " + dataAsJSON);
+        var cosVal = data.cosSim;
+        getElem("cosineAnswer").innerHTML = "Cosine similarity is " + cosVal + ".";
+    });
+}
+
 $(document).ready(function () {
     console.log("Document Loaded.");
     document.getElementById("inputEntity").addEventListener("keyup", function (event) {
@@ -115,7 +162,12 @@ $(document).ready(function () {
 
             event.preventDefault();
             console.log("Enter hit, beggining sending...");
+            currentEntity = getEntityGiven();
             sendAjaxGetResponseEntitySearch();
         }
     });
 });
+
+
+
+

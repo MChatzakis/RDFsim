@@ -15,7 +15,6 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFac
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -31,8 +30,6 @@ import utils.CommonUtils;
  *
  * @author manos
  */
-
-
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
 public class SearchServlet extends HttpServlet {
 
@@ -64,7 +61,6 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -94,21 +90,31 @@ public class SearchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("Just got a POST request from site.");
-        //processRequest(request, response);
-        //this one takes a query as a string, and we should sent data back
-        String entity = request.getParameter("entity");
+
+        int type = Integer.parseInt(request.getParameter("type"));
+
         PrintWriter out = response.getWriter();
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        JSONObject data2sent = getData2sent(entity, 10);
-        JSONObject dummy = new JSONObject();
-        //dummy.put("Manos", entity);
+        JSONObject data2sent = null;
+        switch (type) {
+        case 0:
+            String entity = request.getParameter("entity");
+            data2sent = getSimilarEntities(entity, 10);
+            break;
+        case 1:
+            String en1 = request.getParameter("en1");
+            String en2 = request.getParameter("en2");
+            data2sent = getCosineSimilarity(en1, en2);
+            break;
+        }
+
         System.out.println("Sending: " + data2sent.toString(2));
+
         out.print(data2sent);
         out.flush();
-
     }
 
     /**
@@ -119,16 +125,19 @@ public class SearchServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
-    public JSONObject getData2sent(String entity, int count) {
+    public JSONObject getSimilarEntities(String entity, int count) {
         JSONObject data = new JSONObject();
         HashMap<String, Double> similarsOfEntity = vec.getSimilarEntitiesWithValues(entity, count);
-
         data = CommonUtils.entityMapToJSON(similarsOfEntity);
-        data.put("self", entity);
-        
         return data;
     }
 
+    public JSONObject getCosineSimilarity(String en1, String en2) {
+        JSONObject data = new JSONObject();
+        double sim = vec.calculateCosineSimilarity(en1, en2);
+        data.put("cosSim", sim);
+        return data;
+    }
 }
