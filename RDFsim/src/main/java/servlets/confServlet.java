@@ -7,6 +7,9 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -78,10 +81,18 @@ public class ConfServlet extends HttpServlet {
         String embeddingAPI = request.getParameter("EmbeddingAPI");
         String query = "";
 
-        System.out.println("Endpoint Selected: "+endpoint);
+        System.out.println("Endpoint Selected: " + endpoint);
         
+        
+        
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ConfServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         //processRequest(request, response);
-        //response.sendRedirect(request.getContextPath() + "/SearchServlet");
+        response.sendRedirect(request.getContextPath() + "/SearchServlet");
         //System.out.println("Conf -- Redirect send");
         return;
     }

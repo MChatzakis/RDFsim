@@ -21,6 +21,7 @@ import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
+import utils.CommonUtils;
 
 /**
  *
@@ -33,27 +34,24 @@ public class Word2VecEmbeddingCreator {
     SentenceIterator iter;
     TokenizerFactory tokenizerFactory;
 
-    HashMap<String, ArrayList<String>> topEntities;
-
     int minWordFrequency;
     int layerSize;
     int seed;
     int windowSize;
 
-    public Word2VecEmbeddingCreator(String path){
+    public Word2VecEmbeddingCreator(String path) {
         this.loadVectorFile(path);
     }
-    
-    public Word2VecEmbeddingCreator(int minWordFrequency, int layerSize, int seed, int windowSize,
-           String filepath) {
+
+    public Word2VecEmbeddingCreator(int minWordFrequency, int layerSize, int seed, int windowSize, String filepath) {
         this.minWordFrequency = minWordFrequency;
         this.layerSize = layerSize;
         this.seed = seed;
         this.windowSize = windowSize;
         this.iter = new LineSentenceIterator(new File(filepath));;
         this.tokenizerFactory = new DefaultTokenizerFactory();
-        
-        topEntities = new HashMap<String, ArrayList<String>>();
+
+        //topEntities = new HashMap<String, ArrayList<String>>();
     }
 
     public void train() {
@@ -88,7 +86,19 @@ public class Word2VecEmbeddingCreator {
 
     public void loadVectorFile(String filepath) {
         vec = WordVectorSerializer.readWord2VecModel(filepath);
-        assert(vec != null);
+        assert (vec != null);
+    }
+
+    public HashMap<String, Double> getSimilarEntitiesWithValues(String entity, int count) {
+        HashMap<String, Double> topEntities = new HashMap<>();
+        Collection<String> entities = getSimilarEntities(entity, count);
+
+        for (String neighbour : entities) {
+            double cosSim = calculateCosineSimilarity(entity, neighbour);
+            topEntities.put(neighbour, cosSim);
+        }
+
+        return CommonUtils.sortEntityMap(topEntities);
     }
 
 }
