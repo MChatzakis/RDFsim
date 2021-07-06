@@ -35,32 +35,15 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
 public class SearchServlet extends HttpServlet {
 
-    Word2VecEmbeddingCreator vec = new Word2VecEmbeddingCreator("C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\vectors.vec");
+    Word2VecEmbeddingCreator vec;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SearchServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    public SearchServlet() {
+        super();
+        initVectorSpace();
+    }
+
+    private void initVectorSpace() {
+        vec = new Word2VecEmbeddingCreator("C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\vectors.vec");
     }
 
     /**
@@ -76,7 +59,6 @@ public class SearchServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("DoGet -- Search");
         request.getRequestDispatcher("/search.jsp").forward(request, response);
-        //response.sendRedirect("/search.jsp");
         return;
     }
 
@@ -89,9 +71,7 @@ public class SearchServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        System.out.println("Just got a POST request from site.");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int type = Integer.parseInt(request.getParameter("type"));
 
@@ -99,9 +79,10 @@ public class SearchServlet extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        int count = 0;
 
+        int count = 0;
         JSONObject data2sent = null;
+
         switch (type) {
         case 0:
             String entity = request.getParameter("entity");
@@ -114,14 +95,13 @@ public class SearchServlet extends HttpServlet {
             data2sent = getCosineSimilarity(en1, en2);
             break;
         case 2:
-            System.out.println("Praxeis");
             String positives = request.getParameter("positives");
             String negatives = request.getParameter("negatives");
             count = Integer.parseInt(request.getParameter("count"));
             data2sent = getExpressionEntities(positives, negatives, count);
         }
 
-        System.out.println("Sending: " + data2sent.toString(2));
+        System.out.println("Server->Sending: " + data2sent.toString(2));
 
         out.print(data2sent);
         out.flush();
@@ -134,11 +114,11 @@ public class SearchServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Search Servlet";
     }
 
     public JSONObject getSimilarEntities(String entity, int count) {
-        JSONObject data = new JSONObject();
+        JSONObject data = null;
         HashMap<String, Double> similarsOfEntity = vec.getSimilarEntitiesWithValues(entity, count);
         data = CommonUtils.entityMapToJSON(similarsOfEntity);
         return data;
@@ -158,9 +138,9 @@ public class SearchServlet extends HttpServlet {
 
         Collection<String> entities2add = Arrays.asList(posEnts);
         Collection<String> entities2sub = Arrays.asList(negEnts);
-        System.out.println("Blah");
-        System.out.println(entities2add);
-        System.out.println(entities2sub);
+        //System.out.println("Blah");
+        //System.out.println(entities2add);
+        //System.out.println(entities2sub);
         Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
 
         String resultAsString = "";

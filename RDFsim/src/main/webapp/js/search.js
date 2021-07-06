@@ -2,7 +2,6 @@
  * Basic search controller
  * Manos Chatzakis (chatzakis@ics.forth.gr)
  */
-
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
 var TOP_K = 0;
 var COS_SIM = 1;
@@ -176,11 +175,11 @@ function calculateExpression() {
 
 $(document).ready(function () {
     console.log("Document Loaded.");
-    document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
+    /*document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            console.log("Enter hit, beggining sending...");
+            //console.log("Enter hit, beggining sending...");
             searchEntity();
         }
-    });
+    });*/
 });
