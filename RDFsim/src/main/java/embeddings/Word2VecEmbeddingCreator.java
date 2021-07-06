@@ -65,6 +65,7 @@ public class Word2VecEmbeddingCreator {
                 .build();
 
         vec.fit();
+        //vec.wordsNearest("italy", "rome", 1)
     }
 
     public void saveVectorSpace(String filepath) {
@@ -101,4 +102,8 @@ public class Word2VecEmbeddingCreator {
         return CommonUtils.sortEntityMap(topEntities);
     }
 
+    public Collection<String> getExpressionResult(Collection<String>ents2add, Collection<String>ents2sub, int count){
+        return vec.wordsNearestSum(ents2sub, ents2sub, count);
+    }
+    
 }

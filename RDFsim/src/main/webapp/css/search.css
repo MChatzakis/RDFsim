@@ -1,6 +1,12 @@
 #graphContainer {
-  width: 400px;
-  height: 400px;
-  border: 1px solid black;
-  display: none;
+    width: 700px;
+    height: 700px;
+    border: 1px solid black;
+    display: none;
+}
+
+#resultsContainer{
+    display: none;
+    border: 1px solid black;
+    width: 700px;
 }

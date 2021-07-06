@@ -1,8 +1,7 @@
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
 var TOP_K = 0;
 var COS_SIM = 1;
-var currentEntity = "";
-
+var EXPR = 2;
 
 function getElem(id) {
     return document.getElementById(id);
@@ -21,8 +20,7 @@ function showElem(id) {
 }
 
 function sendAjaxWithPromise(jsonData) {
-    console.log("Getting the promise ready. Entity to search is: " + getEntityGiven());
-    // returns a promise that can be used later. 
+    console.log("Getting the promise ready. Data to sent: " + JSON.stringify(jsonData, null, 4));
     return $.ajax({
         type: "POST",
         url: URL,
@@ -31,143 +29,122 @@ function sendAjaxWithPromise(jsonData) {
     });
 }
 
-function sendAjaxPromiseEntitySearch() {
-    console.log("Getting the promise ready. Entity to search is: " + getEntityGiven());
-    // returns a promise that can be used later. 
-    return $.ajax({
-        type: "POST",
-        url: URL,
-        data: {
-            type: TOP_K,
-            entity: getEntityGiven()
-        },
-        dataType: "json"
-    });
-}
-
-function sendAjaxGetResponseEntitySearch() {
-    sendAjaxPromiseEntitySearch().then(function (data) {
-        // Run this when your request was successful
-        var dataAsJSON = JSON.stringify(data, null, 4);
-        console.log("Data response from the server now: " + dataAsJSON);
-        drawGraph(data);
-        showElem("graphContainer");
-        //dummyGraphCreation();
-    });
-}
-
-function getEntityGiven() {
-    return getElem("inputEntity").value;
-}
-
 function getElemValue(id) {
     return getElem(id).value;
 }
 
-function drawGraph(entitiesJSON) {
+function drawGraph(entitiesJSON, self) {
     var nodeArr = [];
     var edgeArr = [];
-
     counter = 1;
-
-    /*for (let [key, value] of Object.entries(entitiesJSON)) {
-     console.log(key, value);
-     }*/
-
-    nodeArr.push({id: 0, label: currentEntity});
-
+    nodeArr.push({id: 0, label: self});
     for (var k in entitiesJSON) {
 
-        // console.log("Adding k = " + k + " to arrays..");
-
-        /* if (k === "self") {
-         nodeArr.push({id: 0, label: k});
-         } else {*/
         nodeArr.push({id: counter, label: k});
         edgeArr.push({from: counter, to: 0});
         counter++;
-        //}
     }
 
     console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
-
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
-
     var container = document.getElementById("graphContainer");
     var data = {
         nodes: nodes,
         edges: edges,
     };
-
     var options = {};
     var network = new vis.Network(container, data, options);
-
+    showElem("graphContainer");
 }
 
-function dummyGraphCreation() {
-    var nodes = new vis.DataSet([
-        {id: 1, label: "Node 1"},
-        {id: 2, label: "Node 2"},
-        {id: 3, label: "Node 3"},
-        {id: 4, label: "Node 4"},
-        {id: 5, label: "Node 5"},
-    ]);
-// create an array with edges
-    var edges = new vis.DataSet([
-        {from: 1, to: 3},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5},
-        {from: 3, to: 3},
-    ]);
-// create a network
-    var container = document.getElementById("graphContainer");
-    var data = {
-        nodes: nodes,
-        edges: edges,
-    };
-    var options = {};
-    var network = new vis.Network(container, data, options);
+function createTOPKresultsTable(jsonData, self) {
+    var map = new Map();
+    var table = getElem("resultTable");
+    var counter = 0;
+    clearElem("resultTable");
+    for (var key in jsonData) {
+        map.set(key, jsonData[key]);
+    }
+
+    map[Symbol.iterator] = function * () {
+        yield * [...this.entries()].sort((a, b) => b[1] - a[1]);
+    }
+
+    row = table.insertRow(0);
+    var cell = row.insertCell(0);
+    cell.innerHTML = "Entity";
+    cell = row.insertCell(1);
+    cell.innerHTML = "Cos-Sim";
+    for (let [key, value] of map) {
+        console.log(key + ' ' + value);
+        row = table.insertRow(counter + 1);
+        var arr = [key, value];
+        for (var j = 0; j < 2; j++) {
+            var cell = row.insertCell(j);
+            cell.innerHTML = arr[j] + "";
+        }
+        counter++;
+    }
+
+    showElem("resultsContainer");
 }
 
 function searchEntity() {
-    currentEntity = getEntityGiven();
-    sendAjaxGetResponseEntitySearch();
+    var currentEntity = getElemValue("inputSearchEntity");
+    var jsonData = {
+        type: TOP_K,
+        entity: currentEntity,
+    };
+    sendAjaxWithPromise(jsonData).then(function (data) {
+        console.log("Data response from the server for TOP K entity search: " + JSON.stringify(data, null, 4));
+        createTOPKresultsTable(data, currentEntity);
+        drawGraph(data, currentEntity);
+    });
 }
 
 function compareEntities() {
     var ent1 = getElemValue("cosineEntity1");
     var ent2 = getElemValue("cosineEntity2");
-    
     var jsonData = {
         type: COS_SIM,
         en1: getElemValue("cosineEntity1"),
         en2: getElemValue("cosineEntity2"),
     };
-
     sendAjaxWithPromise(jsonData).then(function (data) {
-        var dataAsJSON = JSON.stringify(data, null, 4);        
+        var dataAsJSON = JSON.stringify(data, null, 4);
         console.log("Data response from the server for cosine similarity: " + dataAsJSON);
         var cosVal = data.cosSim;
         getElem("cosineAnswer").innerHTML = "Cosine similarity is " + cosVal + ".";
     });
 }
 
+function calculateExpression() {
+    
+    //var resCount = getElemValue("entitiesExpressionCount");
+    //var toAddArr = getElemValue("entities2add").split(",");
+    //var toSubArr = getElemValue("entities2sub").split(",");
+    
+    var jsonData = {
+        type: EXPR,
+        count: getElemValue("entitiesExpressionCount"),
+        positives: getElemValue("entities2add"),
+        negatives: getElemValue("entities2sub")
+    };
+
+    sendAjaxWithPromise(jsonData).then(function (data) {
+        console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
+        
+    });
+}
+
 $(document).ready(function () {
     console.log("Document Loaded.");
-    document.getElementById("inputEntity").addEventListener("keyup", function (event) {
-        // Number 13 is the "Enter" key on the keyboard
+    document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
         if (event.keyCode === 13) {
-
             event.preventDefault();
             console.log("Enter hit, beggining sending...");
-            currentEntity = getEntityGiven();
-            sendAjaxGetResponseEntitySearch();
+            searchEntity();
         }
     });
 });
-
-
-
-

@@ -17,6 +17,8 @@ import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -109,6 +111,11 @@ public class SearchServlet extends HttpServlet {
             String en2 = request.getParameter("en2");
             data2sent = getCosineSimilarity(en1, en2);
             break;
+        case 2:
+            String positives = request.getParameter("positives");
+            String negatives = request.getParameter("negatives");
+            int count = Integer.parseInt(request.getParameter("count"));
+            data2sent = getExpressionEntities(positives, negatives, count);
         }
 
         System.out.println("Sending: " + data2sent.toString(2));
@@ -138,6 +145,29 @@ public class SearchServlet extends HttpServlet {
         JSONObject data = new JSONObject();
         double sim = vec.calculateCosineSimilarity(en1, en2);
         data.put("cosSim", sim);
+        return data;
+    }
+
+    public JSONObject getExpressionEntities(String positives, String negatives, int count) {
+        JSONObject data = new JSONObject();
+        String[] posEnts = positives.split(",");
+        String[] negEnts = positives.split(",");
+
+        Collection<String> entities2add = Arrays.asList(posEnts);
+        Collection<String> entities2sub = Arrays.asList(posEnts);
+
+        
+        System.out.println(entities2add);
+        System.out.println(entities2sub);
+        /*Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
+
+        String resultAsString = "";
+        for (String s : result) {
+            resultAsString += s + " ";
+        }
+
+        data.put("expr_result", resultAsString);*/
+
         return data;
     }
 }

@@ -25,23 +25,29 @@
 
         <!-- Top K similars -->
         <div class = "topKsimilarContainer">
+
+            <!-- Similar Search Form -->
             <div class = "searchContainer">
                 <div class  = "search">
                     <p class="search-title">Find top 10 similar entities</p>
                     <input
                         type="input"
-                        id="inputEntity"
+                        id="inputSearchEntity"
                         placeholder="Insert entity"
                         />
                     <button onclick="searchEntity();" >Search</button>
                 </div>
             </div>
-
-
-            <div class = "resultsContainer">
-
-            </div>
-
+            <!-- Result table -->
+            <div class = "resultsContainer" id = "resultsContainer">
+                <table class = "resultTable" id = "resultTable">
+                    <tr>
+                        <th>Entity</th>
+                        <th>Cos-Sim</th>
+                    </tr>
+                </table>
+            </div>  
+            <!-- Similarity Graph Drawing -->
             <div class = "graphContainer" id ="graphContainer" >
             </div>
         </div>
@@ -64,6 +70,29 @@
             </div>
             <div class = "cosineAnswer">
                 <p id = "cosineAnswer"></p>
+            </div>
+        </div>
+
+        <!-- Ar Expressions -->
+        <div class = "arExpressionsContainer">
+            <div class ="arExpressionSearch">
+                <p class="expr-title">Arithmetic Expressions</p>
+                <input
+                    type="input"
+                    id="entities2add"
+                    placeholder="Insert entities to add (eg. en1,en2,...)"
+                    />
+                 <input
+                    type="input"
+                    id="entities2sub"
+                    placeholder="Insert entities to sub (eg. en1,en2,...)"
+                    />
+                <input
+                    type="input"
+                    id="entitiesExpressionCount"
+                    placeholder="Count (eg.2)"
+                    />
+                <button onClick = "calculateExpression()"> Calculate </button>
             </div>
         </div>
 
