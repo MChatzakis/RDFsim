@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package scripts;
 
 import embeddings.Word2VecEmbeddingCreator;
@@ -13,8 +8,8 @@ import sparql.SPARQLTripleRetriever;
 import utils.CommonUtils;
 
 /**
- *
- * @author manos
+ * Class to provide basic examples about the triple retrieval and the embeddings creation.
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 public class Tests {
 

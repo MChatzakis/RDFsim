@@ -82,9 +82,7 @@ public class ConfServlet extends HttpServlet {
         String query = "";
 
         System.out.println("Endpoint Selected: " + endpoint);
-        
-        
-        
+
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {

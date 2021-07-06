@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sparql;
 
 import java.io.BufferedReader;
@@ -21,12 +16,11 @@ import org.json.JSONObject;
 import utils.CommonUtils;
 
 /**
- *
- * @author manos
+ * Class offering methods to retrieve RDF triples from any SPARQL endpoint
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
 public class SPARQLTripleRetriever {
-
 
     private ArrayList<String> triples = null;
 

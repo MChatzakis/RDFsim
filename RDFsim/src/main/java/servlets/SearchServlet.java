@@ -99,12 +99,14 @@ public class SearchServlet extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        int count = 0;
 
         JSONObject data2sent = null;
         switch (type) {
         case 0:
             String entity = request.getParameter("entity");
-            data2sent = getSimilarEntities(entity, 10);
+            count = Integer.parseInt(request.getParameter("count"));
+            data2sent = getSimilarEntities(entity, count);
             break;
         case 1:
             String en1 = request.getParameter("en1");
@@ -112,9 +114,10 @@ public class SearchServlet extends HttpServlet {
             data2sent = getCosineSimilarity(en1, en2);
             break;
         case 2:
+            System.out.println("Praxeis");
             String positives = request.getParameter("positives");
             String negatives = request.getParameter("negatives");
-            int count = Integer.parseInt(request.getParameter("count"));
+            count = Integer.parseInt(request.getParameter("count"));
             data2sent = getExpressionEntities(positives, negatives, count);
         }
 
@@ -151,23 +154,21 @@ public class SearchServlet extends HttpServlet {
     public JSONObject getExpressionEntities(String positives, String negatives, int count) {
         JSONObject data = new JSONObject();
         String[] posEnts = positives.split(",");
-        String[] negEnts = positives.split(",");
+        String[] negEnts = negatives.split(",");
 
         Collection<String> entities2add = Arrays.asList(posEnts);
-        Collection<String> entities2sub = Arrays.asList(posEnts);
-
-        
+        Collection<String> entities2sub = Arrays.asList(negEnts);
+        System.out.println("Blah");
         System.out.println(entities2add);
         System.out.println(entities2sub);
-        /*Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
+        Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
 
         String resultAsString = "";
         for (String s : result) {
-            resultAsString += s + " ";
+            resultAsString += s + "   ";
         }
 
-        data.put("expr_result", resultAsString);*/
-
+        data.put("expr_result", resultAsString);
         return data;
     }
 }

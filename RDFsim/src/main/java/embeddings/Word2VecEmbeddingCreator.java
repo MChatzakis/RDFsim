@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package embeddings;
 
 import java.io.File;
@@ -24,8 +19,9 @@ import org.slf4j.impl.StaticLoggerBinder;
 import utils.CommonUtils;
 
 /**
+ * Wrapper class of w2v to provide basic comparison methods
  *
- * @author Manos Chatzakis
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
 public class Word2VecEmbeddingCreator {
@@ -102,8 +98,9 @@ public class Word2VecEmbeddingCreator {
         return CommonUtils.sortEntityMap(topEntities);
     }
 
-    public Collection<String> getExpressionResult(Collection<String>ents2add, Collection<String>ents2sub, int count){
-        return vec.wordsNearestSum(ents2sub, ents2sub, count);
+    public Collection<String> getExpressionResult(Collection<String> ents2add, Collection<String> ents2sub, int count) {
+        //for expressions ent1 + ent2 - ent3 ... 
+        return vec.wordsNearest(ents2sub, ents2sub, count);
     }
-    
+
 }

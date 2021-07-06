@@ -35,6 +35,11 @@
                         id="inputSearchEntity"
                         placeholder="Insert entity"
                         />
+                    <input
+                        type="input"
+                        id="inputSearchEntityCount"
+                        placeholder="Insert Count"
+                        />
                     <button onclick="searchEntity();" >Search</button>
                 </div>
             </div>
@@ -73,7 +78,7 @@
             </div>
         </div>
 
-        <!-- Ar Expressions -->
+        <!-- Arithmetic Expressions -->
         <div class = "arExpressionsContainer">
             <div class ="arExpressionSearch">
                 <p class="expr-title">Arithmetic Expressions</p>
@@ -82,7 +87,7 @@
                     id="entities2add"
                     placeholder="Insert entities to add (eg. en1,en2,...)"
                     />
-                 <input
+                <input
                     type="input"
                     id="entities2sub"
                     placeholder="Insert entities to sub (eg. en1,en2,...)"
@@ -93,6 +98,9 @@
                     placeholder="Count (eg.2)"
                     />
                 <button onClick = "calculateExpression()"> Calculate </button>
+            </div>
+            <div class = "expressionAns" id = "exprAns">
+                <p id = "exprAnsPar"></p>
             </div>
         </div>
 

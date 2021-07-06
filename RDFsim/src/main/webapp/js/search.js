@@ -1,3 +1,8 @@
+/*
+ * Basic search controller
+ * Manos Chatzakis (chatzakis@ics.forth.gr)
+ */
+
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
 var TOP_K = 0;
 var COS_SIM = 1;
@@ -94,6 +99,7 @@ function searchEntity() {
     var currentEntity = getElemValue("inputSearchEntity");
     var jsonData = {
         type: TOP_K,
+        count: getElemValue("inputSearchEntityCount"),
         entity: currentEntity,
     };
     sendAjaxWithPromise(jsonData).then(function (data) {
@@ -119,12 +125,41 @@ function compareEntities() {
     });
 }
 
+function updateExpressionAns(toAddArr, toSubArr, data) {
+    clearElem("exprAnsPar");
+    elem = getElem("exprAnsPar");
+
+    var answer = "";
+
+    for (var i = 0; i < toAddArr.length; i++) {
+        answer += toAddArr[i];
+        if (i < toAddArr.length - 1) {
+            answer += " + ";
+        }
+    }
+
+    for (var i = 0; i < toSubArr.length; i++) {
+        if (i === 0) {
+            answer += " - ";
+        }
+
+        answer += toSubArr[i];
+        if (i < toSubArr.length - 1) {
+            answer += "-";
+        }
+    }
+
+    answer += " = [" + data["expr_result"] + "].";
+
+    elem.innerHTML = answer;
+}
+
 function calculateExpression() {
-    
-    //var resCount = getElemValue("entitiesExpressionCount");
-    //var toAddArr = getElemValue("entities2add").split(",");
-    //var toSubArr = getElemValue("entities2sub").split(",");
-    
+
+    var resCount = getElemValue("entitiesExpressionCount");
+    var toAddArr = getElemValue("entities2add").split(",");
+    var toSubArr = getElemValue("entities2sub").split(",");
+
     var jsonData = {
         type: EXPR,
         count: getElemValue("entitiesExpressionCount"),
@@ -134,7 +169,8 @@ function calculateExpression() {
 
     sendAjaxWithPromise(jsonData).then(function (data) {
         console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
-        
+
+        updateExpressionAns(toAddArr, toSubArr, data);
     });
 }
 
