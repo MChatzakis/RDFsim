@@ -6,6 +6,7 @@ var URL = "http://localhost:8080/RDFsim/SearchServlet";
 var TOP_K = 0;
 var COS_SIM = 1;
 var EXPR = 2;
+var BIG_GRAPH = 3;
 
 function getElem(id) {
     return document.getElementById(id);
@@ -48,7 +49,7 @@ function drawGraph(entitiesJSON, self) {
         counter++;
     }
 
-    console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
+    //console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
     var container = document.getElementById("graphContainer");
@@ -104,7 +105,55 @@ function searchEntity() {
         console.log("Data response from the server for TOP K entity search: " + JSON.stringify(data, null, 4));
         createTOPKresultsTable(data, currentEntity);
         drawGraph(data, currentEntity);
+        //createBigGraph();
     });
+}
+
+function createBigGraph() {
+    var currentEntity = getElemValue("inputSearchEntity");
+    var jsonData = {
+        type: BIG_GRAPH,
+        count: getElemValue("inputSearchEntityCount"),
+        depth: 3,
+        entity: currentEntity,
+    };
+    sendAjaxWithPromise(jsonData).then(function (data) {
+        console.log("Data response from the server for BIG graph: " + JSON.stringify(data, null, 4));
+        drawBigGraph(data);
+    });
+}
+
+function drawBigGraph(jsonData) {
+    var nodeArr = [];
+    var edgeArr = [];
+    
+    for (var k in jsonData) {
+        var name = k;
+        var idN = k["label"];
+        nodeArr.push({id: idN, label: name});
+       
+    }
+    
+    for(var k in jsonData){
+        var name = k;
+        var idN = k["label"];
+        for(var t in k["links"]){
+            var fromN = label;
+            var toN = t["label"]
+            edgeArr.push({from: fromN, to: toN});
+        }
+    }
+
+    var nodes = new vis.DataSet(nodeArr);
+    var edges = new vis.DataSet(edgeArr);
+    var container = document.getElementById("graphContainer");
+    var data = {
+        nodes: nodes,
+        edges: edges,
+    };
+    var options = {};
+    var network = new vis.Network(container, data, options);
+    showElem("graphContainer");
 }
 
 function compareEntities() {
@@ -175,10 +224,10 @@ function calculateExpression() {
 $(document).ready(function () {
     console.log("Document Loaded.");
     /*document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            //console.log("Enter hit, beggining sending...");
-            searchEntity();
-        }
-    });*/
+     if (event.keyCode === 13) {
+     event.preventDefault();
+     //console.log("Enter hit, beggining sending...");
+     searchEntity();
+     }
+     });*/
 });

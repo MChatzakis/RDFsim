@@ -75,4 +75,12 @@ public class CommonUtils {
 
         return mapObj;
     }
+
+    public static JSONObject entityMapToJSONGraph(String entity ,HashMap<String, Double> similarsOfCurrEntity, int i) {
+        JSONObject g = new JSONObject();
+        
+        
+        
+        return g;
+    }
 }

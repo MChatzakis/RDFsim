@@ -101,5 +101,8 @@
             </div>
         </div>
 
+        <!-- Similarity Graph -->
+        <div class = "graphContainer" id ="graphContainer" >
+        </div>
     </body>
 </html>
