@@ -43,7 +43,6 @@ function drawGraph(entitiesJSON, self) {
     counter = 1;
     nodeArr.push({id: 0, label: self});
     for (var k in entitiesJSON) {
-
         nodeArr.push({id: counter, label: k});
         edgeArr.push({from: counter, to: 0});
         counter++;

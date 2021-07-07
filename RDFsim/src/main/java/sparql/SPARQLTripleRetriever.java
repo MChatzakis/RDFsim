@@ -24,7 +24,7 @@ public class SPARQLTripleRetriever {
 
     private ArrayList<String> triples = null;
 
-    public JSONObject getRawJSONTriples(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, IOException {
+    public JSONObject getRawJSONData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, IOException {
 
         String prefixedQuery = query;
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(prefixedQuery, "utf8");
@@ -81,15 +81,14 @@ public class SPARQLTripleRetriever {
 
     public String getTriples(String endpoint, String query, boolean formatTriples) throws MalformedURLException, IOException, IOException {
         //NOTE: for now only select queries are supported
-        JSONObject raw = getRawJSONTriples(endpoint, query);
-        //System.out.println(raw.toString(2));
-        String triples = getTriplesFromRawJSON(raw, formatTriples, "s", "p", "o");
-        return triples;
+        JSONObject raw = getRawJSONData(endpoint, query);
+        String triples2ret = getTriplesFromRawJSON(raw, formatTriples, "s", "p", "o");
+        return triples2ret;
     }
 
     public String getTriples(String endpoint, String query, boolean formatTriples, String s, String p, String o) throws MalformedURLException, IOException, IOException {
         //NOTE: for now only select queries are supported
-        JSONObject raw = getRawJSONTriples(endpoint, query);
+        JSONObject raw = getRawJSONData(endpoint, query);
         //System.out.println(raw.toString(2));
         String triples = getTriplesFromRawJSON(raw, formatTriples, s, p, o);
         return triples;
@@ -163,4 +162,6 @@ public class SPARQLTripleRetriever {
 
         return totalTriples;
     }
+   
+    
 }
