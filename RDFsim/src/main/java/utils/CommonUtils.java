@@ -54,7 +54,7 @@ public class CommonUtils {
     }
 
     public static HashMap<String, Entity> harvestEntitiesFromTriples(ArrayList<Triple> triples) {
-        HashMap<String, Entity> entities = null;
+        HashMap<String, Entity> entities = new HashMap<>();
 
         for (Triple t : triples) {
             String s = t.getS();

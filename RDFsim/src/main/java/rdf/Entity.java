@@ -5,6 +5,7 @@
  */
 package rdf;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Data;
 
@@ -16,7 +17,10 @@ import lombok.Data;
 public class Entity {
 
     private String URI;
-
+    private double [] vector;
+    
+    ArrayList<Triple>triples;
+    
     public Entity(String URI) {
         this.URI = URI;
     }

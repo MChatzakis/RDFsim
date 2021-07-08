@@ -31,6 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import rdf.Entity;
+import rdf.Triple;
+import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
@@ -40,12 +43,10 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
 public class SearchServlet extends HttpServlet {
 
-    Word2VecEmbeddingCreator vec;
-
-    public SearchServlet() {
-        super();
-        //loadDataAndInit("conf.json");
-    }
+    Word2VecEmbeddingCreator vec = null;
+    HashMap<String, Entity> entities = null;
+    ArrayList<Triple> triples = null;
+    String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
     private void initVectorSpace() {
         vec = new Word2VecEmbeddingCreator("C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\vectors.vec");
@@ -60,14 +61,32 @@ public class SearchServlet extends HttpServlet {
 
         JSONObject obj = new JSONObject(CommonUtils.getFileContent(confFilePath));
         System.out.println("Loaded conf file: " + obj.toString());
-        
+
         String endpoint = obj.getString("endpoint");
         String query = obj.getString("query");
-        
+
         int limit = obj.getInt("limit");
         int offset = obj.getInt("offset");
-        
-        
+
+        SPARQLQuery sq = new SPARQLQuery();
+
+        triples = sq.getTriples(endpoint, query, false, offset, limit, "s", "p", "o");
+
+        String vocab = Triple.produceTripleVocabulary(triples);
+        String path = CommonUtils.writeStringToFile(vocab, "vocab.rdf");
+
+        entities = CommonUtils.harvestEntitiesFromTriples(triples);
+
+        vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
+        vec.train();
+        vec.saveVectorSpace("embeddings/vectors.vec");
+    }
+
+    private void load() throws IOException {
+        if (vec == null || entities == null || triples == null) {
+            loadDataAndInit(defConfFilePath);
+            ///loadPreSavedData();
+        }
     }
 
     /**
@@ -81,9 +100,8 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoGet -- Search");
-        loadDataAndInit("C:\\xampp\\tomcat\\bin\\confs.json");
+        load();
         request.getRequestDispatcher("/search.jsp").forward(request, response);
-        return;
     }
 
     /**

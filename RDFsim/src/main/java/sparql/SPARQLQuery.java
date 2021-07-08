@@ -90,7 +90,7 @@ public class SPARQLQuery {
         ArrayList<Triple> totalTriples = new ArrayList<>();
         ArrayList<Triple> currTriples = null;
         
-        int limit = 10000;
+        int limit = (endLimit >= 10000) ? 10000 : endLimit ;//10000;
         int offset = startOffset;
 
         String query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
@@ -104,7 +104,7 @@ public class SPARQLQuery {
 
             totalTriples.addAll(currTriples);
             
-            if (limit > endLimit) {
+            if (limit >= endLimit) {
                 break;
             }
 
