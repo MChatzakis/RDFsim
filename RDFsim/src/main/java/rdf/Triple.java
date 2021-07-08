@@ -5,8 +5,12 @@
  */
 package rdf;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Scanner;
 import lombok.Data;
 
 /**
@@ -38,9 +42,31 @@ public class Triple {
         return result;
     }
 
-    public static void printTriples(Collection<Triple>triples){
-        for(Triple t : triples){
+    public static void printTriples(Collection<Triple> triples) {
+        for (Triple t : triples) {
             System.out.println(t.toString() + "\n");
         }
+    }
+
+    public static ArrayList<Triple> loadTriplesFromFile(String filepath) {
+        ArrayList<Triple> triples = new ArrayList<>();
+        try {
+            File f = new File(filepath);
+            Scanner scanner = new Scanner(f);
+
+            while (scanner.hasNext()) {
+                String s = scanner.next();
+                String p = scanner.next();
+                String o = scanner.next();
+
+                triples.add(new Triple(s, p, o));
+
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return triples;
     }
 }

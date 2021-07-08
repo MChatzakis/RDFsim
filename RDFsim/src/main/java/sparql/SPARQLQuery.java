@@ -104,7 +104,7 @@ public class SPARQLQuery {
 
             totalTriples.addAll(currTriples);
             
-            if (limit >= endLimit) {
+            if (limit > endLimit) {
                 break;
             }
 

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,21 +47,21 @@ public class SearchServlet extends HttpServlet {
     Word2VecEmbeddingCreator vec = null;
     HashMap<String, Entity> entities = null;
     ArrayList<Triple> triples = null;
+
     String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
-    private void initVectorSpace() {
-        vec = new Word2VecEmbeddingCreator("C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\vectors.vec");
-    }
-
     private void loadPreSavedData() {
+        String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.vec";
+        String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.vec";
+        String defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
 
+        vec = new Word2VecEmbeddingCreator(defVectorFilePath);
+        triples = Triple.loadTriplesFromFile(defTriplesFilePath);
+        entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
     }
 
-    private void loadDataAndInit(String confFilePath) throws IOException {
-        System.out.println("Search servlet initializing...");
-
-        JSONObject obj = new JSONObject(CommonUtils.getFileContent(confFilePath));
-        System.out.println("Loaded conf file: " + obj.toString());
+    private void loadDataAndInit(JSONObject obj) throws IOException {
+        System.out.println("Search servlet initializing with config data...");
 
         String endpoint = obj.getString("endpoint");
         String query = obj.getString("query");
@@ -79,13 +80,32 @@ public class SearchServlet extends HttpServlet {
 
         vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vec.train();
-        vec.saveVectorSpace("embeddings/vectors.vec");
+        vec.saveVectorSpace("vectors.vec");
     }
 
     private void load() throws IOException {
+
         if (vec == null || entities == null || triples == null) {
-            loadDataAndInit(defConfFilePath);
-            ///loadPreSavedData();
+            JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
+            System.out.println("Loaded conf file: " + obj.toString());
+
+            boolean useSample = obj.getBoolean("sample");
+
+            if (useSample) {
+                loadPreSavedData();
+            } else {
+                loadDataAndInit(obj);
+            }
+
+        }
+
+        printInfo();
+    }
+
+    private void printInfo() {
+        System.out.println("Available entities:");
+        for (Map.Entry<String, Entity> set : entities.entrySet()) {
+            System.out.println(set.getValue());
         }
     }
 

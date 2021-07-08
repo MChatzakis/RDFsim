@@ -24,6 +24,7 @@ function getElemValue(id) {
 function sendConf() {
 
     var config = {
+        sample: false,
         endpoint: getElemValue("endpointConf-id"),
         query: getElemValue("queryConf-id"),
         offset: getElemValue("offsetConf-id"),
@@ -35,6 +36,21 @@ function sendConf() {
         window.location.href = SEARCH_URL;
     });
 
+}
+
+function sendSample(){
+    var config = {
+        sample: true,
+        endpoint: "-",
+        query: "-",
+        offset: 0,
+        limit: 0,
+    };
+
+    sendAjaxWithPromise(config, CONF_URL).then(function (data) {
+        console.log("Data response from the server: " + JSON.stringify(data, null, 4));
+        window.location.href = SEARCH_URL;
+    });
 }
 
 function sendAjaxWithPromise(jsonData, URL) {

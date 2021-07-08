@@ -52,7 +52,7 @@ public class CommonUtils {
 
         return string;
     }
-
+    
     public static HashMap<String, Entity> harvestEntitiesFromTriples(ArrayList<Triple> triples) {
         HashMap<String, Entity> entities = new HashMap<>();
 
