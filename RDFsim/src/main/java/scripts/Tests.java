@@ -200,6 +200,10 @@ public class Tests {
         System.out.println(triples);
     }
 
+    public static void EnvironmentBuildUpTest(){
+        
+    }
+    
     public static void main(String[] args) throws IOException {
         //simpleExample();
         //createEmbeddingsW2v();
@@ -208,6 +212,6 @@ public class Tests {
 
         APIPresentationExample();
         SPARQLexamples();
-        //crashTest();
+        
     }
 }

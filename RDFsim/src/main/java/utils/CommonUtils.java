@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
+import rdf.Entity;
+import rdf.Triple;
 
 /**
  * Utilities class
@@ -38,6 +41,16 @@ public class CommonUtils {
         return file.getAbsolutePath();
     }
 
+    public static HashMap<String,Entity> harvestEntitiesFromTriples(ArrayList<Triple>triples){
+         HashMap<String,Entity>entities = null;
+        
+        for(Triple t : triples){
+            entities.put(t.getS(), new Entity(t.getS()));
+        }
+        
+        return entities;
+    }
+    
     public static void printEntityMap(HashMap<String, Double> map) {
         //map.forEach((key, value) -> System.out.println(key + ":" + value)); //why is Java 7 enabled?????????
         for (Map.Entry<String, Double> entry : map.entrySet()) {

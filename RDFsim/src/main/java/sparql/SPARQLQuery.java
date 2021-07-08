@@ -9,21 +9,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import rdf.Triple;
 
 /**
- * Class trying to provide functionality for any SPARQL endpoint/query (not only triples)
- * (OnGoing)
+ * Class trying to provide functionality for any SPARQL endpoint/query (not only
+ * triples) (OnGoing)
+ *
  * @author Manos Chatzakis
  */
 public class SPARQLQuery {
+
     public JSONObject getRawJSONData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, IOException {
 
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
-        
+
         URL url = new URL(sparqlQueryURL);
         URLConnection con = url.openConnection();
-        
+
         String json = "application/sparql-results+json";
         con.setRequestProperty("ACCEPT", json);
 
@@ -44,7 +49,49 @@ public class SPARQLQuery {
         return new JSONObject(resultsString);
     }
 
-    public void parseRawJSONData(JSONObject rawData, String [] keys){
-        
+    public ArrayList<Triple> getTriplesFromRawData(JSONObject raw, boolean formatTriples, String subject, String predicate, String object) {
+        ArrayList<Triple> triples = new ArrayList<>();
+
+        JSONObject results = raw.getJSONObject("results");
+        JSONArray bindings = results.getJSONArray("bindings");
+
+        String s = "";
+        String p = "";
+        String o = "";
+
+        //String triplesText = "";
+        for (int i = 0; i < bindings.length(); i++) {
+            JSONObject jsonTriple = bindings.getJSONObject(i);
+
+            if (formatTriples) {
+                s = formatDBpediaURI(jsonTriple.getJSONObject(subject).getString("value"));
+                p = formatDBpediaURI(jsonTriple.getJSONObject(predicate).getString("value"));
+                o = formatDBpediaURI(jsonTriple.getJSONObject(object).getString("value"));
+            } else {
+                s = jsonTriple.getJSONObject(subject).getString("value");
+                p = jsonTriple.getJSONObject(predicate).getString("value");
+                o = jsonTriple.getJSONObject(object).getString("value");
+            }
+
+            //String triple = s + " " + p + " " + o + " ,\n";
+            //triplesText += triple;
+            triples.add(new Triple(s, p, o));
+        }
+
+        return triples;
+    }
+
+    public String formatDBpediaURI(String URI) {
+
+        String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
+        String[] parts;
+        String result = URI;
+
+        for (String s : splitters) {
+            parts = result.split(s);
+            result = parts[parts.length - 1];
+        }
+
+        return result;
     }
 }
