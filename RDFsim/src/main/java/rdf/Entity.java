@@ -5,6 +5,7 @@
  */
 package rdf;
 
+import java.util.Collection;
 import lombok.Data;
 
 /**
@@ -15,13 +16,22 @@ import lombok.Data;
 public class Entity {
 
     private String URI;
-    
-    public Entity(String URI){
+
+    public Entity(String URI) {
         this.URI = URI;
     }
-    
+
     public String toString() {
         return this.getURI();
     }
-    
+
+    public static String getEntitiesAsString(Collection<Entity> entities) {
+        String res = "";
+        for (Entity t : entities) {
+            //System.out.println(t.toString() + "\n");
+            res += t.toString() + "\n";
+        }
+
+        return res;
+    }
 }

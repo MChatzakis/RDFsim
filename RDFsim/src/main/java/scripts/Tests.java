@@ -99,7 +99,7 @@ public class Tests {
         /*STEP C: Retrieve the data, selecting the first 30.000 triples of philosophers. Note that triple formatting is tested for DBpedia*/
         SPARQLTripleRetriever tr = new SPARQLTripleRetriever();
         /*Iterative method that collects queries in sets of 10k*/
-        String triples = tr.getTriples(SPARQLendpoint, baseQuery, true, 0, 100, "s", "p", "o");
+        String triples = tr.getTriples(SPARQLendpoint, baseQuery, false, 0, 100, "s", "p", "o");
 
 
         /*STEP D: Save the data to a file and get the absoulte file path*/
@@ -199,10 +199,6 @@ public class Tests {
 
         System.out.println(triples);
     }
-
-    public static void EnvironmentBuildUpTest(){
-        
-    }
     
     public static void main(String[] args) throws IOException {
         //simpleExample();
@@ -211,7 +207,7 @@ public class Tests {
         //createEmbeddingsw2v("DBpedia.rdf");
 
         APIPresentationExample();
-        SPARQLexamples();
+        //SPARQLexamples();
         
     }
 }

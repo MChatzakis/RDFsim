@@ -6,6 +6,7 @@
 package rdf;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import lombok.Data;
 
 /**
@@ -37,5 +38,9 @@ public class Triple {
         return result;
     }
 
-    
+    public static void printTriples(Collection<Triple>triples){
+        for(Triple t : triples){
+            System.out.println(t.toString() + "\n");
+        }
+    }
 }

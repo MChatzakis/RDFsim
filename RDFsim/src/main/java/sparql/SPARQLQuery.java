@@ -81,6 +81,39 @@ public class SPARQLQuery {
         return triples;
     }
 
+    public ArrayList<Triple> getTriples(String endpoint, String query, boolean formatTriples, String s, String p, String o) throws MalformedURLException, IOException {
+        JSONObject raw = getRawJSONData(endpoint, query);
+        return getTriplesFromRawData(raw, formatTriples, s, p, o);
+    }
+
+    public ArrayList<Triple> getTriples(String endpoint, String baseQuery, boolean formatTriples, int startOffset, int endLimit, String s, String p, String o) throws IOException {
+        ArrayList<Triple> totalTriples = new ArrayList<>();
+        ArrayList<Triple> currTriples = null;
+        
+        int limit = 10000;
+        int offset = startOffset;
+
+        String query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
+
+        while (!(currTriples = getTriples(endpoint, query, formatTriples, s, p, o)).isEmpty()) {
+            
+            System.out.println("Offset: " + offset + " Limit: " + limit);
+            
+            offset += currTriples.size();
+            limit += 10000;
+
+            totalTriples.addAll(currTriples);
+            
+            if (limit > endLimit) {
+                break;
+            }
+
+            query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
+        }
+
+        return totalTriples;
+    }
+
     public String formatDBpediaURI(String URI) {
 
         String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!

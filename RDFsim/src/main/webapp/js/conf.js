@@ -1,49 +1,53 @@
-var url = "http://localhost:8080/RDFsim/ConfServlet";
+const CONF_URL = "http://localhost:8080/RDFsim/ConfServlet";
+const SEARCH_URL = "http://localhost:8080/RDFsim/ConfServlet";
 
+function getElem(id) {
+    return document.getElementById(id);
+}
+
+function hideElem(id) {
+    getElem(id).style.display = "none";
+}
+
+function clearElem(id) {
+    getElem(id).innerHTML = "";
+}
+
+function showElem(id) {
+    getElem(id).style.display = "block";
+}
+
+function getElemValue(id) {
+    return getElem(id).value;
+}
+
+function senfConf() {
+
+    var config = {
+        endpoint: getElemValue("endpointConf-id"),
+        query: getElemValue("queryConf-id"),
+        offset: getElemValue("offsetConf-id"),
+        limit: getElemValue("limitConf-id"),
+    };
+
+    sendAjaxWithPromise(config,CONF_URL).then(function (data) {
+        console.log("Data response from the server: " + JSON.stringify(data, null, 4));
+        window.location.href = SEARCH_URL;
+    });
+
+}
+
+function sendAjaxWithPromise(jsonData, URL) {
+    console.log("Data to sent: " + JSON.stringify(jsonData, null, 4));
+    return $.ajax({
+        type: "POST",
+        url: URL,
+        data: jsonData,
+        dataType: "json"
+    });
+}
 
 $(document).ready(function () {
-    //what we should do when doc is ready?
 
 });
 
-function sendConf() {
-  var jsonForm = {
-    category: "configurations",
-    sparql_endpoint: $("input[name=sparql]").val(),
-  };
-
-  console.log("Form: " + jsonForm);
-  sendForm(jsonForm, "#conf-form");
-}
-
-function sendForm(jsonForm, id) {
-  console.log("Sending Form");
-  $(id).submit(function (event) {
-    $.ajax({
-      type: "POST" /*POST request*/,
-      url: url,
-      data: jsonForm,
-      dataType: "json",
-      success: function (results) {
-        return results;
-      },
-    }).done(function (data) {
-      console.log(data);
-    });
-  });
-}
-
-function sendXmlForm(url, reqID, formData) {
-  var request = new XMLHttpRequest();
-  request.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-        //callbacks
-    }
-  };
-  request.open("POST", url);
-  request.setRequestHeader(
-    "Content-Type",
-    "application/x-www-form-urlencoded;"
-  );
-  request.send(formData);
-}

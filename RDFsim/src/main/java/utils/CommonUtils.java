@@ -41,16 +41,25 @@ public class CommonUtils {
         return file.getAbsolutePath();
     }
 
-    public static HashMap<String,Entity> harvestEntitiesFromTriples(ArrayList<Triple>triples){
-         HashMap<String,Entity>entities = null;
-        
-        for(Triple t : triples){
-            entities.put(t.getS(), new Entity(t.getS()));
+    public static HashMap<String, Entity> harvestEntitiesFromTriples(ArrayList<Triple> triples) {
+        HashMap<String, Entity> entities = null;
+
+        for (Triple t : triples) {
+            String s = t.getS();
+            String p = t.getP();
+            String o = t.getO();
+
+            entities.put(s, new Entity(s)); //Duplicates avoided using the hashMap
+
+            if (!isClass(p) && !isURI(o)) {
+                entities.put(o, new Entity(o)); //Duplicates avoided using the hashMap
+            }
+
         }
-        
+
         return entities;
     }
-    
+
     public static void printEntityMap(HashMap<String, Double> map) {
         //map.forEach((key, value) -> System.out.println(key + ":" + value)); //why is Java 7 enabled?????????
         for (Map.Entry<String, Double> entry : map.entrySet()) {
@@ -89,11 +98,17 @@ public class CommonUtils {
         return mapObj;
     }
 
-    public static JSONObject entityMapToJSONGraph(String entity ,HashMap<String, Double> similarsOfCurrEntity, int i) {
+    public static JSONObject entityMapToJSONGraph(String entity, HashMap<String, Double> similarsOfCurrEntity, int i) {
         JSONObject g = new JSONObject();
-        
-        
-        
+
         return g;
+    }
+
+    public static boolean isURI(String s) {
+        return (s.startsWith("http"));
+    }
+    
+    public static boolean isClass(String s) {
+        return s.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     }
 }
