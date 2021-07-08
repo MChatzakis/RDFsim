@@ -42,13 +42,13 @@
             <!-- Offset -->
             <div class = "offset" id = "offset-id">
                 <p>Offset:</p>
-                <input type="input" id="offset-id" placeholder="Insert Endpoint"/>
+                <input type="input" id="offsetConf-id" placeholder="Insert Endpoint"/>
             </div>
 
             <!-- Limit -->
             <div class = "limit" id = "limit-id">
                 <p>Limit:</p>
-                <input type="input" id="limit-id" placeholder="Insert Limit"/>
+                <input type="input" id="limitConf-id" placeholder="Insert Limit"/>
             </div>
 
             <!-- Send button -->

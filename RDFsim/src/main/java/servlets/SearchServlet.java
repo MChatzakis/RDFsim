@@ -6,6 +6,7 @@
 package servlets;
 
 import embeddings.Word2VecEmbeddingCreator;
+import java.io.File;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
@@ -43,11 +44,30 @@ public class SearchServlet extends HttpServlet {
 
     public SearchServlet() {
         super();
-        initVectorSpace();
+        //loadDataAndInit("conf.json");
     }
 
     private void initVectorSpace() {
         vec = new Word2VecEmbeddingCreator("C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\vectors.vec");
+    }
+
+    private void loadPreSavedData() {
+
+    }
+
+    private void loadDataAndInit(String confFilePath) throws IOException {
+        System.out.println("Search servlet initializing...");
+
+        JSONObject obj = new JSONObject(CommonUtils.getFileContent(confFilePath));
+        System.out.println("Loaded conf file: " + obj.toString());
+        
+        String endpoint = obj.getString("endpoint");
+        String query = obj.getString("query");
+        
+        int limit = obj.getInt("limit");
+        int offset = obj.getInt("offset");
+        
+        
     }
 
     /**
@@ -61,6 +81,7 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("DoGet -- Search");
+        loadDataAndInit("C:\\xampp\\tomcat\\bin\\confs.json");
         request.getRequestDispatcher("/search.jsp").forward(request, response);
         return;
     }
@@ -174,8 +195,8 @@ public class SearchServlet extends HttpServlet {
         Queue<String> queue = new LinkedList<>();
         queue.add(mainEntity);
 
-        while (!queue.isEmpty() && cD < depth*count) { //just for testing, need to add levels there
-            
+        while (!queue.isEmpty() && cD < depth * count) { //just for testing, need to add levels there
+
             //System.out.println("A: " + counter + "M:" + depth*count);
             String currEn = queue.remove();
 
@@ -196,10 +217,10 @@ public class SearchServlet extends HttpServlet {
                 //from currEn to ajd link!
                 queue.add(adj);
             }
-            
+
             nodeInfo.put("links", links);
             graph.put(currEn, nodeInfo);
-            cD++; 
+            cD++;
         }
 
         return graph;

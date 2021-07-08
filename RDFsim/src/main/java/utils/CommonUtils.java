@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +42,15 @@ public class CommonUtils {
         }
 
         return file.getAbsolutePath();
+    }
+
+    public static String getFileContent(String filePath) throws IOException {
+        Charset encoding = Charset.defaultCharset();
+
+        byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+        String string = new String(bytes, encoding);
+
+        return string;
     }
 
     public static HashMap<String, Entity> harvestEntitiesFromTriples(ArrayList<Triple> triples) {
@@ -107,7 +119,7 @@ public class CommonUtils {
     public static boolean isURI(String s) {
         return (s.startsWith("http"));
     }
-    
+
     public static boolean isClass(String s) {
         return s.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     }

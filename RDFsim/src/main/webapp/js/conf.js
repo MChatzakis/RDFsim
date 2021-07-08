@@ -1,5 +1,5 @@
 const CONF_URL = "http://localhost:8080/RDFsim/ConfServlet";
-const SEARCH_URL = "http://localhost:8080/RDFsim/ConfServlet";
+const SEARCH_URL = "http://localhost:8080/RDFsim/SearchServlet";
 
 function getElem(id) {
     return document.getElementById(id);
@@ -21,7 +21,7 @@ function getElemValue(id) {
     return getElem(id).value;
 }
 
-function senfConf() {
+function sendConf() {
 
     var config = {
         endpoint: getElemValue("endpointConf-id"),
@@ -30,7 +30,7 @@ function senfConf() {
         limit: getElemValue("limitConf-id"),
     };
 
-    sendAjaxWithPromise(config,CONF_URL).then(function (data) {
+    sendAjaxWithPromise(config, CONF_URL).then(function (data) {
         console.log("Data response from the server: " + JSON.stringify(data, null, 4));
         window.location.href = SEARCH_URL;
     });
@@ -48,6 +48,6 @@ function sendAjaxWithPromise(jsonData, URL) {
 }
 
 $(document).ready(function () {
-
+    console.log("Conf document ready");
 });
 
