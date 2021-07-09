@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sparql;
 
 import java.io.BufferedReader;
@@ -13,17 +8,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utils.CommonUtils;
 
 /**
- *
+ * Class providing methods to retrieve data from REST and Virtuoso endpoints.
+ * TODO: Update retrieval methods to also create a list of Entities (rdf.entities) -- ONGOING
+ * 
  * @author Manos Chatzakis
  */
 public class SPARQLQuery {
@@ -59,9 +52,8 @@ public class SPARQLQuery {
         JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
         String res = "";
-        
+
         //System.out.println(rawData.toString(2));
-        
         for (int i = 0; i < data.length(); i++) {
             for (int k = 0; k < vars.length(); k++) {
                 res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
@@ -121,14 +113,5 @@ public class SPARQLQuery {
         }
 
         return result;
-    }
-
-    public static void main(String[] args) throws Exception {
-        //System.out.println(new SPARQLQuery().retrieveData("https://dbpedia.org/sparql", "select  * where {?s ?p ?o .} limit 5").toString(2));
-        //System.out.println(new SPARQLQuery().retrieveData("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01", "select  * where {?s ?p ?o .} limit 5").toString(2));
-
-        SPARQLQuery q = new SPARQLQuery();
-        String data = q.getData("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01", "select  * where {?s ?p ?o .}",5000,0);
-        CommonUtils.writeStringToFile(data, "triples/example.rdf");
     }
 }

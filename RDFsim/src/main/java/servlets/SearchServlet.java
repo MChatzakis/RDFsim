@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import rdf.Entity;
-import rdf.Triple;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -46,18 +45,17 @@ public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
     HashMap<String, Entity> entities = null;
-    ArrayList<Triple> triples = null;
 
     String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
     private void loadPreSavedData() {
-        String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.rdf";
-        String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.rdf";
+        //String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.rdf";
+        //String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.rdf";
+        
         String defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
-
         vec = new Word2VecEmbeddingCreator(defVectorFilePath);
-        triples = Triple.loadTriplesFromFile(defTriplesFilePath);
-        entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
+        
+        //entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
     }
 
     private void loadDataAndInit(JSONObject obj) throws IOException {
@@ -69,14 +67,11 @@ public class SearchServlet extends HttpServlet {
         int limit = obj.getInt("limit");
         int offset = obj.getInt("offset");
 
-        SPARQLVirtuosoClient sq = new SPARQLVirtuosoClient();
+        SPARQLQuery sq = new SPARQLQuery();
 
-        triples = sq.getTriples(endpoint, query, false, offset, limit, "s", "p", "o");
+        String vocab = sq.getData(endpoint, query, offset, limit);
 
-        String vocab = Triple.produceTripleVocabulary(triples);
         String path = CommonUtils.writeStringToFile(vocab, "vocab.rdf");
-
-        entities = CommonUtils.harvestEntitiesFromTriples(triples);
 
         vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vec.train();
@@ -85,7 +80,7 @@ public class SearchServlet extends HttpServlet {
 
     private void load() throws IOException {
 
-        if (vec == null || entities == null || triples == null) {
+        if (vec == null) {  //  || entities == null || triples == null) { 
             JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
             System.out.println("Loaded conf file: " + obj.toString());
 
@@ -103,10 +98,10 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void printInfo() {
-        System.out.println("Available entities:");
+        /*System.out.println("Available entities:");
         for (Map.Entry<String, Entity> set : entities.entrySet()) {
             System.out.println(set.getValue());
-        }
+        }*/
     }
 
     /**

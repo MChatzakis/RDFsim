@@ -23,8 +23,6 @@ public class Entity {
     private String URI;
     private double[] vector;
 
-    ArrayList<Triple> triples;
-
     public Entity(String URI) {
         this.URI = URI;
     }

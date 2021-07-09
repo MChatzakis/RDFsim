@@ -19,10 +19,9 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
 import rdf.Entity;
-import rdf.Triple;
 
 /**
- * Utilities class
+ * Utilities class (Common Methods)
  *
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
@@ -52,26 +51,7 @@ public class CommonUtils {
 
         return string;
     }
-    
-    public static HashMap<String, Entity> harvestEntitiesFromTriples(ArrayList<Triple> triples) {
-        HashMap<String, Entity> entities = new HashMap<>();
-
-        for (Triple t : triples) {
-            String s = t.getS();
-            String p = t.getP();
-            String o = t.getO();
-
-            entities.put(s, new Entity(s)); //Duplicates avoided using the hashMap
-
-            if (!isClass(p) && !isURI(o)) {
-                entities.put(o, new Entity(o)); //Duplicates avoided using the hashMap
-            }
-
-        }
-
-        return entities;
-    }
-
+   
     public static void printEntityMap(HashMap<String, Double> map) {
         //map.forEach((key, value) -> System.out.println(key + ":" + value)); //why is Java 7 enabled?????????
         for (Map.Entry<String, Double> entry : map.entrySet()) {

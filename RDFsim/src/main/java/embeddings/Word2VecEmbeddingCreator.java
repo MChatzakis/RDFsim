@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import lombok.Data;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
+import org.deeplearning4j.models.word2vec.wordstore.VocabCache;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.sentenceiterator.LineSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
@@ -102,4 +103,7 @@ public class Word2VecEmbeddingCreator {
         return vec.wordsNearest(ents2sub, ents2sub, count);
     }
 
+    public Collection<String> getVocab() {
+        return vec.getVocab().words();
+    }
 }
