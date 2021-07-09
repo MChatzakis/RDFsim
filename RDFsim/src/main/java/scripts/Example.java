@@ -32,7 +32,7 @@ public class Example {
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
-        
+
         String entity = "http://dbpedia.org/resource/Cassius_Longinus_(philosopher)";
         Collection<String> similars = vects.getSimilarEntities(entity, 5);
         System.out.println("Similars of " + entity + " " + similars);
@@ -47,13 +47,42 @@ public class Example {
         System.out.println("Similarity (cosine): " + sim);
     }
 
-    public static void loadPreSaved(){
+    public static void loadPreSaved() {
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator("embeddings/VectorSample_Philosophers.vec");
         System.out.println(vects.getVocab());
     }
-    
+
+    public static void createDBpediaSample() throws IOException {
+        String dbPediaEndpoint = "https://dbpedia.org/sparql";
+        String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+
+        SPARQLQuery sq = new SPARQLQuery();
+        String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 50000, 0);
+
+        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
+
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
+        vects.train();
+
+        vects.saveVectorSpace("embeddings/VectorSample_Philosophers.vec");
+    }
+
+    public static void createAriadneSample() throws IOException {
+        String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
+        String ariadneQuery = "select  * where {?s ?p ?o .}";
+        SPARQLQuery sq = new SPARQLQuery();
+        String vocab = sq.getData(ariadneEndpoint, ariadneQuery, 500, 0);
+
+        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
+
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
+        vects.train();
+    }
+
     public static void main(String[] args) throws IOException {
-        classicExample();
+        //classicExample();
         //loadPreSaved();
+        createDBpediaSample();
+        //createAriadneSample();
     }
 }
