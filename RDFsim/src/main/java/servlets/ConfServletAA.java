@@ -18,7 +18,7 @@ import utils.CommonUtils;
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @WebServlet(name = "ConfServlet", urlPatterns = {"/ConfServlet"})
-public class ConfServlet extends HttpServlet {
+public class ConfServletAA extends HttpServlet {
     
     /**
      * Handles the HTTP <code>GET</code> method.
