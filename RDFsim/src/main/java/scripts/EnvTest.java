@@ -8,11 +8,12 @@ package scripts;
 import embeddings.Word2VecEmbeddingCreator;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import rdf.Entity;
 import rdf.Triple;
-import sparql.SPARQLQuery;
+import sparql.SPARQLVirtuosoClient;
 import utils.CommonUtils;
 
 /**
@@ -21,30 +22,49 @@ import utils.CommonUtils;
  */
 public class EnvTest {
 
-    public static void basicTest() throws IOException {
-        String SPARQLendpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01l";
-        String baseQuery = "select  * where {?s ?p ?o . }";
+    public static void exampleDBpedia() throws IOException {
+        /*STEP A: Select a SPARQL endpoint*/
+        String SPARQLendpoint = "https://dbpedia.org/sparql";
 
-        SPARQLQuery sq = new SPARQLQuery();
-        ArrayList<Triple> triples = sq.getTriples(SPARQLendpoint, baseQuery, false, 0, 10, "s", "p", "o");
-
-        for (Triple t : triples) {
-            System.out.println(t.toString());
-        }
         /*
-        String vocab = Triple.produceTripleVocabulary(triples);
-        String path = CommonUtils.writeStringToFile(vocab, "triples/vocab.rdf");
-        
-        HashMap<String, Entity> entityMap = CommonUtils.harvestEntitiesFromTriples(triples);
-        /*for (Map.Entry<String, Entity> set : entityMap.entrySet()) {
+        STEP B: Create a model base query (Base queries: Queries without offset and limit.
+        Note: Use simple "getTriple" method for complete queries with limits and offsets. 
+        Example: Select All triples of philosophers, excluding literals.
+         */
+        String baseQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
-            System.out.println(set.getValue());
-        }
-        
+        /*STEP C: Retrieve the data, selecting the first $(LIMIT) triples of philosophers. Note that triple formatting is tested for DBpedia*/
+        SPARQLVirtuosoClient sq = new SPARQLVirtuosoClient();
+        ArrayList<Triple> triples = sq.getTriples(SPARQLendpoint, baseQuery, true, 0, 30000, "s", "p", "o");
+
+        /*STEP D: Save the data to a file and get the absoulte file path*/
+        String path = CommonUtils.writeStringToFile(Triple.produceTripleVocabulary(triples), "triples/exampleTriples.rdf");
+
+        /*STEP E: Use the saved file as a vocabulary for word2vec after instanciation, and train the model*/
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
-        vects.saveVectorSpace("embeddings/vectors.vec");*/
 
+        /*STEP F: Save the produce embeddings for future use*/
+        vects.saveVectorSpace("embeddings/vectors.vec");
+
+        /*STEP G: Apply operations using the vector space of embeddings*/
+        //Find the 5 most similar entities of Damascius
+        String entity = "Damascius";
+        Collection<String> similars = vects.getSimilarEntities(entity, 5);
+        System.out.println("Similars of " + entity + " " + similars);
+
+        //Find the similarity number of two Philosopher
+        double sim = vects.calculateCosineSimilarity("Philip_of_Opus", "Proklos");
+        System.out.println("Similarity (cosine): " + sim);
+
+        HashMap<String, Double> topEntitiesOfPhilosopher = vects.getSimilarEntitiesWithValues("Aristotle", 20);
+        CommonUtils.printEntityMap(topEntitiesOfPhilosopher);
+
+        sim = vects.calculateCosineSimilarity("Socrates", "Proklos");
+        System.out.println("Similarity (cosine): " + sim);
+
+        /*NOTE: The vector space could be reloaded using the following line*/
+        //Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator("vectors.vec");
     }
 
     public static void createSamples() throws IOException {
@@ -57,7 +77,7 @@ public class EnvTest {
 
         System.out.println("Started creating samples...");
 
-        SPARQLQuery sq = new SPARQLQuery();
+        SPARQLVirtuosoClient sq = new SPARQLVirtuosoClient();
         ArrayList<Triple> triples = sq.getTriples(SPARQLendpoint, baseQuery, false, 0, 30000, "s", "p", "o");
         HashMap<String, Entity> entities = CommonUtils.harvestEntitiesFromTriples(triples);
 
@@ -88,7 +108,7 @@ public class EnvTest {
     }
 
     public static void main(String[] args) throws IOException {
-        //basicTest();
-        createSamples();
+        exampleDBpedia();
+        //createSamples();
     }
 }

@@ -51,8 +51,8 @@ public class SearchServlet extends HttpServlet {
     String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
     private void loadPreSavedData() {
-        String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.vec";
-        String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.vec";
+        String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.rdf";
+        String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.rdf";
         String defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
 
         vec = new Word2VecEmbeddingCreator(defVectorFilePath);
@@ -69,7 +69,7 @@ public class SearchServlet extends HttpServlet {
         int limit = obj.getInt("limit");
         int offset = obj.getInt("offset");
 
-        SPARQLQuery sq = new SPARQLQuery();
+        SPARQLVirtuosoClient sq = new SPARQLVirtuosoClient();
 
         triples = sq.getTriples(endpoint, query, false, offset, limit, "s", "p", "o");
 
@@ -178,16 +178,6 @@ public class SearchServlet extends HttpServlet {
 
         out.print(data2sent);
         out.flush();
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Search Servlet";
     }
 
     public JSONObject getSimilarEntities(String entity, int count) {

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package sparql;
 
 import java.io.BufferedReader;
@@ -5,34 +10,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import rdf.Triple;
+import utils.CommonUtils;
 
 /**
- * Class trying to provide functionality for any SPARQL endpoint/query (not only
- * triples) (OnGoing)
  *
  * @author Manos Chatzakis
  */
 public class SPARQLQuery {
 
-    public JSONObject getRawJSONData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, IOException {
-
+    public JSONObject retrieveData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, ProtocolException, IOException {
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
-
         URL url = new URL(sparqlQueryURL);
-        URLConnection con = url.openConnection();
 
-        String json = "application/sparql-results+json";
-        con.setRequestProperty("ACCEPT", json);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        InputStream is = con.getInputStream();
+        conn.setRequestProperty("ACCEPT", "application/sparql-results+json");
+        conn.setRequestMethod("GET");
+        conn.connect();
+
+        InputStream is = conn.getInputStream();
         InputStreamReader isr = new InputStreamReader(is, "utf8");
         BufferedReader in = new BufferedReader(isr);
 
@@ -49,61 +55,46 @@ public class SPARQLQuery {
         return new JSONObject(resultsString);
     }
 
-    public ArrayList<Triple> getTriplesFromRawData(JSONObject raw, boolean formatTriples, String subject, String predicate, String object) {
-        ArrayList<Triple> triples = new ArrayList<>();
-
-        JSONObject results = raw.getJSONObject("results");
-        JSONArray bindings = results.getJSONArray("bindings");
-
-        String s = "";
-        String p = "";
-        String o = "";
-
-        //String triplesText = "";
-        for (int i = 0; i < bindings.length(); i++) {
-            JSONObject jsonTriple = bindings.getJSONObject(i);
-
-            if (formatTriples) {
-                s = formatDBpediaURI(jsonTriple.getJSONObject(subject).getString("value"));
-                p = formatDBpediaURI(jsonTriple.getJSONObject(predicate).getString("value"));
-                o = formatDBpediaURI(jsonTriple.getJSONObject(object).getString("value"));
-            } else {
-                s = jsonTriple.getJSONObject(subject).getString("value");
-                p = jsonTriple.getJSONObject(predicate).getString("value");
-                o = jsonTriple.getJSONObject(object).getString("value");
+    public String parseData(JSONObject rawData) {
+        JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
+        JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
+        String res = "";
+        
+        //System.out.println(rawData.toString(2));
+        
+        for (int i = 0; i < data.length(); i++) {
+            for (int k = 0; k < vars.length(); k++) {
+                res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
             }
 
-            //String triple = s + " " + p + " " + o + " ,\n";
-            //triplesText += triple;
-            triples.add(new Triple(s, p, o));
+            res += ".\n";
         }
-
-        return triples;
+        return res;
     }
 
-    public ArrayList<Triple> getTriples(String endpoint, String query, boolean formatTriples, String s, String p, String o) throws MalformedURLException, IOException {
-        JSONObject raw = getRawJSONData(endpoint, query);
-        return getTriplesFromRawData(raw, formatTriples, s, p, o);
+    public String getData(String endpoint, String query) throws MalformedURLException, ProtocolException, IOException {
+        return parseData(retrieveData(endpoint, query));
     }
 
-    public ArrayList<Triple> getTriples(String endpoint, String baseQuery, boolean formatTriples, int startOffset, int endLimit, String s, String p, String o) throws IOException {
-        ArrayList<Triple> totalTriples = new ArrayList<>();
-        ArrayList<Triple> currTriples = null;
-        
-        int limit = (endLimit >= 10000) ? 10000 : endLimit ;//10000;
+    public String getData(String endpoint, String baseQuery, int endLimit, int startOffset) throws ProtocolException, IOException {
+        String totalData = "";
+        String currData = "";
+
+        int step = 10000;
+        int limit = (endLimit >= step) ? step : endLimit;
         int offset = startOffset;
 
         String query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
 
-        while (!(currTriples = getTriples(endpoint, query, formatTriples, s, p, o)).isEmpty()) {
-            
-            System.out.println("Offset: " + offset + " Limit: " + limit);
-            
-            offset += currTriples.size();
-            limit += 10000;
+        while (!(currData = getData(endpoint, query)).equals("")) {
 
-            totalTriples.addAll(currTriples);
-            
+            System.out.println("Offset: " + offset + " Limit: " + limit);
+
+            totalData += currData;
+
+            offset += step;
+            limit += step;
+
             if (limit > endLimit) {
                 break;
             }
@@ -111,7 +102,11 @@ public class SPARQLQuery {
             query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
         }
 
-        return totalTriples;
+        return totalData;
+    }
+
+    public String getAllData(String endpoint, String baseQuery) throws IOException {
+        return getData(endpoint, baseQuery, Integer.MAX_VALUE, 0);
     }
 
     public String formatDBpediaURI(String URI) {
@@ -126,5 +121,14 @@ public class SPARQLQuery {
         }
 
         return result;
+    }
+
+    public static void main(String[] args) throws Exception {
+        //System.out.println(new SPARQLQuery().retrieveData("https://dbpedia.org/sparql", "select  * where {?s ?p ?o .} limit 5").toString(2));
+        //System.out.println(new SPARQLQuery().retrieveData("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01", "select  * where {?s ?p ?o .} limit 5").toString(2));
+
+        SPARQLQuery q = new SPARQLQuery();
+        String data = q.getData("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01", "select  * where {?s ?p ?o .}",5000,0);
+        CommonUtils.writeStringToFile(data, "triples/example.rdf");
     }
 }

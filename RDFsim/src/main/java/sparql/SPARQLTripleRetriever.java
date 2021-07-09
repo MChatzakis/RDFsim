@@ -95,7 +95,6 @@ public class SPARQLTripleRetriever {
     }
 
     public String formatDBpediaURI(String URI) {
-
         String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
         String[] parts;
         String result = URI;

@@ -99,7 +99,6 @@ public class Word2VecEmbeddingCreator {
     }
 
     public Collection<String> getExpressionResult(Collection<String> ents2add, Collection<String> ents2sub, int count) {
-        //for expressions ent1 + ent2 - ent3 ... 
         return vec.wordsNearest(ents2sub, ents2sub, count);
     }
 
