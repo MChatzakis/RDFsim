@@ -45,9 +45,9 @@ public class ConfServlet extends HttpServlet {
 
         String url2go = "http://localhost:8080/RDFsim/ConfServlet";
         
-        boolean sample = Boolean.parseBoolean(request.getParameter("sample"));
         String endpoint = request.getParameter("endpoint");
         String query = request.getParameter("query");
+        int sample = Integer.parseInt(request.getParameter("sample"));
         int offset = Integer.parseInt(request.getParameter("offset"));
         int limit = Integer.parseInt(request.getParameter("limit"));
 
@@ -57,7 +57,7 @@ public class ConfServlet extends HttpServlet {
         conf.put("offset", offset);
         conf.put("limit", limit);
         conf.put("sample", sample);
-
+        
         String path = CommonUtils.writeStringToFile(conf.toString(2), "confs.json");
 
         System.out.println("Conf Servlet recieved saved the configurations below: " + conf.toString(2) + "to path: " + path);

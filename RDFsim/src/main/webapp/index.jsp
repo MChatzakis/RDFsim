@@ -19,6 +19,7 @@
     </head>
 
     <body>
+
         <!-- Title -->
         <div class = "title" id = "title-id">
             <h3>RDFsim Configuration</h3>
@@ -60,9 +61,16 @@
             <!-- Configurations End-->
         </div>
 
-        <!-- Presaved Sample load -->
+        <!-- Presaved DBpedia Sample load -->
         <div>
-             <button class = "sampleButton" id = "sampleButton-id" onclick="sendSample();">Load Sample</button>
+            <p>Presaved DBpedia Sample</p>
+            <button class = "dbPediaSampleButton" id = "dbPediaSampleButton-id" onclick="loadDBPediaSample();">Load!</button>
+        </div>
+
+        <!-- Presaved Ariadne Sample load -->
+        <div>
+            <p>Presaved Ariadne Sample</p>
+            <button class = "ariadneSampleButton" id = "ariadneSampleButton-id" onclick="loadAriadneSample();">Load!</button>
         </div>
 
     </body>

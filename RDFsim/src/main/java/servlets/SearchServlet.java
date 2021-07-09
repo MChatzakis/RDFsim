@@ -48,14 +48,23 @@ public class SearchServlet extends HttpServlet {
 
     String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
-    private void loadPreSavedData() {
-        //String defTriplesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\triples\\TripleSample_Philosophers.rdf";
-        //String defEntitiesFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\entities\\EntitySample_Philosophers.rdf";
+    private void loadPreSavedData(int sampleCode) {
         
-        String defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
-        vec = new Word2VecEmbeddingCreator(defVectorFilePath);
-        
+        String defVectorFilePath = "";
+
         //entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
+        switch (sampleCode) {
+        /*DBpedia*/
+        case 1:
+            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
+            break;
+        /*Ariadne*/
+        case 2:
+            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\AriadneVectorSample.vec";
+            break;
+        }
+
+        vec = new Word2VecEmbeddingCreator(defVectorFilePath);
     }
 
     private void loadDataAndInit(JSONObject obj) throws IOException {
@@ -84,10 +93,10 @@ public class SearchServlet extends HttpServlet {
             JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
             System.out.println("Loaded conf file: " + obj.toString());
 
-            boolean useSample = obj.getBoolean("sample");
+            int sampleCode = obj.getInt("sample");
 
-            if (useSample) {
-                loadPreSavedData();
+            if (sampleCode > 0) {
+                loadPreSavedData(sampleCode);
             } else {
                 loadDataAndInit(obj);
             }
@@ -98,10 +107,11 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void printInfo() {
-        /*System.out.println("Available entities:");
-        for (Map.Entry<String, Entity> set : entities.entrySet()) {
-            System.out.println(set.getValue());
-        }*/
+       Collection<String>v = vec.getVocab();
+        System.out.println("Available words to search:");
+       for(String s :v){
+           System.out.println(s);
+       }
     }
 
     /**

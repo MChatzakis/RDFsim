@@ -59,7 +59,7 @@ public class Example {
         SPARQLQuery sq = new SPARQLQuery();
         String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 50000, 0);
 
-        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
+        String path = CommonUtils.writeStringToFile(vocab, "triples/TripleSample_Philosophers.rdf");
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
@@ -71,18 +71,21 @@ public class Example {
         String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
         String ariadneQuery = "select  * where {?s ?p ?o .}";
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(ariadneEndpoint, ariadneQuery, 500, 0);
+        String vocab = sq.getData(ariadneEndpoint, ariadneQuery, 5000, 0);
 
-        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
+        String path = CommonUtils.writeStringToFile(vocab, "triples/AriadneTripleSample.rdf");
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
+
+        vects.saveVectorSpace("embeddings/AriadneVectorSample.vec");
+
     }
 
     public static void main(String[] args) throws IOException {
         //classicExample();
         //loadPreSaved();
-        createDBpediaSample();
-        //createAriadneSample();
+        //createDBpediaSample();
+        createAriadneSample();
     }
 }
