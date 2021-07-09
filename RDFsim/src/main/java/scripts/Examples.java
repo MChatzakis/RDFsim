@@ -13,10 +13,11 @@ import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
- *
+ * Class to provide basic backend functionality examples and sample creation
+ * 
  * @author Manos Chatzakis
  */
-public class Example {
+public class Examples {
 
     public static void classicExample() throws IOException {
         String dbPediaEndpoint = "https://dbpedia.org/sparql";

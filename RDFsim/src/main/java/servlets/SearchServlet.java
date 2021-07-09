@@ -49,7 +49,7 @@ public class SearchServlet extends HttpServlet {
     String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
 
     private void loadPreSavedData(int sampleCode) {
-        
+
         String defVectorFilePath = "";
 
         //entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
@@ -68,7 +68,7 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void loadDataAndInit(JSONObject obj) throws IOException {
-        System.out.println("Search servlet initializing with config data...");
+        System.out.println("------------------ Search servlet initializing with config data...");
 
         String endpoint = obj.getString("endpoint");
         String query = obj.getString("query");
@@ -78,18 +78,21 @@ public class SearchServlet extends HttpServlet {
 
         SPARQLQuery sq = new SPARQLQuery();
 
-        String vocab = sq.getData(endpoint, query, offset, limit);
-
+        String vocab = sq.getData(endpoint, query, limit, offset);
+        //System.out.println(vocab);
         String path = CommonUtils.writeStringToFile(vocab, "vocab.rdf");
 
         vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vec.train();
         vec.saveVectorSpace("vectors.vec");
+
+        System.out.println("------------------ Model trained...");
+
     }
 
     private void load() throws IOException {
 
-        if (vec == null) {  //  || entities == null || triples == null) { 
+        if (true) {//vec == null) {  //  || entities == null || triples == null) { 
             JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
             System.out.println("Loaded conf file: " + obj.toString());
 
@@ -107,11 +110,11 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void printInfo() {
-       Collection<String>v = vec.getVocab();
+        Collection<String> v = vec.getVocab();
         System.out.println("Available words to search:");
-       for(String s :v){
-           System.out.println(s);
-       }
+        for (String s : v) {
+            System.out.println(s);
+        }
     }
 
     /**
