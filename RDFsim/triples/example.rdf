@@ -1,10 +1,10 @@
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://xmlns.com/foaf/0.1/Person .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/ontology/Person .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://schema.org/Person .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Object100002684 .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Observer110369528 .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Orator110380672 .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Organism100004475 .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Person100007846 .
-http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://dbpedia.org/class/yago/Philosopher110423589 .
+http://dbpedia.org/resource/Cassius_Longinus_(philosopher) http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Damascius http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Satyrus_the_Peripatetic http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Secundus_the_Silent http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Onasander http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Philip_of_Opus http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Abaris_the_Hyperborean http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Democritus http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Diogenes_Laërtius http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
+http://dbpedia.org/resource/Gorgias http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Thing http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class .
