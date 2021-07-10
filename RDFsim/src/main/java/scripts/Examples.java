@@ -27,7 +27,7 @@ public class Examples {
         String ariadneQuery = "select  * where {?s ?p ?o .}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(dbPediaEndpoint, ariadneQuery, 50000, 0);
+        String vocab = sq.getData(ariadneEndpoint, ariadneQuery, 100000, 0);
 
         String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
 
