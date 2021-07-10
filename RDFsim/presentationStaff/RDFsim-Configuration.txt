@@ -1,0 +1,20 @@
+-------------------------------------------------
+Endpoint: https://dbpedia.org/sparql
+Query: select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}
+Offset: 0
+Limit: 100
+-------------------------------------------------
+
+-------------------------------------------------
+Endpoint: https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01
+Query: select  * where {?s ?p ?o .}
+Offset: 0
+Limit: 100
+-------------------------------------------------
+
+-------------------------------------------------
+Endpoint: https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01
+Query:
+Offset: 0
+Limit: 100
+-------------------------------------------------
