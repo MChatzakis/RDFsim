@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 /**
  * Class providing methods to retrieve data from REST and Virtuoso endpoints.
- * TODO: Update retrieval methods to also create a list of Entities (rdf.entities) -- ONGOING
+ * TODO: Update retrieval methods to also create a list of Entities (rdf.entities) -- ONGOING, discuss
  * 
  * @author Manos Chatzakis
  */

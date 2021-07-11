@@ -56,11 +56,11 @@ public class SearchServlet extends HttpServlet {
         switch (sampleCode) {
         /*DBpedia*/
         case 1:
-            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\VectorSample_Philosophers.vec";
+            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\data\\embeddings\\VectorSample_Philosophers40000.vec";
             break;
         /*Ariadne*/
         case 2:
-            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\embeddings\\AriadneVectorSample.vec";
+            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\data\\embeddings\\AriadneVectorSample_People1000.vec";
             break;
         }
 

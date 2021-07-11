@@ -20,7 +20,7 @@ import lombok.Data;
 @Data
 public class Entity {
 
-    private String URI;
+    private String URI; 
     private double[] vector;
 
     public Entity(String URI) {
@@ -47,15 +47,5 @@ public class Entity {
         }
 
         return entities;
-    }
-
-    public static String getEntitiesAsString(Collection<Entity> entities) {
-        String res = "";
-        for (Entity t : entities) {
-            //System.out.println(t.toString() + "\n");
-            res += t.toString() + "\n";
-        }
-
-        return res;
     }
 }
