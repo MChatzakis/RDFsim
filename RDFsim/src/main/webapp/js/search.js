@@ -44,7 +44,7 @@ function drawGraph(entitiesJSON, self) {
     counter = 1;
     nodeArr.push({id: 0, label: self});
     for (var k in entitiesJSON) {
-        nodeArr.push({id: counter, label: k});
+        nodeArr.push({id: counter, label: formatDBpediaURI(k)}); //formatted URI use
         edgeArr.push({from: counter, to: 0});
         counter++;
     }
@@ -126,18 +126,18 @@ function createBigGraph() {
 function drawBigGraph(jsonData) {
     var nodeArr = [];
     var edgeArr = [];
-    
+
     for (var k in jsonData) {
         var name = k;
         var idN = k["label"];
         nodeArr.push({id: idN, label: name});
-       
+
     }
-    
-    for(var k in jsonData){
+
+    for (var k in jsonData) {
         var name = k;
         var idN = k["label"];
-        for(var t in k["links"]){
+        for (var t in k["links"]) {
             var fromN = label;
             var toN = t["label"]
             edgeArr.push({from: fromN, to: toN});
@@ -219,6 +219,24 @@ function calculateExpression() {
 
         updateExpressionAns(toAddArr, toSubArr, data);
     });
+}
+
+function formatDBpediaURI(URI) {
+    var formattedURI = URI;
+    var beforeSplitters = ["/", "#", ":"];
+    var afterSplitters = ["?"];
+
+    for (var s in beforeSplitters) {
+        var arr = formattedURI.split(s);
+        formattedURI = arr[arr.length - 1];
+    }
+
+    for (var s in afterSplitters) {
+        var arr = formattedURI.split(s);
+        formattedURI = arr[0];
+    }
+
+    return formattedURI;
 }
 
 $(document).ready(function () {

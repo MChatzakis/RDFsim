@@ -22,15 +22,14 @@ public class Examples {
     public static void classicExample() throws IOException {
         String dbPediaEndpoint = "https://dbpedia.org/sparql";
         String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
-
         String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
         String simplestQuery = "select  * where {?s ?p ?o .}";
         String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
+        //String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
 
-        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000, 0, "./data/triples/example.rdf", false);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
@@ -59,9 +58,8 @@ public class Examples {
         String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 40000, 0);
 
-        String path = CommonUtils.writeStringToFile(vocab, "./data/triples/TripleSample_Philosophers40000.rdf");
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 40000, 0, "./data/triples/TripleSample_Philosophers40000.rdf", false);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
@@ -74,15 +72,12 @@ public class Examples {
         String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(ariadneEndpoint, ariadneQuery, 1000, 0);
-
-        String path = CommonUtils.writeStringToFile(vocab, "./data/triples/AriadneTripleSample_People1000.rdf");
+        String path = sq.writeDataToFile(ariadneEndpoint, ariadneQuery, 1000, 0, "./data/triples/AriadneTripleSample_People1000.rdf", false);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
 
         vects.saveVectorSpace("./data/embeddings/AriadneVectorSample_People1000.vec");
-
     }
 
     public static void createBiggerSequences() throws IOException {
@@ -91,22 +86,34 @@ public class Examples {
         String dbPediaQuery = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 10, 0);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10, 0, "triples/example.rdf", false);
 
-        //System.out.println(vocab);
-        String path = CommonUtils.writeStringToFile(vocab, "triples/example.rdf");
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
     }
 
+    public static void createMostTriples() throws IOException {
+        /*String dbPediaEndpoint = "https://dbpedia.org/sparql";
+        String dbPediaQuery = "select  * where {?s ?p ?o .}";
+
+        SPARQLQuery sq = new SPARQLQuery();
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 0, "./data/triples/crash.rdf", false);
+        */
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "./data/triples/crash.rdf");
+        vects.train();
+
+        vects.saveVectorSpace("./data/embeddings/crash.vec");
+    }
+
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
-        
+
         //classicExample();
         //loadPreSaved();
         //createDBpediaSample();
         //createAriadneSample();
         //createBiggerSequences();
+        //createMostTriples();
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;

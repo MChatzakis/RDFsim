@@ -77,10 +77,7 @@ public class SearchServlet extends HttpServlet {
         int offset = obj.getInt("offset");
 
         SPARQLQuery sq = new SPARQLQuery();
-
-        String vocab = sq.getData(endpoint, query, limit, offset);
-        //System.out.println(vocab);
-        String path = CommonUtils.writeStringToFile(vocab, "vocab.rdf");
+        String path = sq.writeDataToFile(endpoint, query, limit, offset, "vocab.rdf", false);
 
         vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vec.train();

@@ -1,6 +1,9 @@
 package sparql;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,13 +13,18 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.nd4j.shade.guava.io.CharSink;
 
 /**
  * Class providing methods to retrieve data from REST and Virtuoso endpoints.
- * TODO: Update retrieval methods to also create a list of Entities (rdf.entities) -- ONGOING, discuss
- * 
+ * TODO: Update retrieval methods to also create a list of Entities
+ * (rdf.entities) -- ONGOING, discuss
+ *
  * @author Manos Chatzakis
  */
 public class SPARQLQuery {
@@ -48,7 +56,7 @@ public class SPARQLQuery {
         return new JSONObject(resultsString);
     }
 
-    public String parseData(JSONObject rawData) {
+    public String parseData(JSONObject rawData, boolean formatURI) {
         JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
         String res = "";
@@ -56,7 +64,12 @@ public class SPARQLQuery {
         //System.out.println(rawData.toString(2));
         for (int i = 0; i < data.length(); i++) {
             for (int k = 0; k < vars.length(); k++) {
-                res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
+                if (formatURI) {
+                    res += formatDBpediaURI(data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value")) + " ";
+                } else {
+                    res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
+                }
+
             }
 
             res += ".\n";
@@ -64,13 +77,13 @@ public class SPARQLQuery {
         return res;
     }
 
-    public String getData(String endpoint, String query) throws MalformedURLException, ProtocolException, IOException {
-        return parseData(retrieveData(endpoint, query));
+    public String getData(String endpoint, String query, boolean formatURI) throws MalformedURLException, ProtocolException, IOException {
+        return parseData(retrieveData(endpoint, query), formatURI);
     }
 
-    public String getData(String endpoint, String baseQuery, int endLimit, int startOffset) throws ProtocolException, IOException {
-        String totalData = "";
+    public String writeDataToFile(String endpoint, String baseQuery, int endLimit, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
         String currData = "";
+        FileWriter fw = new FileWriter(filename, true);
 
         int step = 10000;
         int limit = (endLimit >= step) ? step : endLimit;
@@ -78,14 +91,14 @@ public class SPARQLQuery {
 
         String query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
 
-        while (!(currData = getData(endpoint, query)).equals("")) {
+        while (!(currData = getData(endpoint, query, formatURI)).equals("")) {
 
             System.out.println("Offset: " + offset + " Limit: " + limit);
 
-            totalData += currData;
-
             offset += step;
             limit += step;
+
+            fw.write(currData);
 
             if (limit > endLimit) {
                 break;
@@ -93,12 +106,12 @@ public class SPARQLQuery {
 
             query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
         }
-
-        return totalData;
+        fw.close();
+        return new File(filename).getAbsolutePath();
     }
 
-    public String getAllData(String endpoint, String baseQuery) throws IOException {
-        return getData(endpoint, baseQuery, Integer.MAX_VALUE, 0);
+    public String getAllData(String endpoint, String baseQuery, String filepath, boolean formatURI) throws IOException {
+        return writeDataToFile(endpoint, baseQuery, Integer.MAX_VALUE, 0, filepath, formatURI);
     }
 
     public String formatDBpediaURI(String URI) {
