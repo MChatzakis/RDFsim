@@ -3,11 +3,11 @@
  * Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
+//var URL = "/SearchServlet";
 var TOP_K = 0;
 var COS_SIM = 1;
 var EXPR = 2;
 var BIG_GRAPH = 3;
-
 function getElem(id) {
     return document.getElementById(id);
 }
@@ -49,11 +49,12 @@ function drawGraph(entitiesJSON, self) {
     nodeArr.push({id: 0, label: formatDBpediaURI(self), url: self});
     for (var k in entitiesJSON) {
         nodeArr.push({id: counter, label: formatDBpediaURI(k), url: k}); //formatted URI use
-        edgeArr.push({from: counter, to: 0});
+        console.log("SS: " + roundTo(entitiesJSON[k], 2));
+        edgeArr.push({from: counter, to: 0, label: roundTo(entitiesJSON[k], 2) + "", length: 300});
         counter++;
     }
 
-    //console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
+//console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
     var container = document.getElementById("graphContainer-id");
@@ -61,9 +62,16 @@ function drawGraph(entitiesJSON, self) {
         nodes: nodes,
         edges: edges,
     };
-    var options = {};
+    var options = {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        edges: {
+            width: 0.1,
+        }, // defined in the edges module.
+        nodes: {}, // defined in the nodes module.
+    };
     var network = new vis.Network(container, data, options);
-
     network.on("click", function (params) {
         //console.log("Something was clicked!");
         var nodeID = params.nodes[0];
@@ -74,8 +82,11 @@ function drawGraph(entitiesJSON, self) {
             //console.log('pointer', params.pointer);
             setElemValue("inputSearchEntity", nodeInfo.url);
             searchEntity();
-
         }
+    });
+
+    network.on("stabilizationIterationsDone", function () {
+        network.setOptions({physics: false});
     });
 
     showElem("graphContainer-id");
@@ -125,7 +136,6 @@ function searchEntity() {
         //createTOPKresultsTable(data, currentEntity);
         drawGraph(data, currentEntity);
     });
-
     loadFrameResource(currentEntity);
 }
 
@@ -146,12 +156,10 @@ function createBigGraph() {
 function drawBigGraph(jsonData) {
     var nodeArr = [];
     var edgeArr = [];
-
     for (var k in jsonData) {
         var name = k;
         var idN = k["label"];
         nodeArr.push({id: idN, label: name});
-
     }
 
     for (var k in jsonData) {
@@ -195,9 +203,7 @@ function compareEntities() {
 function updateExpressionAns(toAddArr, toSubArr, data) {
     clearElem("exprAnsPar");
     elem = getElem("exprAnsPar");
-
     var answer = "";
-
     for (var i = 0; i < toAddArr.length; i++) {
         answer += toAddArr[i];
         if (i < toAddArr.length - 1) {
@@ -217,7 +223,6 @@ function updateExpressionAns(toAddArr, toSubArr, data) {
     }
 
     answer += " = [" + data["expr_result"] + "].";
-
     elem.innerHTML = answer;
 }
 
@@ -226,17 +231,14 @@ function calculateExpression() {
     var resCount = getElemValue("entitiesExpressionCount");
     var toAddArr = getElemValue("entities2add").split(",");
     var toSubArr = getElemValue("entities2sub").split(",");
-
     var jsonData = {
         type: EXPR,
         count: getElemValue("entitiesExpressionCount"),
         positives: getElemValue("entities2add"),
         negatives: getElemValue("entities2sub")
     };
-
     sendAjaxWithPromise(jsonData).then(function (data) {
         console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
-
         updateExpressionAns(toAddArr, toSubArr, data);
     });
 }
@@ -245,7 +247,6 @@ function formatDBpediaURI(URI) {
     console.log("Formatting URI");
     var formattedURI = URI;
     var beforeSplitters = ['/', '#', ':'];
-
     for (var s = 0; s < beforeSplitters.length; s++) {
         var arr = formattedURI.split(beforeSplitters[s]);
         formattedURI = arr[arr.length - 1];
@@ -259,6 +260,11 @@ function loadFrameResource(url) {
     showElem("iframe-wiki-id");
 }
 
+function roundTo(num, points) {
+    const x = Math.pow(10, points);
+    return Math.round(num * x) / x;
+}
+
 $(document).ready(function () {
     console.log("Document Loaded.");
     document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
@@ -268,8 +274,8 @@ $(document).ready(function () {
             searchEntity();
         }
     });
-
     //getElem("iframe-wiki-id").src = "https://www.wikipedia.org/wiki/Aristotle";
     //getElem("iframe-wiki-id").src = "https://www.dbpedia.org/";
-
+    var ctx = "${pageContext.request.contextPath}";
+    console.log(ctx);
 });

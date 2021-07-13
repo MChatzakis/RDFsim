@@ -100,13 +100,12 @@
 
         <div class="center-search">
             <div class  = "search">
-                <h3 class="search-title">RDFsim</h3>
-                <input type="text" id="inputSearchEntity" placeholder="Insert entity" size="50"/>
-                <!--<button onclick="searchEntity();">Search</button>-->
+                <h1 class="search-title"><font color="blue">RDF</font>sim</h1>
+                <input type="text" class = "inputSearchEntity" id="inputSearchEntity" placeholder="Insert entity" size="50"/>
             </div>
         </div>
 
-     
+
         <div class = "results" id = "results-id" >
             <div class = "results-info" id = "results-info-id"> 
                 <iframe class = "iframe-wiki" id ="iframe-wiki-id" src=""></iframe>
@@ -115,5 +114,9 @@
                 <div class ="graphContainer" id ="graphContainer-id"></div>
             </div>
         </div>
+ 
+        <footer>
+            HA!
+        </footer>
     </body>
 </html>

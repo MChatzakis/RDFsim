@@ -2,7 +2,7 @@
     position: relative; 
     height: 100%; 
     width: 100%;
-    /*border: 1px solid black;*/
+    border: 1px solid black;
     display: none;
 }
 
@@ -13,6 +13,7 @@
     align-items: center;
     text-align: center;
     min-height: 10vh;
+    padding-bottom: 25px;
 }
 
 .results{
@@ -22,19 +23,42 @@
 .results-info{
     text-align: center; 
     width: 50%; 
-    height: 900px; 
-    float: left; 
+    height: 800px; 
+    float: left;
 }
 
 .results-graph{
     text-align: center;
     margin-left: 50%;
-    height: 900px;
+    height: 800px;
+
 }
 
 .iframe-wiki{
     position: relative; 
     height: 100%; 
     width: 100%;
-    display: none;
+    display:none;
+}
+
+.inputSearchEntity{
+    background: white url(./icons/search-icon.png) right no-repeat;
+    padding-right: 17px;
+
+    border: 1px solid #ccc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 4px 7px;
+    outline: 0;
+    -webkit-appearance: none;
+}
+
+footer {
+    clear: both;
+    position: relative;
+    height: 70px;
+    margin-top: -200px;
+    background: black;
 }
