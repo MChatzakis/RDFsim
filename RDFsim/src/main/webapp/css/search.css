@@ -1,7 +1,8 @@
-#graphContainer {
-    width: 750px;
-    height: 750px;
-    border: 1px solid black;
+.graphContainer {
+    position: relative; 
+    height: 100%; 
+    width: 100%;
+    /*border: 1px solid black;*/
     display: none;
 }
 
@@ -23,18 +24,17 @@
     width: 50%; 
     height: 900px; 
     float: left; 
-    background: gray;
 }
 
 .results-graph{
     text-align: center;
     margin-left: 50%;
     height: 900px;
-    background: lightblue;
 }
 
 .iframe-wiki{
     position: relative; 
     height: 100%; 
     width: 100%;
+    display: none;
 }

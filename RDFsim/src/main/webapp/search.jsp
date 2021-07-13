@@ -100,18 +100,18 @@
 
         <div class="center-search">
             <div class  = "search">
-                <p class="search-title">RDFsim</p>
-                <input type="input" id="inputSearchEntity" placeholder="Insert entity"/>
-                <button onclick="searchEntity();">Search!</button>
+                <h3 class="search-title">RDFsim</h3>
+                <input type="text" id="inputSearchEntity" placeholder="Insert entity" size="50"/>
+                <!--<button onclick="searchEntity();">Search</button>-->
             </div>
         </div>
 
+     
         <div class = "results" id = "results-id" >
             <div class = "results-info" id = "results-info-id"> 
                 <iframe class = "iframe-wiki" id ="iframe-wiki-id" src=""></iframe>
             </div>
             <div class = "results-graph" id = "results-graph-id"> 
-                Graph will be displayed here
                 <div class ="graphContainer" id ="graphContainer-id"></div>
             </div>
         </div>

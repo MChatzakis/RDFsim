@@ -38,13 +38,17 @@ function getElemValue(id) {
     return getElem(id).value;
 }
 
+function setElemValue(id, val) {
+    getElem(id).value = val;
+}
+
 function drawGraph(entitiesJSON, self) {
     var nodeArr = [];
     var edgeArr = [];
     counter = 1;
-    nodeArr.push({id: 0, label: self});
+    nodeArr.push({id: 0, label: formatDBpediaURI(self), url: self});
     for (var k in entitiesJSON) {
-        nodeArr.push({id: counter, label: formatDBpediaURI(k)}); //formatted URI use
+        nodeArr.push({id: counter, label: formatDBpediaURI(k), url: k}); //formatted URI use
         edgeArr.push({from: counter, to: 0});
         counter++;
     }
@@ -52,14 +56,29 @@ function drawGraph(entitiesJSON, self) {
     //console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
-    var container = document.getElementById("graphContainer");
+    var container = document.getElementById("graphContainer-id");
     var data = {
         nodes: nodes,
         edges: edges,
     };
     var options = {};
     var network = new vis.Network(container, data, options);
-    showElem("graphContainer");
+
+    network.on("click", function (params) {
+        //console.log("Something was clicked!");
+        var nodeID = params.nodes[0];
+        if (nodeID) {
+            var clickedNode = this.body.nodes[nodeID];
+            var nodeInfo = clickedNode.options;
+            console.log('clicked node:', nodeInfo.label);
+            //console.log('pointer', params.pointer);
+            setElemValue("inputSearchEntity", nodeInfo.url);
+            searchEntity();
+
+        }
+    });
+
+    showElem("graphContainer-id");
 }
 
 function createTOPKresultsTable(jsonData, self) {
@@ -106,6 +125,8 @@ function searchEntity() {
         //createTOPKresultsTable(data, currentEntity);
         drawGraph(data, currentEntity);
     });
+
+    loadFrameResource(currentEntity);
 }
 
 function createBigGraph() {
@@ -221,34 +242,34 @@ function calculateExpression() {
 }
 
 function formatDBpediaURI(URI) {
+    console.log("Formatting URI");
     var formattedURI = URI;
-    var beforeSplitters = ["/", "#", ":"];
-    var afterSplitters = ["?"];
+    var beforeSplitters = ['/', '#', ':'];
 
-    for (var s in beforeSplitters) {
-        var arr = formattedURI.split(s);
+    for (var s = 0; s < beforeSplitters.length; s++) {
+        var arr = formattedURI.split(beforeSplitters[s]);
         formattedURI = arr[arr.length - 1];
-    }
-
-    for (var s in afterSplitters) {
-        var arr = formattedURI.split(s);
-        formattedURI = arr[0];
     }
 
     return formattedURI;
 }
 
+function loadFrameResource(url) {
+    getElem("iframe-wiki-id").src = url;
+    showElem("iframe-wiki-id");
+}
+
 $(document).ready(function () {
     console.log("Document Loaded.");
-    /*document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
-     if (event.keyCode === 13) {
-     event.preventDefault();
-     //console.log("Enter hit, beggining sending...");
-     searchEntity();
-     }
-     });*/
+    document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            //console.log("Enter hit, beggining sending...");
+            searchEntity();
+        }
+    });
 
-    getElem("iframe-wiki-id").src = "https://www.wikipedia.org/wiki/Aristotle";
+    //getElem("iframe-wiki-id").src = "https://www.wikipedia.org/wiki/Aristotle";
     //getElem("iframe-wiki-id").src = "https://www.dbpedia.org/";
 
 });
