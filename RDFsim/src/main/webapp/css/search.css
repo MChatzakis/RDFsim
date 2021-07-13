@@ -42,8 +42,11 @@
 }
 
 .inputSearchEntity{
-    background: white url(./icons/search-icon.png) right no-repeat;
+    background: white url(../icons/search-icon.png) right no-repeat;
     padding-right: 17px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 10% 10%;
 
     border: 1px solid #ccc;
     -moz-border-radius: 10px;
