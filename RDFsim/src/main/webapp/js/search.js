@@ -98,14 +98,13 @@ function searchEntity() {
     var currentEntity = getElemValue("inputSearchEntity");
     var jsonData = {
         type: TOP_K,
-        count: getElemValue("inputSearchEntityCount"),
+        count: 5,
         entity: currentEntity,
     };
     sendAjaxWithPromise(jsonData).then(function (data) {
         console.log("Data response from the server for TOP K entity search: " + JSON.stringify(data, null, 4));
-        createTOPKresultsTable(data, currentEntity);
+        //createTOPKresultsTable(data, currentEntity);
         drawGraph(data, currentEntity);
-        //createBigGraph();
     });
 }
 
@@ -248,4 +247,8 @@ $(document).ready(function () {
      searchEntity();
      }
      });*/
+
+    getElem("iframe-wiki-id").src = "https://www.wikipedia.org/wiki/Aristotle";
+    //getElem("iframe-wiki-id").src = "https://www.dbpedia.org/";
+
 });

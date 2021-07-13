@@ -1,7 +1,7 @@
 <%-- 
     Document   : search
     Created on : Jul 5, 2021, 1:20:08 PM
-    Author     : manos
+    Author     : Manos Chatzakis
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -18,13 +18,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>RDFsim</title>
     </head>
-    
+
     <body>
 
-        <!-- Top K similars -->
+        <!-- Top K similars 
         <div class = "topKsimilarContainer">
-
-            <!-- Similar Search Form -->
             <div class = "searchContainer">
                 <div class  = "search">
                     <p class="search-title">Find top 10 similar entities</p>
@@ -41,7 +39,6 @@
                     <button onclick="searchEntity();" >Search</button>
                 </div>
             </div>
-            <!-- Result table -->
             <div class = "resultsContainer" id = "resultsContainer">
                 <table class = "resultTable" id = "resultTable">
                     <tr>
@@ -50,12 +47,11 @@
                     </tr>
                 </table>
             </div>  
-            <!-- Similarity Graph Drawing -->
             <div class = "graphContainer" id ="graphContainer" >
             </div>
-        </div>
+        </div>-->
 
-        <!-- Cosine Similarity -->
+        <!-- Cosine Similarity 
         <div class = "cosineSimilarityContainer">
             <div class ="cosineSearch">
                 <p class="cosine-title">Cosine Similarity</p>
@@ -74,9 +70,9 @@
             <div class = "cosineAnswer">
                 <p id = "cosineAnswer"></p>
             </div>
-        </div>
+        </div>-->
 
-        <!-- Arithmetic Expressions -->
+        <!-- Arithmetic Expressions 
         <div class = "arExpressionsContainer">
             <div class ="arExpressionSearch">
                 <p class="expr-title">Arithmetic Expressions</p>
@@ -100,10 +96,24 @@
             <div class = "expressionAns" id = "exprAns">
                 <p id = "exprAnsPar"></p>
             </div>
+        </div>-->
+
+        <div class="center-search">
+            <div class  = "search">
+                <p class="search-title">RDFsim</p>
+                <input type="input" id="inputSearchEntity" placeholder="Insert entity"/>
+                <button onclick="searchEntity();">Search!</button>
+            </div>
         </div>
 
-        <!-- Similarity Graph -->
-        <div class = "graphContainer" id ="graphContainer" >
+        <div class = "results" id = "results-id" >
+            <div class = "results-info" id = "results-info-id"> 
+                <iframe class = "iframe-wiki" id ="iframe-wiki-id" src=""></iframe>
+            </div>
+            <div class = "results-graph" id = "results-graph-id"> 
+                Graph will be displayed here
+                <div class ="graphContainer" id ="graphContainer-id"></div>
+            </div>
         </div>
     </body>
 </html>

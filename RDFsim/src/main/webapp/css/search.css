@@ -5,8 +5,36 @@
     display: none;
 }
 
-#resultsContainer{
-    display: none;
-    border: 1px solid black;
-    width: 700px;
+.center-search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 10vh;
+}
+
+.results{
+    width: 100%;
+}
+
+.results-info{
+    text-align: center; 
+    width: 50%; 
+    height: 900px; 
+    float: left; 
+    background: gray;
+}
+
+.results-graph{
+    text-align: center;
+    margin-left: 50%;
+    height: 900px;
+    background: lightblue;
+}
+
+.iframe-wiki{
+    position: relative; 
+    height: 100%; 
+    width: 100%;
 }

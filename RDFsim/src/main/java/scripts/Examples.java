@@ -54,14 +54,14 @@ public class Examples {
     }
 
     public static void createDBpediaSample() throws IOException {
-        String dbPediaEndpoint = "https://dbpedia.org/sparql";
+        /*String dbPediaEndpoint = "https://dbpedia.org/sparql";
         String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
         SPARQLQuery sq = new SPARQLQuery();
 
         String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 40000, 0, "./data/triples/TripleSample_Philosophers40000.rdf", false);
-
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
+        */
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "./data/triples/TripleSample_Philosophers40000.rdf");
         vects.train();
 
         vects.saveVectorSpace("./data/embeddings/VectorSample_Philosophers40000.vec");
@@ -110,7 +110,7 @@ public class Examples {
 
         //classicExample();
         //loadPreSaved();
-        //createDBpediaSample();
+        createDBpediaSample();
         //createAriadneSample();
         //createBiggerSequences();
         //createMostTriples();

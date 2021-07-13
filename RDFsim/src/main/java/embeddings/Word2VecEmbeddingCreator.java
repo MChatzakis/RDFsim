@@ -62,7 +62,6 @@ public class Word2VecEmbeddingCreator {
                 .build();
 
         vec.fit();
-        //vec.wordsNearest("italy", "rome", 1)
     }
 
     public void saveVectorSpace(String filepath) {
