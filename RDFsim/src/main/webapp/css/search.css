@@ -43,15 +43,16 @@
 
 .inputSearchEntity{
     background: white url(../icons/search-icon.png) right no-repeat;
-    padding-right: 17px;
+    /*padding-right: 17px;*/
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 10% 10%;
-
+    background-size: 80% 80%;
+    background-position: right;
+    
     border: 1px solid #ccc;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
-    border-radius: 10px;
+    border-radius: 40px;
     font-size: 20px;
     padding: 4px 7px;
     outline: 0;
