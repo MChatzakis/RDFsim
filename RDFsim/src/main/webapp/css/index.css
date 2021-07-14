@@ -1,0 +1,30 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 40vh;
+    padding-bottom: 5px;
+}
+
+.search-input{
+    border: 1px solid #ccc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 40px;
+    font-size: 20px;
+    padding: 4px 7px;
+    outline: 0;
+    -webkit-appearance: none;
+    height: 30px;
+}
+
+footer {
+    clear: both;
+    position: relative;
+    height: 70px;
+    margin-top: -200px;
+    background: black;
+}
+

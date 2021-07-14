@@ -1,7 +1,7 @@
 <%-- 
-    Document   : index.jsp
-    Created on : Jun 29, 2021, 1:47:51 PM
-    Author     :    Manos Chatzakis
+    Document   : index
+    Created on : Jul 14, 2021, 2:43:48 AM
+    Author     : manos
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -9,69 +9,38 @@
 <html>
 
     <!-- RDFsim Frameworks -->
+    <link rel="stylesheet" href="css/index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="js/conf.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>RDFsim</title>
     </head>
-
+    
     <body>
+        <!-- Main Container -->
+        <div class = "home" id = "home-id">
 
-        <!-- Title -->
-        <div class = "title" id = "title-id">
-            <h3>RDFsim Configuration</h3>
+            <!-- Logo -->
+            <div class = "logo" id = "logo-id">
+                <h1>RDFsim</h1>
+            </div>
+
+            <!-- Search -->
+            <form id = "search-form-id">
+
+                <div id="search-div-id" class="search-div">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="65">
+                </div>
+
+            </form>
+
         </div>
-
-        <!-- Configurations -->
-        <div class = "confs" id = "confs-id">
-
-            <!-- Endpoint -->
-            <div class = "endpoint" id = "endpoint-id">
-                <p>Endpoint:</p>
-                <input type="input" id="endpointConf-id" placeholder="Insert Endpoint"/>
-            </div>
-
-            <!-- Query -->
-            <div class = "query" id = "query-id">
-                <p>Query:</p>
-                <input type="input" id="queryConf-id" placeholder="Insert Query"/>
-            </div>
-
-            <!-- Offset -->
-            <div class = "offset" id = "offset-id">
-                <p>Offset:</p>
-                <input type="input" id="offsetConf-id" placeholder="Insert Endpoint"/>
-            </div>
-
-            <!-- Limit -->
-            <div class = "limit" id = "limit-id">
-                <p>Limit:</p>
-                <input type="input" id="limitConf-id" placeholder="Insert Limit"/>
-            </div>
-
-            <!-- Send button -->
-            <div>
-                <br>
-                <button class = "confButton" id = "confButton-id" onclick="sendConf();">Configure</button>
-            </div>
-
-            <!-- Configurations End-->
-        </div>
-
-        <!-- Presaved DBpedia Sample load -->
-        <div>
-            <p>Presaved DBpedia Sample</p>
-            <button class = "dbPediaSampleButton" id = "dbPediaSampleButton-id" onclick="loadDBPediaSample();">Load!</button>
-        </div>
-
-        <!-- Presaved Ariadne Sample load -->
-        <div>
-            <p>Presaved Ariadne Sample</p>
-            <button class = "ariadneSampleButton" id = "ariadneSampleButton-id" onclick="loadAriadneSample();">Load!</button>
-        </div>
-
+        
+       
     </body>
+    
 </html>
