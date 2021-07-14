@@ -51,7 +51,7 @@ function drawGraph(entitiesJSON, self) {
     for (var k in entitiesJSON) {
         nodeArr.push({id: counter, label: formatDBpediaURI(k), url: k}); //formatted URI use
         console.log("SS: " + roundTo(entitiesJSON[k], 2));
-        edgeArr.push({from: counter, to: 0, label: roundTo(entitiesJSON[k], 2) + "", length: 300});
+        edgeArr.push({from: counter, to: 0, label: roundTo(entitiesJSON[k], 2) + "", length: 350});
         counter++;
     }
 

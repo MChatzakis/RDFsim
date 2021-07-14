@@ -27,16 +27,16 @@
 
             <!-- Logo -->
             <div class = "logo" id = "logo-id">
-                <img class="logo-img" src="./icons/rdfsim-logo3.png" alt="rdfsim-logo">
+                <img class="logo-img" src="./icons/rdfsim-logo4.png" alt="rdfsim-logo">
             </div>
 
             <!-- Search -->
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="75">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60">
                 </div>
             </form>
-            <span class="home-description">Similarity browsing tool</span>
+            <span class="home-description">Similarity browsing tool for RDF Databases</span>
         </div>
 
         <!-- Footer -->
@@ -44,7 +44,7 @@
             <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
             |
             <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
-            | © Copyright 2020 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
+             |  © Copyright 2020 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
             <div class="footer-images">
                 <a href="https://www.ics.forth.gr/isl/"><img src="./icons/isl-logo.png" height="30"></a>
                 <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="30"></a>

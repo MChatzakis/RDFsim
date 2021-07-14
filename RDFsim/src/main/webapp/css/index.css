@@ -17,16 +17,21 @@
     padding: 4px 7px;
     outline: 0;
     -webkit-appearance: none;
-    height: 40px;
+    height: 32px;
 }
 
 .logo-img{
-    height: 260px;
+    height: 210px;
     max-width: 100vw;
 }
 
-html, body {
+html{
     margin: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .copyright {
@@ -41,6 +46,7 @@ html, body {
     margin-top: auto;
     position:absolute;
     bottom: 0;
+    font-size: 14px;
 }
 
 .footer-images {

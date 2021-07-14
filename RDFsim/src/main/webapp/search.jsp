@@ -110,13 +110,17 @@
         <!-- Top search form -->
         <div class="search-top">
             <a href="/RDFsim" class="rdfsim-logo">
-                <img class="rdfsim-logo-img" src="./icons/rdfsim-logo3.png" alt="RDFsim">
+                <img class="rdfsim-logo-img" src="./icons/rdfsim-logo4.png" alt="RDFsim">
             </a>
             <form id = "search-form-id" class = "search-form" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="75">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="40">
                 </div>
             </form>
+            <!--<button class = "settings">
+                <img src="./icons/setting-icon.png" height="30" width="30">
+            </button>-->
+
         </div>
 
         <!-- Results -->
