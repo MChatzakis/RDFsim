@@ -4,7 +4,6 @@
  */
 
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
-
 var TOP_K = 0;
 var COS_SIM = 1;
 var EXPR = 2;
@@ -68,10 +67,28 @@ function drawGraph(entitiesJSON, self) {
         autoResize: true,
         height: '100%',
         width: '100%',
+        
         edges: {
             width: 0.1,
-        }, // defined in the edges module.
-        nodes: {}, // defined in the nodes module.
+        },
+        
+        nodes: {
+            color: {
+                border: 'red',
+                background: 'white',
+                highlight: {
+                    border: 'red',
+                    background: 'gray'
+                },
+                hover: {
+                    border: 'black',
+                    background: 'black'
+                }
+            },
+            font: {
+                color: 'black',
+            },
+        }, 
     };
     var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
@@ -84,7 +101,7 @@ function drawGraph(entitiesJSON, self) {
             //console.log('pointer', params.pointer);
             setElemValue("search-input-id", nodeInfo.url);
             //searchEntity();
-             window.location.href = "./SearchServlet?entity="+nodeInfo.url;
+            window.location.href = "./SearchServlet?entity=" + nodeInfo.url;
         }
     });
 
@@ -271,7 +288,7 @@ function roundTo(num, points) {
 $(document).ready(function () {
     console.log("Current entity: " + currentEntity);
     console.log("Data recieved from server: " + searchData);
-    drawGraph(JSON.parse(searchData),currentEntity);
+    drawGraph(JSON.parse(searchData), currentEntity);
     loadFrameResource(currentEntity);
     setElemValue("search-input-id", currentEntity);
 });
