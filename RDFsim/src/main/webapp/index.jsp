@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 
-    <!-- RDFsim Frameworks -->
+    <!-- RDFsim Frameworks and Styling -->
     <link rel="stylesheet" href="css/index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -21,6 +21,7 @@
     </head>
 
     <body>
+        
         <!-- Main Container -->
         <div class = "home" id = "home-id">
 
@@ -30,7 +31,7 @@
             </div>
 
             <!-- Search -->
-            <form id = "search-form-id">
+            <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="75">
                 </div>

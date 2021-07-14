@@ -7,6 +7,7 @@ package servlets;
 
 import embeddings.Word2VecEmbeddingCreator;
 import java.io.File;
+import java.io.FileNotFoundException;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
@@ -18,6 +19,8 @@ import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +28,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,15 +44,40 @@ import utils.CommonUtils;
 
 /**
  *
- * @author manos
+ * @author Manos Chatzakis
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
+@WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
-    HashMap<String, Entity> entities = null;
+    
+    public SearchServlet() {
+        super();
+        try {
+            initDBpediaSample();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-    String defConfFilePath = "C:\\xampp\\tomcat\\bin\\confs.json";
+    private void initDBpediaSample() throws FileNotFoundException {
+        String linuxPath = "/usr/rdfsim/embeddings/VectorSample_Philosophers40000.vec";
+        String windowsPath = "C:\\tmp\\rdfsim\\embeddings\\VectorSample_Philosophers40000.vec";
+
+        File lin = new File(linuxPath);
+        File win = new File(windowsPath);
+
+        if (lin.exists()) {
+            //server side version
+            vec = new Word2VecEmbeddingCreator(linuxPath);
+        } else if (win.exists()) {
+            //windows local version
+            vec = new Word2VecEmbeddingCreator(windowsPath);
+        } else {
+            throw new FileNotFoundException("Could not locate the vector file in current file system");
+        }
+    }
 
     private void loadPreSavedData(int sampleCode) {
 
@@ -89,7 +120,7 @@ public class SearchServlet extends HttpServlet {
 
     private void load() throws IOException {
 
-        if (true) {//vec == null) {  //  || entities == null || triples == null) { 
+        /*if (true) {//vec == null) {  //  || entities == null || triples == null) { 
             JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
             System.out.println("Loaded conf file: " + obj.toString());
 
@@ -102,8 +133,7 @@ public class SearchServlet extends HttpServlet {
             }
 
         }
-
-        printInfo();
+        printInfo();*/
     }
 
     private void printInfo() {
@@ -124,10 +154,13 @@ public class SearchServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("DoGet -- Search"); //&query=
-        load();
-       
-        request.getRequestDispatcher("/search.jsp").forward(request, response);
+        String entity = request.getParameter("entity");
+
+        request.setAttribute("data", getSimilarEntities(entity, 10));
+        request.setAttribute("self", entity);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     /**
@@ -259,5 +292,4 @@ public class SearchServlet extends HttpServlet {
 
         return graph;
     }
-
 }

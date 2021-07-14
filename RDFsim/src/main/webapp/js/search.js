@@ -2,12 +2,14 @@
  * Basic search controller
  * Manos Chatzakis (chatzakis@ics.forth.gr)
  */
+
 var URL = "http://localhost:8080/RDFsim/SearchServlet";
-//var URL = "/SearchServlet";
+
 var TOP_K = 0;
 var COS_SIM = 1;
 var EXPR = 2;
 var BIG_GRAPH = 3;
+
 function getElem(id) {
     return document.getElementById(id);
 }
@@ -80,8 +82,9 @@ function drawGraph(entitiesJSON, self) {
             var nodeInfo = clickedNode.options;
             console.log('clicked node:', nodeInfo.label);
             //console.log('pointer', params.pointer);
-            setElemValue("inputSearchEntity", nodeInfo.url);
-            searchEntity();
+            setElemValue("search-input-id", nodeInfo.url);
+            //searchEntity();
+             window.location.href = "./SearchServlet?entity="+nodeInfo.url;
         }
     });
 
@@ -266,16 +269,9 @@ function roundTo(num, points) {
 }
 
 $(document).ready(function () {
-    console.log("Document Loaded.");
-    document.getElementById("inputSearchEntity").addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            //console.log("Enter hit, beggining sending...");
-            searchEntity();
-        }
-    });
-    //getElem("iframe-wiki-id").src = "https://www.wikipedia.org/wiki/Aristotle";
-    //getElem("iframe-wiki-id").src = "https://www.dbpedia.org/";
-    var ctx = "${pageContext.request.contextPath}";
-    console.log(ctx);
+    console.log("Current entity: " + currentEntity);
+    console.log("Data recieved from server: " + searchData);
+    drawGraph(JSON.parse(searchData),currentEntity);
+    loadFrameResource(currentEntity);
+    setElemValue("search-input-id", currentEntity);
 });

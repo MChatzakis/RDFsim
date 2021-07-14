@@ -1,19 +1,9 @@
 .graphContainer {
     position: relative; 
-    height: 100%; 
-    width: 100%;
+    height: 93%; 
+    width: 93%;
     border: 1px solid black;
-    display: none;
-}
 
-.center-search {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 10vh;
-    padding-bottom: 25px;
 }
 
 .results{
@@ -24,31 +14,29 @@
     text-align: center; 
     width: 50%; 
     height: 800px; 
-    float: left;
+    float: left;   
 }
 
 .results-graph{
     text-align: center;
     margin-left: 50%;
     height: 800px;
-
 }
 
 .iframe-wiki{
     position: relative; 
-    height: 100%; 
-    width: 100%;
-    display:none;
+    height: 93%; 
+    width: 93%;
+    border: 1px solid black;
 }
 
 .inputSearchEntity{
     background: white url(../icons/search-icon.png) right no-repeat;
-    /*padding-right: 17px;*/
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 80% 80%;
     background-position: right;
-    
+
     border: 1px solid #ccc;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -59,10 +47,65 @@
     -webkit-appearance: none;
 }
 
-footer {
-    clear: both;
-    position: relative;
-    height: 70px;
-    margin-top: -200px;
-    background: black;
+.search-top{
+    height: 140px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
 }
+
+.rdfsim-logo-img{
+    height: 120px;
+    max-width: 100vw;
+}
+
+.search-div{
+    float: left;
+    clear: both;
+}
+
+.search-input{
+    border: 1px solid #ccc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 40px;
+    font-size: 20px;
+    padding: 4px 7px;
+    outline: 0;
+    -webkit-appearance: none;
+    height: 25px;
+}
+
+.search-form{
+    margin-top: 50px;
+    float: left;
+}
+
+.rdfsim-logo{
+    position: relative;
+    float: left;
+    margin: 5px;
+}
+
+a{
+    color:red;
+}
+
+.copyright {
+    display: flex;
+    height: 37px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    background: black;
+    color: #fff;
+    margin-top: auto;
+    position:relative;
+    bottom: 0;
+}
+
+html, body {
+    margin: 0;
+}
+
+
