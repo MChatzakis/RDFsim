@@ -59,12 +59,12 @@ public class Examples {
 
         SPARQLQuery sq = new SPARQLQuery();
 
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 1000, 0, "./data/triples/TripleSample_Philosophers1000.rdf", false);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10, 0, "./data/triples/TripleSample_Philosophers10.rdf", false);
         
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "./data/triples/TripleSample_Philosophers1000.rdf");
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "./data/triples/TripleSample_Philosophers10.rdf");
         vects.train();
 
-        vects.saveVectorSpace("./data/embeddings/VectorSample_Philosophers1000.vec");
+        vects.saveVectorSpace("./data/embeddings/VectorSample_Philosophers10.vec");
     }
 
     public static void createAriadneSample() throws IOException {
