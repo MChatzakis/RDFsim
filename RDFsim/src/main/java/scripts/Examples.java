@@ -29,7 +29,7 @@ public class Examples {
         SPARQLQuery sq = new SPARQLQuery();
         //String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
 
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000, 0, "./data/triples/example.rdf", false);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 15000, 0, "./data/triples/example.rdf", false);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
@@ -97,20 +97,20 @@ public class Examples {
         String dbPediaQuery = "select  * where {?s ?p ?o .}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 0, "./data/triples/crash.rdf", false);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 2219983, "C:\\tmp\\rdfsim\\most.rdf", false);
         */
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "./data/triples/crash.rdf");
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "C:\\tmp\\rdfsim\\most.rdf");
         vects.train();
 
-        vects.saveVectorSpace("./data/embeddings/crash.vec");
+        vects.saveVectorSpace("C:\\tmp\\rdfsim\\embeddings\\most.vec");
     }
 
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
-        //classicExample();
+        classicExample();
         //loadPreSaved();
-        createDBpediaSample();
+        //createDBpediaSample();
         //createAriadneSample();
         //createBiggerSequences();
         //createMostTriples();

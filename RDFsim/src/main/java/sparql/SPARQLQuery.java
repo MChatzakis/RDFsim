@@ -81,37 +81,32 @@ public class SPARQLQuery {
         return parseData(retrieveData(endpoint, query), formatURI);
     }
 
-    public String writeDataToFile(String endpoint, String baseQuery, int endLimit, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
+    public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
         String currData = "";
         FileWriter fw = new FileWriter(filename, true);
 
-        int step = 10000;
-        int limit = (endLimit >= step) ? step : endLimit;
+        int step = (total >= 10000) ? 10000 : total;
         int offset = startOffset;
 
-        String query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
+        String query = baseQuery + " OFFSET " + offset + " LIMIT " + step;
 
         while (!(currData = getData(endpoint, query, formatURI)).equals("")) {
 
-            System.out.println("Offset: " + offset + " Limit: " + limit);
+            System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
 
+            step = (total-offset >= 10000) ? 10000 : total-offset;
             offset += step;
-            limit += step;
-
             fw.write(currData);
 
-            if (limit > endLimit) {
+            if (offset >= total) {
                 break;
             }
 
-            query = baseQuery + " OFFSET " + offset + " LIMIT " + limit;
+            query = baseQuery + " OFFSET " + offset + " LIMIT " + step;
         }
+
         fw.close();
         return new File(filename).getAbsolutePath();
-    }
-
-    public String getAllData(String endpoint, String baseQuery, String filepath, boolean formatURI) throws IOException {
-        return writeDataToFile(endpoint, baseQuery, Integer.MAX_VALUE, 0, filepath, formatURI);
     }
 
     public String formatDBpediaURI(String URI) {

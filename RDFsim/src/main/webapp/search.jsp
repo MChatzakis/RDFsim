@@ -34,11 +34,15 @@
             <a href="/RDFsim" class="rdfsim-logo">
                 <img class="rdfsim-logo-img" src="./icons/rdfsim-logo4.png" alt="RDFsim">
             </a>
-            <form id = "search-form-id" class = "search-form" action= "./SearchServlet">
+
+            <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Insert entity" size="40">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="40">
+                    <button class="search-button" type="submit" value="Submit">
+                        <img src="icons/search-icon.png" width="26" height="26" alt=""/></button>
                 </div>
             </form>
+
             <!--<button class = "settings">
                 <img src="./icons/setting-icon.png" height="30" width="30">
             </button>-->
@@ -55,8 +59,6 @@
             </div>
             <div style="clear:both"></div>
         </div>
-
-
 
         <!-- Footer 
         <div class="copyright">

@@ -9,15 +9,12 @@
 }
 
 .search-input{
-    border: 1px solid #ccc;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 40px;
+    border: none;
     font-size: 20px;
-    padding: 4px 7px;
     outline: 0;
-    -webkit-appearance: none;
-    height: 32px;
+    margin-left: 10px;
+    display: inline-block;
+    height:35px;
 }
 
 .logo-img{
@@ -30,8 +27,21 @@ html{
 }
 
 body {
+    min-width: 100px;
+    min-height: 100px;
     margin: 0;
     font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.search-div{
+    border: 1px solid #ccc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 40px;
+    padding: 4px 7px;
+    outline: 0;
+    -webkit-appearance: none;
+    height:35px;
 }
 
 .copyright {
@@ -62,4 +72,21 @@ body {
 
 a{
     color:red;
+}
+
+.search-button {
+    color: #900;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border: none;
+    padding: 0;
+    background: none;
+    vertical-align: middle;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.search-button img {
+    vertical-align: middle;
 }
