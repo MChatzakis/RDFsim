@@ -23,7 +23,7 @@ import org.nd4j.shade.guava.io.CharSink;
 /**
  * Class providing methods to retrieve data from REST and Virtuoso endpoints.
  * TODO: Update retrieval methods to also create a list of Entities
- * (rdf.entities) -- ONGOING, discuss
+ * (rdf.entities) -- ONGOING, discuss?
  *
  * @author Manos Chatzakis
  */
