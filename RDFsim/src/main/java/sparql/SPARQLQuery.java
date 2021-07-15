@@ -30,6 +30,9 @@ import org.nd4j.shade.guava.io.CharSink;
 public class SPARQLQuery {
 
     public JSONObject retrieveData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, ProtocolException, IOException {
+
+        System.out.println("Query: " + query);
+
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
         URL url = new URL(sparqlQueryURL);
 
@@ -69,7 +72,6 @@ public class SPARQLQuery {
                 } else {
                     res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
                 }
-
             }
 
             res += ".\n";
@@ -88,21 +90,22 @@ public class SPARQLQuery {
         int step = (total >= 10000) ? 10000 : total;
         int offset = startOffset;
 
-        String query = baseQuery + " OFFSET " + offset + " LIMIT " + step;
+        String query = baseQuery + " offset " + offset + " limit " + step;
 
         while (!(currData = getData(endpoint, query, formatURI)).equals("")) {
 
-            System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
+            //System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
 
             offset += step;
-            step = (total-offset >= 10000) ? 10000 : total-offset;
+            step = (total - offset >= 10000) ? 10000 : (total - offset);
+            
             fw.write(currData);
 
             if (offset >= total) {
                 break;
             }
 
-            query = baseQuery + " OFFSET " + offset + " LIMIT " + step;
+            query = baseQuery + " offset " + offset + " limit " + step;
         }
 
         fw.close();

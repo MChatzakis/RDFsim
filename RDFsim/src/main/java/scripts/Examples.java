@@ -22,14 +22,14 @@ public class Examples {
     public static void classicExample() throws IOException {
         String dbPediaEndpoint = "https://dbpedia.org/sparql";
         String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
-        String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
-        String simplestQuery = "select  * where {?s ?p ?o .}";
+        String dbPediaQuery = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+        String simplestQuery = "select * where {?s ?p ?o .}";
         String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
 
         SPARQLQuery sq = new SPARQLQuery();
         //String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
 
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 15000, 0, "./data/triples/example.rdf", false);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 100, 0, "./data/triples/example.rdf", true);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
