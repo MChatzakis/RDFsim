@@ -87,8 +87,13 @@ a{
     bottom: 0;
 }
 
-html, body {
+html{
+     margin: 0;
+} 
+
+body {
     margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .settings{
