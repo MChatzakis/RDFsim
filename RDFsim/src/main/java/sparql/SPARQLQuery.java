@@ -87,18 +87,17 @@ public class SPARQLQuery {
         String currData = "";
         FileWriter fw = new FileWriter(filename, true);
 
-        int step = (total >= 10000) ? 10000 : total;
         int offset = startOffset;
+        int step = (total - offset >= 10000) ? 10000 : (total - offset); //step = (total >= 10000) ? 10000 : total;
 
         String query = baseQuery + " offset " + offset + " limit " + step;
 
         while (!(currData = getData(endpoint, query, formatURI)).equals("")) {
 
             //System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
-
             offset += step;
             step = (total - offset >= 10000) ? 10000 : (total - offset);
-            
+
             fw.write(currData);
 
             if (offset >= total) {

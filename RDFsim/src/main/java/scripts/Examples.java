@@ -29,7 +29,7 @@ public class Examples {
         SPARQLQuery sq = new SPARQLQuery();
         //String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
 
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 100, 0, "./data/triples/example.rdf", true);
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 25000, 0, "./data/triples/example.rdf", true);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
