@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
-import rdf.Entity;
 
 /**
  * Utilities class (Common Methods)

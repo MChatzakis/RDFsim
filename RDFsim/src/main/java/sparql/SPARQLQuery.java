@@ -94,8 +94,8 @@ public class SPARQLQuery {
 
             System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
 
-            step = (total-offset >= 10000) ? 10000 : total-offset;
             offset += step;
+            step = (total-offset >= 10000) ? 10000 : total-offset;
             fw.write(currData);
 
             if (offset >= total) {
