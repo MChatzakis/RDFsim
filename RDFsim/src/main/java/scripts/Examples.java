@@ -99,7 +99,7 @@ public class Examples {
         SPARQLQuery sq = new SPARQLQuery();
         String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 2219983, "C:\\tmp\\rdfsim\\most.rdf", false);
         */
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "C:\\tmp\\rdfsim\\most.rdf");
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(3, 100, 42, 5, "C:\\tmp\\rdfsim\\most.rdf");
         vects.train();
 
         vects.saveVectorSpace("C:\\tmp\\rdfsim\\embeddings\\most.vec");
@@ -108,12 +108,12 @@ public class Examples {
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
-        classicExample();
+        //classicExample();
         //loadPreSaved();
         //createDBpediaSample();
         //createAriadneSample();
         //createBiggerSequences();
-        //createMostTriples();
+        createMostTriples();
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
