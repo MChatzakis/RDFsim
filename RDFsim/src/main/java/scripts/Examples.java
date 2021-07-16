@@ -19,102 +19,53 @@ import utils.CommonUtils;
  */
 public class Examples {
 
-    public static void classicExample() throws IOException {
-        String dbPediaEndpoint = "https://dbpedia.org/sparql";
-        String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
-        String dbPediaQuery = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
-        String simplestQuery = "select * where {?s ?p ?o .}";
-        String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
+    public static String dbPediaEndpoint = "https://dbpedia.org/sparql";
+    public static String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
+    public static String simplestQuery = "select * where {?s ?p ?o .}";
+    
+    public static String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
+    public static String dbPediaPhilosophersQuery = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+    public static String dbPediaQueryBiggerSeqs = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
 
+    public static void completeExample(String rdfFilePath, String vecFilePath, String endpoint, String query, int total, int start) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
-        //String vocab = sq.getData(dbPediaEndpoint, dbPediaQuery, 1000, 0);
-
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10, 100, "./data/triples/example.rdf", true);
+        String path = sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, false);
 
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
         vects.train();
+        vects.saveVectorSpace(vecFilePath);
 
-        String entity = "http://dbpedia.org/resource/Cassius_Longinus_(philosopher)";
+        /*String entity = "http://dbpedia.org/resource/Cassius_Longinus_(philosopher)";
         Collection<String> similars = vects.getSimilarEntities(entity, 5);
         System.out.println("Similars of " + entity + " " + similars);
-
         double sim = vects.calculateCosineSimilarity("http://dbpedia.org/resource/Damo_(philosopher)", "http://dbpedia.org/resource/Onasander");
         System.out.println("Similarity (cosine): " + sim);
-
         HashMap<String, Double> topEntitiesOfPhilosopher = vects.getSimilarEntitiesWithValues("http://dbpedia.org/resource/Democritus", 5);
         CommonUtils.printEntityMap(topEntitiesOfPhilosopher);
-
         sim = vects.calculateCosineSimilarity("http://dbpedia.org/resource/Democritus", "http://dbpedia.org/resource/Gorgias");
-        System.out.println("Similarity (cosine): " + sim);
+        System.out.println("Similarity (cosine): " + sim);*/
     }
 
-    public static void loadPreSaved() {
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator("embeddings/VectorSample_Philosophers.vec");
-        System.out.println(vects.getVocab());
+    public static void loadPreSaved(String filepath) {
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(filepath);
+        Collection<String> strs = vects.getVocab();
+        for (String s : strs) {
+            System.out.println(s);
+        }
+        System.out.println("Total words: " + strs.size());
     }
 
-    public static void createDBpediaSample() throws IOException {
-        String dbPediaEndpoint = "https://dbpedia.org/sparql";
-        String dbPediaQuery = "select  * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
-        String longerDBpediaQuery = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1. ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
-        
-        SPARQLQuery sq = new SPARQLQuery();
-
-        String path = sq.writeDataToFile(dbPediaEndpoint, longerDBpediaQuery, 50000, 0, "./data/triples/Sequences_Philosophers.rdf", false);
-        
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(4, 100, 42, 5, "./data/triples/Sequences_Philosophers.rdf");
+    public static void trainOnly(String filepath, String output) {
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(4, 100, 42, 5, filepath);
         vects.train();
-
-        vects.saveVectorSpace("./data/embeddings/VectorSample_PhilosophersSequences.vec");
-    }
-
-    public static void createAriadneSample() throws IOException {
-        String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
-        String ariadneQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
-
-        SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(ariadneEndpoint, ariadneQuery, 1000, 0, "./data/triples/AriadneTripleSample_People1000.rdf", false);
-
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
-        vects.train();
-
-        vects.saveVectorSpace("./data/embeddings/AriadneVectorSample_People1000.vec");
-    }
-
-    public static void createBiggerSequences() throws IOException {
-        String dbPediaEndpoint = "https://dbpedia.org/sparql";
-
-        String dbPediaQuery = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
-
-        SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10, 0, "triples/example.rdf", false);
-
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
-        vects.train();
-    }
-
-    public static void createMostTriples() throws IOException {
-        /*String dbPediaEndpoint = "https://dbpedia.org/sparql";
-        String dbPediaQuery = "select * where {?s ?p ?o .}";
-
-        SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 880152, 9119948, "C:\\tmp\\rdfsim\\crash.rdf", false);
-        
-        */Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, "C:\\tmp\\rdfsim\\crash.rdf");
-        vects.train();
-
-        vects.saveVectorSpace("C:\\tmp\\rdfsim\\embeddings\\most.vec");
+        vects.saveVectorSpace(output);
     }
 
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
-        //classicExample();
-        //loadPreSaved();
-        createDBpediaSample();
-        //createAriadneSample();
-        //createBiggerSequences();
-        //createMostTriples();
+        //trainOnly("C:\\tmp\\rdfsim\\crash.rdf", "C:\\tmp\\rdfsim\\embeddings\\c.vec");
+        //loadPreSaved("C:\\tmp\\rdfsim\\embeddings\\c.vec")
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;

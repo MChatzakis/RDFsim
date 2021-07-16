@@ -73,10 +73,6 @@
             <div style="clear:both"></div>
         </div>
 
-        <div>
-            lkdsfksdkjfhs
-        </div>
-        
         <!-- Footer -->
         <div class="copyright">
             <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
@@ -88,6 +84,6 @@
                 <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="30"></a>
             </div>
         </div>
-     
+
     </body>
 </html>

@@ -1,7 +1,9 @@
 package embeddings;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,8 +49,6 @@ public class Word2VecEmbeddingCreator {
         this.windowSize = windowSize;
         this.iter = new LineSentenceIterator(new File(filepath));;
         this.tokenizerFactory = new DefaultTokenizerFactory();
-
-        //topEntities = new HashMap<String, ArrayList<String>>();
     }
 
     public void train() {
@@ -66,8 +66,8 @@ public class Word2VecEmbeddingCreator {
 
     public void saveVectorSpace(String filepath) {
         try {
-            WordVectorSerializer.writeWordVectors(vec, filepath);
-        } catch (IOException ex) {
+            WordVectorSerializer.writeWord2VecModel(vec, filepath);
+        } catch (Exception ex) {
             Logger.getLogger(Word2VecEmbeddingCreator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
