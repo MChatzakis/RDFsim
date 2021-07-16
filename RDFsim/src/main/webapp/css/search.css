@@ -22,6 +22,8 @@
     text-align: center;
     margin-left: 50%;
     height: 1000px;
+    width: 50%; 
+        
 }
 
 .iframe-wiki{
@@ -106,14 +108,16 @@ html{
 
 body {
     margin: 0;
+    min-height: 400px;
+    min-width: 400px;
     font-family: 'Open Sans', Arial, sans-serif;
 }
 
 .search-button {
     color: #900;
     font-weight: bold;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     border: none;
     padding: 0;
     background: none;
@@ -128,17 +132,24 @@ body {
     cursor: pointer;
 }
 
-.settings-popup{
-    position: relative;
-    /*margin: 20px;*/
+
+
+.settings-button{
     float:right;
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+    /*margin-top : 80px;*/
+    margin-right:20px;
 }
 
-.settings-conf{
-    border: 1px solid #ccc;
-    display: none;
-    position: relative;
+.settings-button img{
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.settings-config{
     background: gray;
 }
-
 

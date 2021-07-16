@@ -56,7 +56,7 @@ function drawGraph(entitiesJSON, self) {
         counter++;
     }
 
-//console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
+    //console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
     var container = document.getElementById("graphContainer-id");
@@ -204,16 +204,17 @@ function updateExpressionAns(toAddArr, toSubArr, data) {
 }
 
 function calculateExpression() {
-
     var resCount = getElemValue("entitiesExpressionCount");
     var toAddArr = getElemValue("entities2add").split(",");
     var toSubArr = getElemValue("entities2sub").split(",");
+    
     var jsonData = {
         type: EXPR,
         count: getElemValue("entitiesExpressionCount"),
         positives: getElemValue("entities2add"),
         negatives: getElemValue("entities2sub")
     };
+    
     sendAjaxWithPromise(jsonData).then(function (data) {
         console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
         updateExpressionAns(toAddArr, toSubArr, data);
@@ -223,8 +224,10 @@ function calculateExpression() {
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
+    
     var formattedURI = URI;
     var beforeSplitters = ['/', '#', ':'];
+    
     for (var s = 0; s < beforeSplitters.length; s++) {
         var arr = formattedURI.split(beforeSplitters[s]);
         formattedURI = arr[arr.length - 1];

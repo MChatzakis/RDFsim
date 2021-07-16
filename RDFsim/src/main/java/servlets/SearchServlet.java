@@ -51,6 +51,8 @@ public class SearchServlet extends HttpServlet {
     Word2VecEmbeddingCreator vec = null;
     int similarsNum = 10;
     
+    boolean embeddedBrowser = false;
+    
     public SearchServlet() {
         super();
         try {

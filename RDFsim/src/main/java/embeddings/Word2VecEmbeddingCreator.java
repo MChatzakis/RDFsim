@@ -29,7 +29,7 @@ import utils.CommonUtils;
 @Data
 public class Word2VecEmbeddingCreator {
 
-    Word2Vec vec; //Vector space
+    Word2Vec vec;
     SentenceIterator iter;
     TokenizerFactory tokenizerFactory;
 
