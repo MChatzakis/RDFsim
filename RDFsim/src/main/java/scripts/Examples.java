@@ -93,16 +93,16 @@ public class Examples {
     }
 
     public static void createMostTriples() throws IOException {
-        /*String dbPediaEndpoint = "https://dbpedia.org/sparql";
-        String dbPediaQuery = "select  * where {?s ?p ?o .}";
+        String dbPediaEndpoint = "https://dbpedia.org/sparql";
+        String dbPediaQuery = "select * where {?s ?p ?o .}";
 
         SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 2219983, "C:\\tmp\\rdfsim\\most.rdf", false);
-        */
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(3, 100, 42, 5, "C:\\tmp\\rdfsim\\most.rdf");
+        String path = sq.writeDataToFile(dbPediaEndpoint, dbPediaQuery, 10000000, 419997, "C:\\tmp\\rdfsim\\crash.rdf", false);
+        
+        /*Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(3, 100, 42, 5, "C:\\tmp\\rdfsim\\most.rdf");
         vects.train();
 
-        vects.saveVectorSpace("C:\\tmp\\rdfsim\\embeddings\\most.vec");
+        vects.saveVectorSpace("C:\\tmp\\rdfsim\\embeddings\\most.vec");*/
     }
 
     public static void main(String[] args) throws IOException {
