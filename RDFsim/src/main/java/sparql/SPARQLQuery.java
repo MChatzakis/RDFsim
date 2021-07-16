@@ -86,9 +86,10 @@ public class SPARQLQuery {
     public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
         String currData = "";
         FileWriter fw = new FileWriter(filename, true);
-
+        
+        int dataRetrieved = 0;
         int offset = startOffset;
-        int step = (total - offset >= 10000) ? 10000 : (total - offset); //step = (total >= 10000) ? 10000 : total;
+        int step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
 
         String query = baseQuery + " offset " + offset + " limit " + step;
 
@@ -96,11 +97,13 @@ public class SPARQLQuery {
 
             //System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
             offset += step;
-            step = (total - offset >= 10000) ? 10000 : (total - offset);
+            dataRetrieved += step;
+            
+            step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
 
             fw.write(currData);
 
-            if (offset >= total) {
+            if (dataRetrieved >= total) {
                 break;
             }
 

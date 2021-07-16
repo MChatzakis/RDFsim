@@ -8,6 +8,7 @@ var COS_SIM = 1;
 var EXPR = 2;
 var BIG_GRAPH = 3;
 
+/* ---------------------------------- Basic control functions ---------------------------------- */
 function getElem(id) {
     return document.getElementById(id);
 }
@@ -42,6 +43,7 @@ function setElemValue(id, val) {
     getElem(id).value = val;
 }
 
+/* ---------------------------------- Graph Drawing ---------------------------------- */
 function drawGraph(entitiesJSON, self) {
     var nodeArr = [];
     var edgeArr = [];
@@ -66,11 +68,11 @@ function drawGraph(entitiesJSON, self) {
         autoResize: true,
         height: '100%',
         width: '100%',
-        
+
         edges: {
             width: 0.1,
         },
-        
+
         nodes: {
             color: {
                 border: 'red',
@@ -87,7 +89,7 @@ function drawGraph(entitiesJSON, self) {
             font: {
                 color: 'black',
             },
-        }, 
+        },
     };
     var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
@@ -111,6 +113,7 @@ function drawGraph(entitiesJSON, self) {
     showElem("graphContainer-id");
 }
 
+/* ---------------------------------- Embeddings ---------------------------------- */
 function createTOPKresultsTable(jsonData, self) {
     var map = new Map();
     var table = getElem("resultTable");
@@ -156,51 +159,6 @@ function searchEntity() {
         drawGraph(data, currentEntity);
     });
     loadFrameResource(currentEntity);
-}
-
-function createBigGraph() {
-    var currentEntity = getElemValue("inputSearchEntity");
-    var jsonData = {
-        type: BIG_GRAPH,
-        count: getElemValue("inputSearchEntityCount"),
-        depth: 3,
-        entity: currentEntity,
-    };
-    sendAjaxWithPromise(jsonData).then(function (data) {
-        console.log("Data response from the server for BIG graph: " + JSON.stringify(data, null, 4));
-        drawBigGraph(data);
-    });
-}
-
-function drawBigGraph(jsonData) {
-    var nodeArr = [];
-    var edgeArr = [];
-    for (var k in jsonData) {
-        var name = k;
-        var idN = k["label"];
-        nodeArr.push({id: idN, label: name});
-    }
-
-    for (var k in jsonData) {
-        var name = k;
-        var idN = k["label"];
-        for (var t in k["links"]) {
-            var fromN = label;
-            var toN = t["label"]
-            edgeArr.push({from: fromN, to: toN});
-        }
-    }
-
-    var nodes = new vis.DataSet(nodeArr);
-    var edges = new vis.DataSet(edgeArr);
-    var container = document.getElementById("graphContainer");
-    var data = {
-        nodes: nodes,
-        edges: edges,
-    };
-    var options = {};
-    var network = new vis.Network(container, data, options);
-    showElem("graphContainer");
 }
 
 function compareEntities() {
@@ -262,6 +220,7 @@ function calculateExpression() {
     });
 }
 
+/* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
     var formattedURI = URI;
@@ -274,16 +233,25 @@ function formatDBpediaURI(URI) {
     return formattedURI;
 }
 
-function loadFrameResource(url) {
-    getElem("iframe-wiki-id").src = url;
-    showElem("iframe-wiki-id");
-}
-
 function roundTo(num, points) {
     const x = Math.pow(10, points);
     return Math.round(num * x) / x;
 }
 
+function loadFrameResource(url) {
+    //url could be a dbpedia resource
+    var name = formatDBpediaURI(url);
+    var wikiLink = "https://en.wikipedia.org/wiki/"+name;
+    getElem("iframe-wiki-id").src = wikiLink;
+    showElem("iframe-wiki-id");
+}
+
+/* ---------------------------------- Popup Settings ---------------------------------- */
+function popupSettings() {
+    showElem("settings-conf-id");
+}
+
+/* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
     console.log("Current entity: " + currentEntity);
     console.log("Data recieved from server: " + searchData);
@@ -291,3 +259,4 @@ $(document).ready(function () {
     loadFrameResource(currentEntity);
     setElemValue("search-input-id", currentEntity);
 });
+

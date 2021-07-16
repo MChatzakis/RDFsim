@@ -90,7 +90,7 @@ a{
     background: black;
     color: #fff;
     margin-top: auto;
-    position:absolute;
+    /*position:absolute;*/
     bottom: 0;
     font-size: 14px;
 }
@@ -109,15 +109,6 @@ body {
     font-family: 'Open Sans', Arial, sans-serif;
 }
 
-.settings{
-    width: 40px;
-    height: 40px;
-    float:right;
-    margin: 70px;
-    padding: 10px;
-}
-
-
 .search-button {
     color: #900;
     font-weight: bold;
@@ -129,11 +120,25 @@ body {
     vertical-align: middle;
     margin-right: 10px;
     display: inline-block;
+
 }
 
 .search-button img {
     vertical-align: middle;
+    cursor: pointer;
 }
 
+.settings-popup{
+    position: relative;
+    /*margin: 20px;*/
+    float:right;
+}
+
+.settings-conf{
+    border: 1px solid #ccc;
+    display: none;
+    position: relative;
+    background: gray;
+}
 
 

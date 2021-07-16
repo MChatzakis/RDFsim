@@ -49,6 +49,7 @@ import utils.CommonUtils;
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
+    int similarsNum = 10;
     
     public SearchServlet() {
         super();
@@ -78,63 +79,6 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    private void loadPreSavedData(int sampleCode) {
-
-        String defVectorFilePath = "";
-
-        //entities = Entity.loadEntitiesFromFile(defEntitiesFilePath);
-        switch (sampleCode) {
-        /*DBpedia*/
-        case 1:
-            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\data\\embeddings\\VectorSample_Philosophers40000.vec";
-            break;
-        /*Ariadne*/
-        case 2:
-            defVectorFilePath = "C:\\Users\\manos\\Documents\\GitHub\\RDFsim\\RDFsim\\data\\embeddings\\AriadneVectorSample_People1000.vec";
-            break;
-        }
-
-        vec = new Word2VecEmbeddingCreator(defVectorFilePath);
-    }
-
-    private void loadDataAndInit(JSONObject obj) throws IOException {
-        System.out.println("------------------ Search servlet initializing with config data...");
-
-        String endpoint = obj.getString("endpoint");
-        String query = obj.getString("query");
-
-        int limit = obj.getInt("limit");
-        int offset = obj.getInt("offset");
-
-        SPARQLQuery sq = new SPARQLQuery();
-        String path = sq.writeDataToFile(endpoint, query, limit, offset, "vocab.rdf", false);
-
-        vec = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
-        vec.train();
-        vec.saveVectorSpace("vectors.vec");
-
-        System.out.println("------------------ Model trained...");
-
-    }
-
-    private void load() throws IOException {
-
-        /*if (true) {//vec == null) {  //  || entities == null || triples == null) { 
-            JSONObject obj = new JSONObject(CommonUtils.getFileContent(defConfFilePath));
-            System.out.println("Loaded conf file: " + obj.toString());
-
-            int sampleCode = obj.getInt("sample");
-
-            if (sampleCode > 0) {
-                loadPreSavedData(sampleCode);
-            } else {
-                loadDataAndInit(obj);
-            }
-
-        }
-        printInfo();*/
-    }
-
     private void printInfo() {
         Collection<String> v = vec.getVocab();
         System.out.println("Available words to search:");
@@ -154,10 +98,13 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String entity = request.getParameter("entity");
-
-        request.setAttribute("data", getSimilarEntities(entity, 10));
+        JSONObject data2sent = getSimilarEntities(entity, similarsNum);
+        
+        request.setAttribute("data", data2sent);
         request.setAttribute("self", entity);
-
+        
+        System.out.println("Server connection attribute: " + data2sent.toString(2));
+        
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
     }
