@@ -251,7 +251,7 @@ function loadFrameResource(url) {
 
 /* ---------------------------------- Popup Settings ---------------------------------- */
 function popupSettings() {
-    showElem("settings-conf-id");
+
 }
 
 /* ---------------------------------- Document Load ---------------------------------- */

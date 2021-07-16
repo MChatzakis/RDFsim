@@ -95,11 +95,4 @@ public class CommonUtils {
         return g;
     }
 
-    public static boolean isURI(String s) {
-        return (s.startsWith("http"));
-    }
-
-    public static boolean isClass(String s) {
-        return s.equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-    }
 }

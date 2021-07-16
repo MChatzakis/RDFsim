@@ -127,4 +127,5 @@ public class SPARQLQuery {
 
         return result;
     }
+
 }
