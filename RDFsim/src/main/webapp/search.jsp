@@ -57,14 +57,36 @@
     <!-- Results -->
     <div class = "results" id = "results-id" >
         <div class = "results-info" id = "results-info-id"> 
-           
+
             <iframe class = "iframe-wiki" id ="iframe-wiki-id" frameBorder="0" src=""></iframe>
         </div>
         <div class = "results-graph" id = "results-graph-id"> 
-            
+
             <div class ="graphContainer" id ="graphContainer-id"></div>
         </div>
         <div style="clear:both"></div>
+    </div>
+
+    <div class = "graph-conf">
+        <label>Similars:</label>
+        <input type="text" size="10">
+    </div>
+
+    <div class="info-conf">
+        <label for="info-conf">Information service:</label>
+        <select name="services" id="service-selection-id">
+            <option value="dbpedia">DBpedia</option>
+            <option value="wikipedia">Wikipedia</option>
+            <option value="custom">Custom</option>
+        </select> 
+    </div>
+
+    <div class="database-conf">
+        <label for="database-conf">Information service:</label>
+        <select name="databases" id="database-selection-id">
+            <option value="dbpedia">DBpedia</option>
+            <option value="ariadnekb">AriadneKB</option>
+        </select> 
     </div>
 
     <!-- Footer -->

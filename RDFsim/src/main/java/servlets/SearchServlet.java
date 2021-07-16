@@ -50,9 +50,10 @@ public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
     int similarsNum = 10;
-    
+    String currentEntity = "";
+
     boolean embeddedBrowser = false;
-    
+
     public SearchServlet() {
         super();
         try {
@@ -89,36 +90,30 @@ public class SearchServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String entity = request.getParameter("entity");
-        JSONObject data2sent = getSimilarEntities(entity, similarsNum);
-        
+        String count = request.getParameter("count");
+
+        if (entity != null) {
+            currentEntity = entity;
+        }
+
+        if (count != null) {
+            similarsNum = Integer.parseInt(count);
+        }
+
+        JSONObject data2sent = getSimilarEntities(currentEntity, similarsNum);
+
         request.setAttribute("data", data2sent);
         request.setAttribute("self", entity);
-        
+
         System.out.println("Server connection attribute: " + data2sent.toString(2));
-        
+
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
