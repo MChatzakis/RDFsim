@@ -26,7 +26,7 @@
             </div>
 
             <!-- Search -->
-            <form id = "search-form-id" action= "./SearchServlet">
+            <form id = "search-form-id" action= "./SearchServlet?count=1">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60">
                     <button class="search-button" type="submit" value="Submit">

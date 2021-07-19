@@ -60,14 +60,14 @@ function drawGraph(entitiesJSON) {
         console.log("Current Links: " + links);
 
         for (var link in links) {
-            
-            var toID =links[link]["toID"];
+
+            var toID = links[link]["toID"];
             var weight = links[link]["weight"];
 
             console.log("Link toID: " + toID);
             console.log("Weight: " + weight);
 
-            edgeArr.push({from: currentID, to: toID, label: roundTo(weight, 2) + "", length: 350});
+            edgeArr.push({from: currentID, to: toID, label: roundTo(weight, 2) + "", length: 250});
         }
     }
 
@@ -84,11 +84,9 @@ function drawGraph(entitiesJSON) {
         autoResize: true,
         height: '100%',
         width: '100%',
-
         edges: {
             width: 0.1,
         },
-
         nodes: {
             color: {
                 border: 'red',
@@ -104,10 +102,24 @@ function drawGraph(entitiesJSON) {
             },
             font: {
                 color: 'black',
+                size: 18, // px
+                face: 'arial',
             },
+            shape: 'box',
         },
+        physics: {
+            enabled: true,
+            barnesHut: {
+                theta: 0.5,
+                gravitationalConstant: -2000,
+                centralGravity: 0.3,
+                springLength: 95,
+                springConstant: 0.04,
+                damping: 0.09,
+                avoidOverlap: 0
+            }
+        }
     };
-
     var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
         //console.log("Something was clicked!");
@@ -272,7 +284,7 @@ $(document).ready(function () {
     var jsonD = searchData;
 
     console.log("Current entity: " + curEn);
-    console.log("Data recieved from server: " +searchData);
+    console.log("Data recieved from server: " + searchData);
 
     drawGraph(JSON.parse(searchData));
 

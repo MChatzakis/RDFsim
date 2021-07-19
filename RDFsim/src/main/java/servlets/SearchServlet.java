@@ -52,7 +52,7 @@ public class SearchServlet extends HttpServlet {
     Word2VecEmbeddingCreator vec = null;
 
     int similarsNum = 10;
-    int graphDepth = 2;
+    int graphDepth = 1;
 
     String currentEntity = "";
 
@@ -101,10 +101,12 @@ public class SearchServlet extends HttpServlet {
 
         if (entity != null) {
             currentEntity = entity;
+            System.out.println("Entity Set: " + currentEntity);
         }
 
         if (count != null) {
             similarsNum = Integer.parseInt(count);
+            System.out.println("Count set: " + similarsNum);
         }
 
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
@@ -114,8 +116,7 @@ public class SearchServlet extends HttpServlet {
 
         request.setAttribute("graph", graph2sent.toString());
         request.setAttribute("self", currentEntity);
-        
-        
+
         System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");

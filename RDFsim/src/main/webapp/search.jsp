@@ -67,10 +67,13 @@
         <div style="clear:both"></div>
     </div>
 
-    <div class = "graph-conf">
+    <form class = "graph-conf">
         <label>Similars:</label>
-        <input type="text" size="10">
-    </div>
+        <input type="text" size="6">
+        <br>
+        <label>Depth:</label>
+        <input type="text" size="6">
+    </form>
 
     <div class="info-conf">
         <label for="info-conf">Information service:</label>
@@ -82,7 +85,7 @@
     </div>
 
     <div class="database-conf">
-        <label for="database-conf">Information service:</label>
+        <label for="database-conf">Database:</label>
         <select name="databases" id="database-selection-id">
             <option value="dbpedia">DBpedia</option>
             <option value="ariadnekb">AriadneKB</option>
