@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -49,7 +50,10 @@ import utils.CommonUtils;
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
+
     int similarsNum = 10;
+    int graphDepth = 2;
+
     String currentEntity = "";
 
     boolean embeddedBrowser = false;
@@ -103,12 +107,16 @@ public class SearchServlet extends HttpServlet {
             similarsNum = Integer.parseInt(count);
         }
 
-        JSONObject data2sent = getSimilarEntities(currentEntity, similarsNum);
+        SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
+        simg.createGraph();
 
-        request.setAttribute("data", data2sent);
-        request.setAttribute("self", entity);
+        JSONObject graph2sent = simg.toJSON();
 
-        System.out.println("Server connection attribute: " + data2sent.toString(2));
+        request.setAttribute("graph", graph2sent.toString());
+        request.setAttribute("self", currentEntity);
+        
+        
+        System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
@@ -147,13 +155,6 @@ public class SearchServlet extends HttpServlet {
             count = Integer.parseInt(request.getParameter("count"));
             data2sent = getExpressionEntities(positives, negatives, count);
             break;
-        case 3:
-            System.out.println("---------------------------------------------------------------------------------------------------------dd");
-            String mainEntity = request.getParameter("entity");
-            int depth = Integer.parseInt(request.getParameter("depth"));
-            count = Integer.parseInt(request.getParameter("count"));
-            data2sent = getBigGraphData(mainEntity, depth, count);
-            break;
         }
 
         System.out.println("Server->Sending: " + data2sent.toString(2));
@@ -183,9 +184,7 @@ public class SearchServlet extends HttpServlet {
 
         Collection<String> entities2add = Arrays.asList(posEnts);
         Collection<String> entities2sub = Arrays.asList(negEnts);
-        //System.out.println("Blah");
-        //System.out.println(entities2add);
-        //System.out.println(entities2sub);
+
         Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
 
         String resultAsString = "";
@@ -197,42 +196,4 @@ public class SearchServlet extends HttpServlet {
         return data;
     }
 
-    public JSONObject getBigGraphData(String mainEntity, int depth, int count) {
-        JSONObject graph = new JSONObject();
-        int cD = 0, counter = 0;
-
-        //apply BFS?
-        Queue<String> queue = new LinkedList<>();
-        queue.add(mainEntity);
-
-        while (!queue.isEmpty() && cD < depth * count) { //just for testing, need to add levels there
-
-            //System.out.println("A: " + counter + "M:" + depth*count);
-            String currEn = queue.remove();
-
-            JSONObject nodeInfo = new JSONObject();
-            JSONArray links = new JSONArray();
-
-            nodeInfo.put("label", counter);
-            System.out.println(currEn);
-            HashMap<String, Double> sims = vec.getSimilarEntitiesWithValues(currEn, count);
-            for (String adj : sims.keySet()) {
-
-                JSONObject linkInfo = new JSONObject();
-                linkInfo.put("label", counter++);
-                linkInfo.put("name", adj);
-                linkInfo.put("weight", sims.get(adj)); //cosSim
-
-                links.put(linkInfo);
-                //from currEn to ajd link!
-                queue.add(adj);
-            }
-
-            nodeInfo.put("links", links);
-            graph.put(currEn, nodeInfo);
-            cD++;
-        }
-
-        return graph;
-    }
 }

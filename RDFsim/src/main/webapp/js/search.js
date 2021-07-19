@@ -44,26 +44,42 @@ function setElemValue(id, val) {
 }
 
 /* ---------------------------------- Graph Drawing ---------------------------------- */
-function drawGraph(entitiesJSON, self) {
+function drawGraph(entitiesJSON) {
     var nodeArr = [];
     var edgeArr = [];
-    counter = 1;
-    nodeArr.push({id: 0, label: formatDBpediaURI(self), url: self});
+
     for (var k in entitiesJSON) {
-        nodeArr.push({id: counter, label: formatDBpediaURI(k), url: k}); //formatted URI use
-        console.log("SS: " + roundTo(entitiesJSON[k], 2));
-        edgeArr.push({from: counter, to: 0, label: roundTo(entitiesJSON[k], 2) + "", length: 350});
-        counter++;
+        var currentID = entitiesJSON[k]['id'];
+        var currentLabel = k;
+        var links = entitiesJSON[k]['links'];
+
+        nodeArr.push({id: currentID, label: formatDBpediaURI(currentLabel), url: currentLabel});
+
+        console.log("Current Label: " + currentLabel);
+        console.log("Current ID: " + currentID);
+        console.log("Current Links: " + links);
+
+        for (var link in links) {
+            
+            var toID =links[link]["toID"];
+            var weight = links[link]["weight"];
+
+            console.log("Link toID: " + toID);
+            console.log("Weight: " + weight);
+
+            edgeArr.push({from: currentID, to: toID, label: roundTo(weight, 2) + "", length: 350});
+        }
     }
 
-    //console.log("NodeArr = " + nodeArr + "\nEdgeArr = " + edgeArr);
     var nodes = new vis.DataSet(nodeArr);
     var edges = new vis.DataSet(edgeArr);
     var container = document.getElementById("graphContainer-id");
+
     var data = {
         nodes: nodes,
         edges: edges,
     };
+
     var options = {
         autoResize: true,
         height: '100%',
@@ -91,6 +107,7 @@ function drawGraph(entitiesJSON, self) {
             },
         },
     };
+
     var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
         //console.log("Something was clicked!");
@@ -207,14 +224,14 @@ function calculateExpression() {
     var resCount = getElemValue("entitiesExpressionCount");
     var toAddArr = getElemValue("entities2add").split(",");
     var toSubArr = getElemValue("entities2sub").split(",");
-    
+
     var jsonData = {
         type: EXPR,
         count: getElemValue("entitiesExpressionCount"),
         positives: getElemValue("entities2add"),
         negatives: getElemValue("entities2sub")
     };
-    
+
     sendAjaxWithPromise(jsonData).then(function (data) {
         console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
         updateExpressionAns(toAddArr, toSubArr, data);
@@ -224,10 +241,10 @@ function calculateExpression() {
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
-    
+
     var formattedURI = URI;
     var beforeSplitters = ['/', '#', ':'];
-    
+
     for (var s = 0; s < beforeSplitters.length; s++) {
         var arr = formattedURI.split(beforeSplitters[s]);
         formattedURI = arr[arr.length - 1];
@@ -244,22 +261,23 @@ function roundTo(num, points) {
 function loadFrameResource(url) {
     //url could be a dbpedia resource
     var name = formatDBpediaURI(url);
-    var wikiLink = "https://en.wikipedia.org/wiki/"+name;
+    var wikiLink = "https://en.wikipedia.org/wiki/" + name;
     getElem("iframe-wiki-id").src = wikiLink;
     showElem("iframe-wiki-id");
 }
 
-/* ---------------------------------- Popup Settings ---------------------------------- */
-function popupSettings() {
-
-}
-
 /* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
-    console.log("Current entity: " + currentEntity);
-    console.log("Data recieved from server: " + searchData);
-    drawGraph(JSON.parse(searchData), currentEntity);
-    loadFrameResource(currentEntity);
-    setElemValue("search-input-id", currentEntity);
+    var curEn = currentEntity;
+    var jsonD = searchData;
+
+    console.log("Current entity: " + curEn);
+    console.log("Data recieved from server: " +searchData);
+
+    drawGraph(JSON.parse(searchData));
+
+    loadFrameResource(curEn);
+    setElemValue("search-input-id", curEn);
+
 });
 

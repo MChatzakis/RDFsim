@@ -9,6 +9,7 @@ import embeddings.Word2VecEmbeddingCreator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -22,7 +23,7 @@ public class Examples {
     public static String dbPediaEndpoint = "https://dbpedia.org/sparql";
     public static String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
     public static String simplestQuery = "select * where {?s ?p ?o .}";
-    
+
     public static String ariadnePeopleQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
     public static String dbPediaPhilosophersQuery = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
     public static String dbPediaQueryBiggerSeqs = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
@@ -61,11 +62,21 @@ public class Examples {
         vects.saveVectorSpace(output);
     }
 
+    public static void simGraph(String filepath, int count, int depth) {
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(filepath);
+        SimilarityGraph g = new SimilarityGraph(depth, count, vects, "http://dbpedia.org/resource/Aristotle");
+
+        g.createGraph();
+
+        System.out.println(g.toJSON().toString(2));
+    }
+
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
         //trainOnly("C:\\tmp\\rdfsim\\crash.rdf", "C:\\tmp\\rdfsim\\embeddings\\c.vec");
         //loadPreSaved("C:\\tmp\\rdfsim\\embeddings\\c.vec")
+        simGraph("C:\\tmp\\rdfsim\\embeddings\\VectorSample_Philosophers40000.vec", 1, 3);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
