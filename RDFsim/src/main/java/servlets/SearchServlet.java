@@ -113,7 +113,6 @@ public class SearchServlet extends HttpServlet {
         simg.createGraph();
 
         JSONObject graph2sent = simg.toJSON();
-
         request.setAttribute("graph", graph2sent.toString());
         request.setAttribute("self", currentEntity);
 

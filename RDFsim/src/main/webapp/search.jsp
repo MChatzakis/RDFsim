@@ -14,8 +14,9 @@
         <title>RDFsim</title>
 
         <script type="text/javascript">
-            var searchData = '<%=request.getAttribute("graph")%>';
+            var graph = '<%=request.getAttribute("graph")%>';
             var currentEntity = '<%=request.getAttribute("self")%>';
+            var triplesRetrieved = '<%=request.getAttribute("triples")%>';
         </script>
     </head>
 

@@ -281,12 +281,12 @@ function loadFrameResource(url) {
 /* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
     var curEn = currentEntity;
-    var jsonD = searchData;
-
+    var graphJson = graph;
+    
     console.log("Current entity: " + curEn);
-    console.log("Data recieved from server: " + searchData);
+    console.log("Data recieved from server: " + graphJson);
 
-    drawGraph(JSON.parse(searchData));
+    drawGraph(JSON.parse(graphJson));
 
     loadFrameResource(curEn);
     setElemValue("search-input-id", curEn);
