@@ -17,6 +17,8 @@
             var graph = '<%=request.getAttribute("graph")%>';
             var currentEntity = '<%=request.getAttribute("self")%>';
             var triplesRetrieved = '<%=request.getAttribute("triples")%>';
+            var currCount = '<%=request.getAttribute("count")%>';
+            var currDepth = '<%=request.getAttribute("depth")%>';
         </script>
     </head>
 
@@ -57,7 +59,7 @@
                 <button class="settings-button-info" id ="settings-button-info-id" onClick="dispElemFromButtonClick('info-conf-id');">
                     <img src="icons/settings-icon-trans.png" width="26" height="26" alt="searchIcon"/>
                 </button>
-                
+
                 <form class = "info-conf" id ="info-conf-id">
                     <label for="info-conf">Information service:</label>
                     <select name="services" id="service-selection-id">
@@ -72,49 +74,49 @@
                         <option value="ariadnekb">AriadneKB</option>
                     </select> 
                     <button type="submit" value="Configure!"></button>
-                </div>
-                </form>
             </div>
+        </form>
+    </div>
 
-            <!-- Graph Frame Confs -->
-            <div class="settings-button-graph-container" id="settings-button-graph-container-id">
-                <button class="settings-button-graph" id="settings-button-graph-id" onClick="dispElemFromButtonClick('graph-conf-id');" >
-                    <img src="icons/settings-icon-trans.png" width="26" height="26" alt="searchIcon"/>
-                </button>
-                <form class = "graph-conf" id ="graph-conf-id" action= "./SearchServlet">
-                    <label>Similars:</label>
-                    <input type="text" size="3" name="count">
-                    <br>
-                    <label>Depth:</label>
-                    <input type="text" size="3" name="depth">
-                    <br>
-                    <input type="submit" value="Configure!">
-                </form>
-            </div>
+    <!-- Graph Frame Confs -->
+    <div class="settings-button-graph-container" id="settings-button-graph-container-id">
+        <button class="settings-button-graph" id="settings-button-graph-id" onClick="dispElemFromButtonClick('graph-conf-id');" >
+            <img src="icons/settings-icon-trans.png" width="26" height="26" alt="searchIcon"/>
+        </button>
+        <form class = "graph-conf" id ="graph-conf-id" action= "./SearchServlet">
+            <label>Similars:</label>
+            <input type="text" size="3" name="count" id = "count-input-id" class = "count-input">
+            <br>
+            <label>Depth:</label>
+            <input type="text" size="3" name="depth" id = "depth-input-id" class = "depth-input">
+            <br>
+            <input type="submit" value="Configure!">
+        </form>
+    </div>
 
-            <!-- Results -->
-            <div class = "results" id = "results-id" >
-                <div class = "results-info" id = "results-info-id"> 
-                    <iframe class = "iframe-wiki" id ="iframe-wiki-id" frameBorder="0" src=""></iframe>
-                </div>
-                <div class = "results-graph" id = "results-graph-id"> 
-                    <div class ="graphContainer" id ="graphContainer-id"></div>
-                </div>
-                <div style="clear:both"></div>
-            </div>
+    <!-- Results -->
+    <div class = "results" id = "results-id" >
+        <div class = "results-info" id = "results-info-id"> 
+            <iframe class = "iframe-wiki" id ="iframe-wiki-id" frameBorder="0" src=""></iframe>
+        </div>
+        <div class = "results-graph" id = "results-graph-id"> 
+            <div class ="graphContainer" id ="graphContainer-id"></div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
 
-            <!-- Footer -->
-            <div class="copyright">
-                <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
-                |
-                <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
-                | © Copyright 2020 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
-                <div class="footer-images">
-                    <a href="https://www.ics.forth.gr/isl/"><img src="./icons/isl-logo.png" height="30"></a>
-                    <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="30"></a>
-                </div>
-            </div>
+    <!-- Footer -->
+    <div class="copyright">
+        <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
+        |
+        <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
+        | © Copyright 2020 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
+        <div class="footer-images">
+            <a href="https://www.ics.forth.gr/isl/"><img src="./icons/isl-logo.png" height="30"></a>
+            <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="30"></a>
+        </div>
+    </div>
 
-    </body>
+</body>
 
 </html>

@@ -259,8 +259,6 @@ function calculateExpression() {
     });
 }
 
-/* ---------------------------------- Configuration ---------------------------------- */
-
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
@@ -281,11 +279,16 @@ function roundTo(num, points) {
     return Math.round(num * x) / x;
 }
 
-function loadFrameResource(url) {
-    //url could be a dbpedia resource
-    var name = formatDBpediaURI(url);
-    var wikiLink = "https://en.wikipedia.org/wiki/" + name;
-    getElem("iframe-wiki-id").src = wikiLink;
+function loadFrameResource(url, mode) {
+    var wikiLink = "https://en.wikipedia.org/wiki/" + formatDBpediaURI(url);
+    var dbpLink = url;
+
+    if (mode === "wikipedia") {
+        getElem("iframe-wiki-id").src = wikiLink;
+    } else {
+        getElem("iframe-wiki-id").src = dbpLink;
+    }
+
     showElem("iframe-wiki-id");
 }
 
@@ -299,8 +302,9 @@ $(document).ready(function () {
 
     drawGraph(JSON.parse(graphJson));
 
-    loadFrameResource(curEn);
+    loadFrameResource(curEn, "wikipedia");
     setElemValue("search-input-id", curEn);
-
+    setElemValue("count-input-id", currCount);
+    setElemValue("depth-input-id", currDepth)
 });
 

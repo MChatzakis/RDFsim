@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import embeddings.Word2VecEmbeddingCreator;
@@ -50,27 +45,31 @@ import utils.CommonUtils;
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
+    String currentEntity = "";
+
+    String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
 
     int similarsNum = 10;
     int graphDepth = 1;
-
-    String currentEntity = "";
 
     boolean embeddedBrowser = false;
 
     public SearchServlet() {
         super();
+
         try {
-            initDBpediaSample();
+            String sample2load = "VectorSample_Philosophers40000";
+            initDBpediaSample(sample2load);
+            printInfo();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void initDBpediaSample() throws FileNotFoundException {
-        String linuxPath = "/usr/rdfsim/embeddings/VectorSample_Philosophers40000.vec";
-        String windowsPath = "C:\\tmp\\rdfsim\\embeddings\\VectorSample_Philosophers40000.vec";
+    private void initDBpediaSample(String sampleName) throws FileNotFoundException {
+        String linuxPath = "/usr/rdfsim/embeddings/" + sampleName + ".vec";
+        String windowsPath = "C:\\tmp\\rdfsim\\embeddings\\" + sampleName + ".vec";
 
         File lin = new File(linuxPath);
         File win = new File(windowsPath);
@@ -119,7 +118,7 @@ public class SearchServlet extends HttpServlet {
         simg.createGraph();
 
         JSONObject graph2sent = simg.toJSON();
-        
+
         request.setAttribute("graph", graph2sent.toString());
         request.setAttribute("self", currentEntity);
         request.setAttribute("count", similarsNum);

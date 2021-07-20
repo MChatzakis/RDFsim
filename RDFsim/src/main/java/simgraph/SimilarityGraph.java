@@ -64,7 +64,7 @@ public class SimilarityGraph {
                         //do I need to do something here? (the link would be added before, so there also exist a link? maybe wrong thought
                         //for now only source nodes have links
                         SimilarityNode oldNode = nodes.get(entry.getKey());
-                        oldNode.addLink(entry.getValue(), n.getId());
+                        //oldNode.addLink(entry.getValue(), n.getId());
                     } else {
                         SimilarityNode newNode = addNode(entry.getKey(), nodeCounter++);
 

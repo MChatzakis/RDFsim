@@ -25,14 +25,17 @@ public class Examples {
     public static String simplestQuery = "select * where {?s ?p ?o .}";
 
     public static String ariadnePeopleQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
-    public static String dbPediaPhilosophersQuery = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+    public static String dbPediaPhilosophers = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
     public static String dbPediaQueryBiggerSeqs = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
+    public static String dbPediaProgrammingLanguages = "select ?s ?p ?o where {?s ?p ?o . ?s a <http://dbpedia.org/ontology/ProgrammingLanguage> . filter(isURI(?o)) }";
+    public static String dbPediaMovies = "select ?s ?p ?o where { ?s ?p ?o . ?s a <http://schema.org/Movie> . filter(isURI(?o))} ";
+    public static String dbPediaGameConsoles = "select ?s ?p ?o where { ?s ?p ?o. ?s a <http://dbpedia.org/class/yago/WikicatVideoGameConsoles> . filter(isURI(?o))} ";
 
-    public static void completeExample(String rdfFilePath, String vecFilePath, String endpoint, String query, int total, int start) throws IOException {
+    public static void completeProc(String rdfFilePath, String vecFilePath, String endpoint, String query, int total, int start, int minFreq) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
         String path = sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, false);
 
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(5, 100, 42, 5, path);
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, path);
         vects.train();
         vects.saveVectorSpace(vecFilePath);
 
@@ -56,8 +59,8 @@ public class Examples {
         System.out.println("Total words: " + strs.size());
     }
 
-    public static void trainOnly(String filepath, String output) {
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(4, 100, 42, 5, filepath);
+    public static void trainOnly(String filepath, String output, int minFreq) {
+        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, filepath);
         vects.train();
         vects.saveVectorSpace(output);
     }
@@ -74,9 +77,15 @@ public class Examples {
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
-        //trainOnly("C:\\tmp\\rdfsim\\crash.rdf", "C:\\tmp\\rdfsim\\embeddings\\c.vec");
-        //loadPreSaved("C:\\tmp\\rdfsim\\embeddings\\c.vec")
-        simGraph("C:\\tmp\\rdfsim\\embeddings\\VectorSample_Philosophers40000.vec", 1, 3);
+        String datasetName = "movies";
+        String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
+        String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
+
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 1179943, 5);
+        //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
+
+        //trainOnly(rdfFilePath, vectorFilePath, 2);
+        loadPreSaved(vectorFilePath);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;

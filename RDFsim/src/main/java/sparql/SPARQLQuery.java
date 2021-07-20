@@ -85,7 +85,7 @@ public class SPARQLQuery {
     public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
         String currData = "";
         FileWriter fw = new FileWriter(filename, true);
-        
+
         int dataRetrieved = 0;
         int offset = startOffset;
         int step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
@@ -97,7 +97,7 @@ public class SPARQLQuery {
             //System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
             offset += step;
             dataRetrieved += step;
-            
+
             step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
 
             fw.write(currData);
@@ -127,5 +127,25 @@ public class SPARQLQuery {
         return result;
     }
 
-    
+    public JSONArray getTriplesOfURI(String subject, String endpoint) throws MalformedURLException, ProtocolException, IOException {
+        JSONArray jtable = new JSONArray();
+        String query = "select ?p ?o where { <" + subject + "> ?p ?o. }"; //limit 10k
+        String pref = "./SearchServlet?entity=";
+        JSONObject rawData = retrieveData(endpoint, query);
+
+        //JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
+        JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
+        String ps = "";
+        String os = "";
+
+        //System.out.println(rawData.toString(2));
+        for (int i = 0; i < data.length(); i++) {
+           JSONObject newIndex = new JSONObject();
+            ps =  data.getJSONObject(i).getJSONObject("p").getString("value") + "";
+            //newIndex.put("p", href);
+            String address = pref+ps;
+        }
+
+        return jtable;
+    }
 }
