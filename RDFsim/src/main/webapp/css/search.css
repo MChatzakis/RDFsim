@@ -23,7 +23,7 @@
     margin-left: 50%;
     height: 1000px;
     width: 50%; 
-        
+
 }
 
 .iframe-wiki{
@@ -37,7 +37,7 @@
 .search-top{
     height: 120px;
     border-bottom: 1px solid black;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .rdfsim-logo-img{
@@ -151,3 +151,39 @@ body {
     background: gray;
 }
 
+.settings-button-graph{
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.settings-button-info{
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.settings-button-info-container{
+    text-align: center; 
+    width: 49%; 
+    float: left;   
+}
+
+.settings-button-graph-container{
+    text-align: center;
+    margin-left: 50%;
+    width: 49%; 
+}
+
+.graph-conf{
+    display: none;
+}
+
+.info-conf{
+    display: none;
+
+}

@@ -43,6 +43,15 @@ function setElemValue(id, val) {
     getElem(id).value = val;
 }
 
+function dispElemFromButtonClick(id) {
+    var el = getElem(id);
+    if (el.style.display === "block") {
+        hideElem(id);
+    } else {
+        showElem(id);
+    }
+}
+
 /* ---------------------------------- Graph Drawing ---------------------------------- */
 function drawGraph(entitiesJSON) {
     var nodeArr = [];
@@ -250,6 +259,8 @@ function calculateExpression() {
     });
 }
 
+/* ---------------------------------- Configuration ---------------------------------- */
+
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
@@ -282,7 +293,7 @@ function loadFrameResource(url) {
 $(document).ready(function () {
     var curEn = currentEntity;
     var graphJson = graph;
-    
+
     console.log("Current entity: " + curEn);
     console.log("Data recieved from server: " + graphJson);
 

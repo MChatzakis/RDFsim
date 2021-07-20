@@ -98,6 +98,7 @@ public class SearchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
+        String depth = request.getParameter("depth");
 
         if (entity != null) {
             currentEntity = entity;
@@ -109,12 +110,20 @@ public class SearchServlet extends HttpServlet {
             System.out.println("Count set: " + similarsNum);
         }
 
+        if (depth != null) {
+            graphDepth = Integer.parseInt(depth);
+            System.out.println("Depth set: " + graphDepth);
+        }
+
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
         simg.createGraph();
 
         JSONObject graph2sent = simg.toJSON();
+        
         request.setAttribute("graph", graph2sent.toString());
         request.setAttribute("self", currentEntity);
+        request.setAttribute("count", similarsNum);
+        request.setAttribute("depth", graphDepth);
 
         System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
 
