@@ -45,18 +45,19 @@ import utils.CommonUtils;
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
+
     String currentEntity = "";
+    String endpoint = "https://dbpedia.org/sparql";
 
     String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
 
     int similarsNum = 10;
     int graphDepth = 1;
 
-    boolean embeddedBrowser = false;
+    boolean gatherTriples = false;
 
     public SearchServlet() {
         super();
-
         try {
             String sample2load = "VectorSample_Philosophers40000";
             initDBpediaSample(sample2load);
@@ -98,6 +99,7 @@ public class SearchServlet extends HttpServlet {
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
         String depth = request.getParameter("depth");
+        String triples = request.getParameter("triples");
 
         if (entity != null) {
             currentEntity = entity;
@@ -114,6 +116,13 @@ public class SearchServlet extends HttpServlet {
             System.out.println("Depth set: " + graphDepth);
         }
 
+        if (triples != null) {
+            gatherTriples = true;
+            System.out.println("Gathering triples...");
+        } else {
+            gatherTriples = false;
+        }
+
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
         simg.createGraph();
 
@@ -123,6 +132,11 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("self", currentEntity);
         request.setAttribute("count", similarsNum);
         request.setAttribute("depth", graphDepth);
+
+        if (gatherTriples) {
+            JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
+            request.setAttribute("triples", jtriples.toString());
+        }
 
         System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
 

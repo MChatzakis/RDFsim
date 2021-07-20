@@ -113,7 +113,7 @@ public class SPARQLQuery {
         return new File(filename).getAbsolutePath();
     }
 
-    public String formatDBpediaURI(String URI) {
+    public static String formatDBpediaURI(String URI) {
 
         String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
         String[] parts;
@@ -127,25 +127,60 @@ public class SPARQLQuery {
         return result;
     }
 
-    public JSONArray getTriplesOfURI(String subject, String endpoint) throws MalformedURLException, ProtocolException, IOException {
+    public static JSONArray getTriplesOfURI(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
-        String query = "select ?p ?o where { <" + subject + "> ?p ?o. }"; //limit 10k
-        String pref = "./SearchServlet?entity=";
-        JSONObject rawData = retrieveData(endpoint, query);
 
-        //JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
+        String query = "select ?p ?o where { <" + s + "> ?p ?o. }"; //limit 10k
+        String pref = "./SearchServlet?entity=";
+
+        JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
+
         String ps = "";
         String os = "";
 
-        //System.out.println(rawData.toString(2));
         for (int i = 0; i < data.length(); i++) {
-           JSONObject newIndex = new JSONObject();
-            ps =  data.getJSONObject(i).getJSONObject("p").getString("value") + "";
-            //newIndex.put("p", href);
-            String address = pref+ps;
+            JSONObject newIndex = new JSONObject();
+
+            ps = data.getJSONObject(i).getJSONObject("p").getString("value") + "";
+            os = data.getJSONObject(i).getJSONObject("o").getString("value") + "";
+
+            String subject = "";
+            String provenance = "";
+            String object = "";
+
+            if (isURI(s)) {
+                String address = pref + s;
+                subject = "<a href=\"" + address + " \">" + formatDBpediaURI(s) + "</a>, <a href=\"" + s + "\">source</a>";
+            } else {
+                subject = s;
+            }
+
+            if (isURI(ps)) {
+                String address = pref + ps;
+                provenance = "<a href=\"" + address + " \">" + formatDBpediaURI(ps) + "</a>, <a href=\"" + ps + "\">source</a>";
+            } else {
+                provenance = ps;
+            }
+
+            if (isURI(os)) {
+                String address = pref + os;
+                object = "<a href=\"" + address + " \">" + formatDBpediaURI(os) + "</a>, <a href=\"" + os + "\">source</a>";
+            } else {
+                object = os;
+            }
+
+            newIndex.put("s", subject);
+            newIndex.put("p", provenance);
+            newIndex.put("o", object);
+
+            jtable.put(newIndex);
         }
 
         return jtable;
+    }
+
+    public static boolean isURI(String str) {
+        return str.startsWith("http");
     }
 }

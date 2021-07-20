@@ -259,6 +259,33 @@ function calculateExpression() {
     });
 }
 
+/* ---------------------------------- Triples ---------------------------------- */
+function fillTripleTable(data) {
+    var table = getElem("triple-table-id");
+    clearElem("triple-table-id");
+    var counter = 0;
+
+    for (elem in data) {
+
+        var s = elem["s"];
+        var p = elem["p"];
+        var o = elem["o"];
+        var arr = [s, p, o];
+
+        row = table.insertRow(counter + 1);
+
+        for (var j = 0; j < 3; j++) {
+            var cell = row.insertCell(j);
+            cell.innerHTML = arr[j] + "";
+        }
+
+        counter++;
+    }
+
+    showElem("triple-table-id");
+
+}
+
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
@@ -302,7 +329,15 @@ $(document).ready(function () {
 
     drawGraph(JSON.parse(graphJson));
 
-    loadFrameResource(curEn, "wikipedia");
+    if (triplesRetrieved != null) {
+        //hide and show
+        var jsonTripleArray = JSON.parse(triplesRetrieved);
+        fillTripleTable(jsonTripleArray);
+    } else {
+        //hide and show
+        loadFrameResource(curEn, "wikipedia");
+    }
+
     setElemValue("search-input-id", curEn);
     setElemValue("count-input-id", currCount);
     setElemValue("depth-input-id", currDepth)
