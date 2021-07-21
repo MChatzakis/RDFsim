@@ -53,13 +53,12 @@ public class SearchServlet extends HttpServlet {
 
     int similarsNum = 10;
     int graphDepth = 1;
-
     boolean gatherTriples = false;
 
     public SearchServlet() {
         super();
         try {
-            String sample2load = "VectorSample_Philosophers40000";
+            String sample2load = samples[1];
             initDBpediaSample(sample2load);
             printInfo();
         } catch (FileNotFoundException ex) {
@@ -99,7 +98,7 @@ public class SearchServlet extends HttpServlet {
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
         String depth = request.getParameter("depth");
-        String triples = request.getParameter("triples");
+        String infoService = request.getParameter("info-service");
 
         if (entity != null) {
             currentEntity = entity;
@@ -116,13 +115,6 @@ public class SearchServlet extends HttpServlet {
             System.out.println("Depth set: " + graphDepth);
         }
 
-        if (triples != null) {
-            gatherTriples = true;
-            System.out.println("Gathering triples...");
-        } else {
-            gatherTriples = false;
-        }
-
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
         simg.createGraph();
 
@@ -133,13 +125,26 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("count", similarsNum);
         request.setAttribute("depth", graphDepth);
 
-        if (gatherTriples) {
-            JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
-            request.setAttribute("triples", jtriples.toString());
+        if (infoService != null) {
+            if (infoService.equals("wikipedia")) {
+                request.setAttribute("info-service", "wikipedia");
+                System.out.println("Wikipedia service selected.");
+            } else if (infoService.equals("dbpedia")) {
+                request.setAttribute("info-service", "dbpedia");
+                System.out.println("DBpedia service selected.");
+            } else if (infoService.equals("triples")) {
+                JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
+               
+                request.setAttribute("info-service", jtriples.toString());
+                System.out.println("Triple service selected.");
+            }
+
+        } else {
+            request.setAttribute("info-service", "wikipedia"); // wikipedia is the default
+            System.out.println("Wikipedia service selected.");
         }
 
         System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
-
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
     }

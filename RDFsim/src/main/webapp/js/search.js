@@ -265,16 +265,29 @@ function fillTripleTable(data) {
     clearElem("triple-table-id");
     var counter = 0;
 
+    row = table.insertRow(counter++);
+    var cell = row.insertCell(0);
+    cell.innerHTML = "<th>Predicate</th>";
+    var cell = row.insertCell(1);
+    cell.innerHTML = "<th>Object</th>";
+
+    var pref = "./SearchServlet?entity=";
+    var address = "";
+
     for (elem in data) {
 
-        var s = elem["s"];
-        var p = elem["p"];
-        var o = elem["o"];
-        var arr = [s, p, o];
+        var p = data[elem]["p"].replaceAll("@_@", "'");
 
-        row = table.insertRow(counter + 1);
+        var o = data[elem]["o"].replaceAll("@_@", "'");
 
-        for (var j = 0; j < 3; j++) {
+        var predicate = "<a href=\"" + pref + p + " \">" + formatDBpediaURI(p) + "</a>(<a href=\"" + p + "\">src</a>)";
+        var object = "<a href=\"" + pref + o + " \">" + formatDBpediaURI(o) + "</a>(<a href=\"" + o + "\">src</a>)";
+
+        var arr = [predicate, object];
+
+        row = table.insertRow(counter);
+
+        for (var j = 0; j < 2; j++) {
             var cell = row.insertCell(j);
             cell.innerHTML = arr[j] + "";
         }
@@ -297,6 +310,8 @@ function formatDBpediaURI(URI) {
         var arr = formattedURI.split(beforeSplitters[s]);
         formattedURI = arr[arr.length - 1];
     }
+
+    formattedURI = formattedURI.replaceAll("_", " ");
 
     return formattedURI;
 }
@@ -323,23 +338,31 @@ function loadFrameResource(url, mode) {
 $(document).ready(function () {
     var curEn = currentEntity;
     var graphJson = graph;
+    var infoS = infoService;
+    var count = currCount;
+    var depth = currDepth;
 
     console.log("Current entity: " + curEn);
     console.log("Data recieved from server: " + graphJson);
 
     drawGraph(JSON.parse(graphJson));
 
-    if (triplesRetrieved != null) {
-        //hide and show
-        var jsonTripleArray = JSON.parse(triplesRetrieved);
-        fillTripleTable(jsonTripleArray);
+    console.log("Info:" + infoS);
+
+    if (!infoS.startsWith('[{')) {
+        console.log("Embedded browser selected.");
+        hideElem('triple-table-id');
+        loadFrameResource(curEn, infoS);
     } else {
-        //hide and show
-        loadFrameResource(curEn, "wikipedia");
+        console.log("Triple table selected.");
+        hideElem('iframe-wiki-id');
+        //var jsonOb = "{ \"array\": " + infoS + "}";
+        var jsonTripleArray = JSON.parse(infoS);
+        fillTripleTable(jsonTripleArray);
     }
 
     setElemValue("search-input-id", curEn);
-    setElemValue("count-input-id", currCount);
-    setElemValue("depth-input-id", currDepth)
-});
+    setElemValue("count-input-id", count);
+    setElemValue("depth-input-id", depth)
 
+});

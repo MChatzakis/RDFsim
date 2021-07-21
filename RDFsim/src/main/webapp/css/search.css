@@ -16,14 +16,14 @@
     width: 50%; 
     height: 1000px; 
     float: left;   
+
 }
 
 .results-graph{
     text-align: center;
     margin-left: 50%;
     height: 1000px;
-    width: 50%; 
-
+    width: 50%;
 }
 
 .iframe-wiki{
@@ -92,7 +92,7 @@ a{
     background: black;
     color: #fff;
     margin-top: auto;
-    /*position:absolute;*/
+    position:relative;
     bottom: 0;
     font-size: 14px;
 }
@@ -185,5 +185,16 @@ body {
 
 .info-conf{
     display: none;
+}
 
+.triple-table{
+    display: none;
+    position: relative; 
+    height: 96%; 
+    width: 96%;
+    margin-left: 8px;
+    table-layout: fixed;
+    overflow-y: scroll;
+    overflow-x: scroll;    
+    border: 1px solid black;
 }

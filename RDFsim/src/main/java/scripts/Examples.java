@@ -7,6 +7,7 @@ package scripts;
 
 import embeddings.Word2VecEmbeddingCreator;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.Collection;
 import java.util.HashMap;
 import simgraph.SimilarityGraph;
@@ -74,6 +75,10 @@ public class Examples {
         System.out.println(g.toJSON().toString(2));
     }
 
+    public static void getTriplesOfEntity(String entity, String endpoint) throws ProtocolException, IOException {
+        System.out.println(SPARQLQuery.getTriplesOfURI(entity, endpoint).toString(2));
+    }
+
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
@@ -81,11 +86,11 @@ public class Examples {
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
 
-        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 1179943, 5);
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 3145026, 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
-
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         loadPreSaved(vectorFilePath);
+        //getTriplesOfEntity("http://dbpedia.org/resource/Aristotle", dbPediaEndpoint);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;

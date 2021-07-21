@@ -130,7 +130,7 @@ public class SPARQLQuery {
     public static JSONArray getTriplesOfURI(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
-        String query = "select ?p ?o where { <" + s + "> ?p ?o. }"; //limit 10k
+        String query = "select ?p ?o where { <" + s + "> ?p ?o. filter(isURI(?o)) }"; 
         String pref = "./SearchServlet?entity=";
 
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
@@ -146,32 +146,13 @@ public class SPARQLQuery {
             os = data.getJSONObject(i).getJSONObject("o").getString("value") + "";
 
             String subject = "";
-            String provenance = "";
+            String predicate = "";
             String object = "";
 
-            if (isURI(s)) {
-                String address = pref + s;
-                subject = "<a href=\"" + address + " \">" + formatDBpediaURI(s) + "</a>, <a href=\"" + s + "\">source</a>";
-            } else {
-                subject = s;
-            }
+            predicate = ps.replace("'", "@_@");
+            object = os.replace("'", "@_@");
 
-            if (isURI(ps)) {
-                String address = pref + ps;
-                provenance = "<a href=\"" + address + " \">" + formatDBpediaURI(ps) + "</a>, <a href=\"" + ps + "\">source</a>";
-            } else {
-                provenance = ps;
-            }
-
-            if (isURI(os)) {
-                String address = pref + os;
-                object = "<a href=\"" + address + " \">" + formatDBpediaURI(os) + "</a>, <a href=\"" + os + "\">source</a>";
-            } else {
-                object = os;
-            }
-
-            newIndex.put("s", subject);
-            newIndex.put("p", provenance);
+            newIndex.put("p", predicate);
             newIndex.put("o", object);
 
             jtable.put(newIndex);
