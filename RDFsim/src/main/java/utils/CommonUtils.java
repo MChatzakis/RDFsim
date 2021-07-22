@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -50,12 +52,38 @@ public class CommonUtils {
 
         return string;
     }
-   
+
     public static void printEntityMap(HashMap<String, Double> map) {
         //map.forEach((key, value) -> System.out.println(key + ":" + value)); //why is Java 7 enabled?????????
         for (Map.Entry<String, Double> entry : map.entrySet()) {
             System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
         }
+    }
+
+    public static String levenshteinDistance(Collection<String> URIs, String URI) {
+        String closestURI = "";
+        int dist = Integer.MAX_VALUE;
+
+        for (String curr : URIs) {
+            int currDist = StringUtils.getLevenshteinDistance(curr, URI);
+            if (currDist < dist) {
+                dist = currDist;
+                closestURI = curr;
+            }
+        }
+
+        return closestURI;
+    }
+
+    public static JSONObject entityMapToJSON(HashMap<String, Double> map) {
+        JSONObject mapObj = new JSONObject();
+
+        for (Map.Entry<String, Double> entry : map.entrySet()) {
+            //System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
+            mapObj.put(entry.getKey(), entry.getValue().toString());
+        }
+
+        return mapObj;
     }
 
     public static HashMap<String, Double> sortEntityMap(HashMap<String, Double> map) {
@@ -76,23 +104,6 @@ public class CommonUtils {
         }
 
         return temp;
-    }
-
-    public static JSONObject entityMapToJSON(HashMap<String, Double> map) {
-        JSONObject mapObj = new JSONObject();
-
-        for (Map.Entry<String, Double> entry : map.entrySet()) {
-            //System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
-            mapObj.put(entry.getKey(), entry.getValue().toString());
-        }
-
-        return mapObj;
-    }
-
-    public static JSONObject entityMapToJSONGraph(String entity, HashMap<String, Double> similarsOfCurrEntity, int i) {
-        JSONObject g = new JSONObject();
-
-        return g;
     }
 
 }

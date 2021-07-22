@@ -45,11 +45,14 @@ import utils.CommonUtils;
 public class SearchServlet extends HttpServlet {
 
     Word2VecEmbeddingCreator vec = null;
+    Collection<String> availableVocabulary = null;
+
+    String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
 
     String currentEntity = "";
     String endpoint = "https://dbpedia.org/sparql";
-
-    String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
+    String currentInformationService = "wikipedia";
+    String currentPrefix = "http://dbpedia.org/resource/";
 
     int similarsNum = 10;
     int graphDepth = 1;
@@ -83,12 +86,14 @@ public class SearchServlet extends HttpServlet {
         } else {
             throw new FileNotFoundException("Could not locate the vector file in current file system");
         }
+
+        availableVocabulary = vec.getVocab();
     }
 
     private void printInfo() {
-        Collection<String> v = vec.getVocab();
+
         System.out.println("Available words to search:");
-        for (String s : v) {
+        for (String s : availableVocabulary) {
             System.out.println(s);
         }
     }
@@ -101,7 +106,19 @@ public class SearchServlet extends HttpServlet {
         String infoService = request.getParameter("info-service");
 
         if (entity != null) {
-            currentEntity = entity;
+
+            if (!entity.startsWith("http")) {
+                entity = currentPrefix + entity;
+            }
+
+            if (vec.getVec().hasWord(entity)) {
+                currentEntity = entity;
+            } else {
+                String closestEntity = CommonUtils.levenshteinDistance(availableVocabulary, entity);
+                System.out.println("Close: " + closestEntity);
+                currentEntity = closestEntity;
+            }
+
             System.out.println("Entity Set: " + currentEntity);
         }
 
@@ -115,6 +132,20 @@ public class SearchServlet extends HttpServlet {
             System.out.println("Depth set: " + graphDepth);
         }
 
+        if (infoService != null) {
+            if (infoService.equals("wikipedia")) {
+                currentInformationService = "wikipedia";
+                System.out.println("Wikipedia service selected.");
+            } else if (infoService.equals("dbpedia")) {
+                currentInformationService = "dbpedia";
+                System.out.println("DBpedia service selected.");
+            } else if (infoService.equals("triples")) {
+                JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
+                currentInformationService = jtriples.toString();
+                System.out.println("Triple Services Selected");
+            }
+        }
+
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
         simg.createGraph();
 
@@ -124,25 +155,7 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("self", currentEntity);
         request.setAttribute("count", similarsNum);
         request.setAttribute("depth", graphDepth);
-
-        if (infoService != null) {
-            if (infoService.equals("wikipedia")) {
-                request.setAttribute("info-service", "wikipedia");
-                System.out.println("Wikipedia service selected.");
-            } else if (infoService.equals("dbpedia")) {
-                request.setAttribute("info-service", "dbpedia");
-                System.out.println("DBpedia service selected.");
-            } else if (infoService.equals("triples")) {
-                JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
-               
-                request.setAttribute("info-service", jtriples.toString());
-                System.out.println("Triple service selected.");
-            }
-
-        } else {
-            request.setAttribute("info-service", "wikipedia"); // wikipedia is the default
-            System.out.println("Wikipedia service selected.");
-        }
+        request.setAttribute("info-service", currentInformationService);
 
         System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");

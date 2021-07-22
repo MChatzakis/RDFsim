@@ -101,7 +101,7 @@ public class Word2VecEmbeddingCreator {
     public Collection<String> getExpressionResult(Collection<String> ents2add, Collection<String> ents2sub, int count) {
         return vec.wordsNearest(ents2sub, ents2sub, count);
     }
-
+    
     public Collection<String> getVocab() {
         return vec.getVocab().words();
     }
