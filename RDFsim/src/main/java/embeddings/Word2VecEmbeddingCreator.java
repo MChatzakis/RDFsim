@@ -105,4 +105,10 @@ public class Word2VecEmbeddingCreator {
     public Collection<String> getVocab() {
         return vec.getVocab().words();
     }
+    
+    public void removeWordsFromVocab(Collection<String>words2remove){
+        for(String s : words2remove){
+            vec.vocab().removeElement(s);
+        }
+    }
 }

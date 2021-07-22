@@ -87,6 +87,8 @@ public class SearchServlet extends HttpServlet {
             throw new FileNotFoundException("Could not locate the vector file in current file system");
         }
 
+        String[] w2remove = {"."};
+        vec.removeWordsFromVocab(Arrays.asList(w2remove));
         availableVocabulary = vec.getVocab();
     }
 
