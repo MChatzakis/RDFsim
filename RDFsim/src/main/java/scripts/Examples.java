@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package scripts;
 
 import embeddings.Word2VecEmbeddingCreator;
@@ -86,7 +81,7 @@ public class Examples {
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
 
-        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 6534952, 5);
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 7664938, 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         loadPreSaved(vectorFilePath);

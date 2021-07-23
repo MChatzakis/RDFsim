@@ -61,7 +61,7 @@ public class SearchServlet extends HttpServlet {
     public SearchServlet() {
         super();
         try {
-            String sample2load = samples[1];
+            String sample2load = samples[0];
             initDBpediaSample(sample2load);
             printInfo();
         } catch (FileNotFoundException ex) {
@@ -71,7 +71,7 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void initDBpediaSample(String sampleName) throws FileNotFoundException {
-        String linuxPath = "/usr/rdfsim/embeddings/" + sampleName + ".vec";
+        String linuxPath = "/tmp/rdfsim/embeddings/" + sampleName + ".vec";
         String windowsPath = "C:\\tmp\\rdfsim\\embeddings\\" + sampleName + ".vec";
 
         File lin = new File(linuxPath);
