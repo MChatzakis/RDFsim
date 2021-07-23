@@ -121,7 +121,7 @@ public class Word2VecEmbeddingCreator {
 
         RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
         raf.seek(0);
-
+        
         long currentOffset = 0;
 
         Collection<String> words = getVocab();
@@ -152,9 +152,9 @@ public class Word2VecEmbeddingCreator {
             
             currentOffset = raf.getFilePointer();
             //raf.seek(currentOffset);
-
         }
         
+        raf.writeUTF("#end");
         //raf.seek(0);
         //System.out.println(raf.readUTF());
         raf.close();

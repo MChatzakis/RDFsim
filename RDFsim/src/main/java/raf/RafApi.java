@@ -27,10 +27,16 @@ public class RafApi {
         raf.seek(0);
         String res = "";
         String line = "";
-        while ((line = raf.readLine()) != null) {
-            res += line;
-        }
+        while ((line = raf.readUTF()) != null) {
+            res += line + "\n";
+            //System.out.println(line);
 
+            if (line.equals("#end")) {
+                break;
+            }
+
+        }
+        
         return res;
     }
 
