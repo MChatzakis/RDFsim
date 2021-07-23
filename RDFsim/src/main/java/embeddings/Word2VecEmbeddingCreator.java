@@ -1,12 +1,16 @@
 package embeddings;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
@@ -19,6 +23,7 @@ import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
+import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
@@ -101,14 +106,57 @@ public class Word2VecEmbeddingCreator {
     public Collection<String> getExpressionResult(Collection<String> ents2add, Collection<String> ents2sub, int count) {
         return vec.wordsNearest(ents2sub, ents2sub, count);
     }
-    
+
     public Collection<String> getVocab() {
         return vec.getVocab().words();
     }
-    
-    public void removeWordsFromVocab(Collection<String>words2remove){
-        for(String s : words2remove){
+
+    public void removeWordsFromVocab(Collection<String> words2remove) {
+        for (String s : words2remove) {
             vec.vocab().removeElement(s);
         }
+    }
+
+    public void createRAF(String filenameRAF, String filenamePTR, Collection<String> words2remove, int count) throws FileNotFoundException, IOException {
+
+        RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
+        raf.seek(0);
+
+        long currentOffset = 0;
+
+        Collection<String> words = getVocab();
+        TreeMap<String, String> wordsCutted = new TreeMap<>();
+
+        for (String w : words) {
+            wordsCutted.put(SPARQLQuery.formatDBpediaURI(w), w);
+        }
+
+        for (Map.Entry<String, String> entry : wordsCutted.entrySet()) {
+            String currentEntity = entry.getKey();
+            String currentEntityURI = entry.getValue();
+
+            //System.out.println("Doing staff for entity: " + currentEntity);
+
+            String line2write = currentEntity + " " + currentEntityURI + " ";
+
+            HashMap<String, Double> similars = getSimilarEntitiesWithValues(currentEntityURI, count);
+            for (Map.Entry<String, Double> simEntry : similars.entrySet()) {
+                line2write += simEntry.getKey() + "_" + simEntry.getValue() + " ";
+            }
+
+            line2write += "\n";
+            
+            //System.out.println(line2write);
+            
+            raf.writeUTF(line2write);
+            
+            currentOffset = raf.getFilePointer();
+            //raf.seek(currentOffset);
+
+        }
+        
+        //raf.seek(0);
+        //System.out.println(raf.readUTF());
+        raf.close();
     }
 }

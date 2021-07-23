@@ -3,9 +3,11 @@ package utils;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -104,6 +106,36 @@ public class CommonUtils {
         }
 
         return temp;
+    }
+
+    public static void createRAF(String filename) throws FileNotFoundException, IOException {
+        RandomAccessFile raf = new RandomAccessFile(filename, "rw");
+
+        // write something in the file
+        raf.writeUTF("Hello World");
+
+        // set the file pointer at 0 position
+        raf.seek(0);
+        raf.writeUTF("Nope!");
+        // print the string
+        raf.seek(0);
+        System.out.println("" + raf.readUTF());
+
+        // set the file pointer at 5 position
+        /*raf.seek(5);
+
+        // write something in the file
+        raf.writeUTF("This is an example");
+
+        // set the file pointer at 0 position
+        raf.seek(0);
+
+        // print the string
+        System.out.println("" + raf.readUTF());*/
+    }
+
+    public static void main(String[] args) throws IOException {
+        createRAF("r.txt");
     }
 
 }

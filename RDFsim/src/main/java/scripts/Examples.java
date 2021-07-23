@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Collection;
 import java.util.HashMap;
+import raf.RafApi;
 import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
@@ -74,19 +75,24 @@ public class Examples {
         System.out.println(SPARQLQuery.getTriplesOfURI(entity, endpoint).toString(2));
     }
 
+    public static void createRAF(String filenameRAF, String modelName, int count) throws IOException {
+        new Word2VecEmbeddingCreator(modelName).createRAF(filenameRAF, "", null, count);
+        
+        System.out.println(new RafApi(filenameRAF).toUTF());
+    }
+
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
         String datasetName = "movies";
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
-
-        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 7664938, 5);
+        //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 7664938, 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
-        loadPreSaved(vectorFilePath);
+        //loadPreSaved(vectorFilePath);
         //getTriplesOfEntity("http://dbpedia.org/resource/Aristotle", dbPediaEndpoint);
-
+        createRAF("raf.txt", "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec", 1);
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
 
