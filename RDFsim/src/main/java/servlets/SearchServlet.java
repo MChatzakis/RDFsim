@@ -149,7 +149,7 @@ public class SearchServlet extends HttpServlet {
         }
 
         SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
-        simg.createGraph();
+        simg.createGraphW2V();
 
         JSONObject graph2sent = simg.toJSON();
 

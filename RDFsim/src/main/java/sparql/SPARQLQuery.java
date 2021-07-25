@@ -27,38 +27,40 @@ import org.nd4j.shade.guava.io.CharSink;
  * @author Manos Chatzakis
  */
 public class SPARQLQuery {
-
+    
     public JSONObject retrieveData(String endpoint, String query) throws UnsupportedEncodingException, MalformedURLException, ProtocolException, IOException {
-
+        
         System.out.println("Query: " + query);
-
+        
         String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
         URL url = new URL(sparqlQueryURL);
-
+        
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
+        
         conn.setRequestProperty("ACCEPT", "application/sparql-results+json");
         conn.setRequestMethod("GET");
         conn.connect();
-
+        
         InputStream is = conn.getInputStream();
         InputStreamReader isr = new InputStreamReader(is, "utf8");
         BufferedReader in = new BufferedReader(isr);
-
+        
         String input;
         String resultsString = "";
         while ((input = in.readLine()) != null) {
             resultsString += input;
         }
-
+        
         in.close();
         isr.close();
         is.close();
-
+        
         return new JSONObject(resultsString);
     }
-
+    
     public String parseData(JSONObject rawData, boolean formatURI) {
+        
+        System.out.println(rawData.toString(2));
         JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
         String res = "";
@@ -72,95 +74,95 @@ public class SPARQLQuery {
                     res += data.getJSONObject(i).getJSONObject(vars.getString(k)).getString("value") + " ";
                 }
             }
-
+            
             res += ".\n";
         }
         return res;
     }
-
+    
     public String getData(String endpoint, String query, boolean formatURI) throws MalformedURLException, ProtocolException, IOException {
         return parseData(retrieveData(endpoint, query), formatURI);
     }
-
+    
     public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
         String currData = "";
         FileWriter fw = new FileWriter(filename, true);
-
+        
         int dataRetrieved = 0;
         int offset = startOffset;
         int step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
-
+        
         String query = baseQuery + " offset " + offset + " limit " + step;
-
+        
         while (!(currData = getData(endpoint, query, formatURI)).equals("")) {
 
             //System.out.println("[O: " + offset + ",E:" + (offset + step) + "]");
             offset += step;
             dataRetrieved += step;
-
+            
             step = (total - dataRetrieved >= 10000) ? 10000 : (total - dataRetrieved);
-
+            
             fw.write(currData);
-
+            
             if (dataRetrieved >= total) {
                 break;
             }
-
+            
             query = baseQuery + " offset " + offset + " limit " + step;
         }
-
+        
         fw.close();
         return new File(filename).getAbsolutePath();
     }
-
+    
     public static String formatDBpediaURI(String URI) {
-
+        
         String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
         String[] parts;
         String result = URI;
-
+        
         for (String s : splitters) {
             parts = result.split(s);
             result = parts[parts.length - 1];
         }
-
+        
         return result;
     }
-
+    
     public static JSONArray getTriplesOfURI(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
-
-        String query = "select ?p ?o where { <" + s + "> ?p ?o. filter(isURI(?o)) }"; 
+        
+        String query = "select ?p ?o where { <" + s + "> ?p ?o. filter(isURI(?o)) }";        
         String pref = "./SearchServlet?entity=";
-
+        
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
-
+        
         String ps = "";
         String os = "";
-
+        
         for (int i = 0; i < data.length(); i++) {
             JSONObject newIndex = new JSONObject();
-
+            
             ps = data.getJSONObject(i).getJSONObject("p").getString("value") + "";
             os = data.getJSONObject(i).getJSONObject("o").getString("value") + "";
-
+            
             String subject = "";
             String predicate = "";
             String object = "";
-
+            
             predicate = ps.replace("'", "@_@");
             object = os.replace("'", "@_@");
-
+            
             newIndex.put("p", predicate);
             newIndex.put("o", object);
-
+            
             jtable.put(newIndex);
         }
-
+        
         return jtable;
     }
-
+    
     public static boolean isURI(String str) {
         return str.startsWith("http");
     }

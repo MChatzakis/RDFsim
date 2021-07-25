@@ -3,6 +3,7 @@ package embeddings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
@@ -117,12 +118,21 @@ public class Word2VecEmbeddingCreator {
         }
     }
 
+    public void removeWord(String word) {
+        vec.vocab().removeElement(word);
+    }
+
     public void createRAF(String filenameRAF, String filenamePTR, Collection<String> words2remove, int count) throws FileNotFoundException, IOException {
 
         RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
         raf.seek(0);
-        
+
+        String characterPointerMappings = "";
+
+        char currentStartChar = ' ';
         long currentOffset = 0;
+
+        filterDBpediaResourcesOnly();
 
         Collection<String> words = getVocab();
         TreeMap<String, String> wordsCutted = new TreeMap<>();
@@ -131,32 +141,52 @@ public class Word2VecEmbeddingCreator {
             wordsCutted.put(SPARQLQuery.formatDBpediaURI(w), w);
         }
 
+        //characterPointerMappings = currentStartChar + "," + currentOffset + "\n";
         for (Map.Entry<String, String> entry : wordsCutted.entrySet()) {
             String currentEntity = entry.getKey();
             String currentEntityURI = entry.getValue();
 
-            //System.out.println("Doing staff for entity: " + currentEntity);
+            char start = currentEntity.charAt(0);
+
+            currentOffset = raf.getFilePointer();
+            
+            if (start > currentStartChar || currentStartChar == ' ') {
+                currentStartChar = start;
+                characterPointerMappings += currentStartChar + "," + currentOffset + "\n";
+            }
 
             String line2write = currentEntity + " " + currentEntityURI + " ";
 
             HashMap<String, Double> similars = getSimilarEntitiesWithValues(currentEntityURI, count);
             for (Map.Entry<String, Double> simEntry : similars.entrySet()) {
-                line2write += simEntry.getKey() + "_" + simEntry.getValue() + " ";
+                line2write += simEntry.getKey() + "%%%" + simEntry.getValue() + "@";
             }
 
-            line2write += "\n";
-            
+            line2write += " \n";
+
             //System.out.println(line2write);
-            
             raf.writeUTF(line2write);
-            
-            currentOffset = raf.getFilePointer();
-            //raf.seek(currentOffset);
+
         }
-        
+
         raf.writeUTF("#end");
-        //raf.seek(0);
-        //System.out.println(raf.readUTF());
         raf.close();
+
+        CommonUtils.writeStringToFile(characterPointerMappings, filenamePTR);
+
+    }
+
+    public void filterDBpediaResourcesOnly() {
+        Collection<String> startingVocab = new ArrayList<>(getVocab());
+
+        for (String s : startingVocab) {
+            if (!s.startsWith("http://dbpedia.org/resource/")) {
+                vec.vocab().removeElement(s);
+            } else if (s.startsWith("http://dbpedia.org/resource/Category") || s.startsWith("http://dbpedia.org/resource/Template")) {
+                vec.vocab().removeElement(s);
+            } else if (s.contains("???")) {
+                vec.vocab().removeElement(s);
+            }
+        }
     }
 }

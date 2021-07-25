@@ -32,9 +32,9 @@ public class Examples {
         SPARQLQuery sq = new SPARQLQuery();
         String path = sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, false);
 
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, path);
-        vects.train();
-        vects.saveVectorSpace(vecFilePath);
+        //Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, path);
+        //vects.train();
+        //vects.saveVectorSpace(vecFilePath);
 
         /*String entity = "http://dbpedia.org/resource/Cassius_Longinus_(philosopher)";
         Collection<String> similars = vects.getSimilarEntities(entity, 5);
@@ -66,7 +66,7 @@ public class Examples {
         Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(filepath);
         SimilarityGraph g = new SimilarityGraph(depth, count, vects, "http://dbpedia.org/resource/Aristotle");
 
-        g.createGraph();
+        g.createGraphW2V();
 
         System.out.println(g.toJSON().toString(2));
     }
@@ -75,10 +75,20 @@ public class Examples {
         System.out.println(SPARQLQuery.getTriplesOfURI(entity, endpoint).toString(2));
     }
 
-    public static void createRAF(String filenameRAF, String modelName, int count) throws IOException {
-        new Word2VecEmbeddingCreator(modelName).createRAF(filenameRAF, "", null, count);
+    public static void createRAF(String filenameRAF, String filenamePTR, String modelName, int count) throws IOException {
+        new Word2VecEmbeddingCreator(modelName).createRAF(filenameRAF, filenamePTR, null, count);
+
+        //System.out.println(new RafApi(filenameRAF, filenamePTR).toUTF());
+        RafApi raf = new RafApi(filenameRAF, filenamePTR);
         
-        System.out.println(new RafApi(filenameRAF).toUTF());
+        System.out.println(raf.toUTF());
+        
+        String en = "Plato";
+        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(en, count);
+
+        System.out.println("Similars of " + en);
+        CommonUtils.printEntityMap(similars);
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -87,12 +97,14 @@ public class Examples {
         String datasetName = "movies";
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
-        //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 15000000, 9714905, 5);
+        //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 3, 13512331 , 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         //loadPreSaved(vectorFilePath);
         //getTriplesOfEntity("http://dbpedia.org/resource/Aristotle", dbPediaEndpoint);
-        createRAF("raf.txt", "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec", 1);
+
+        createRAF("raf.txt", "t.txt", "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec", 20);
+
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
 
