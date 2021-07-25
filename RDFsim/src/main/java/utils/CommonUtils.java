@@ -108,34 +108,29 @@ public class CommonUtils {
         return temp;
     }
 
-    public static void createRAF(String filename) throws FileNotFoundException, IOException {
-        RandomAccessFile raf = new RandomAccessFile(filename, "rw");
-
-        // write something in the file
-        raf.writeUTF("Hello World");
-
-        // set the file pointer at 0 position
-        raf.seek(0);
-        raf.writeUTF("Nope!");
-        // print the string
-        raf.seek(0);
-        System.out.println("" + raf.readUTF());
-
-        // set the file pointer at 5 position
-        /*raf.seek(5);
-
-        // write something in the file
-        raf.writeUTF("This is an example");
-
-        // set the file pointer at 0 position
-        raf.seek(0);
-
-        // print the string
-        System.out.println("" + raf.readUTF());*/
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
-    public static void main(String[] args) throws IOException {
-        createRAF("r.txt");
-    }
+    public static String formatDBpediaURI(String URI) {
 
+        String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
+        String[] parts;
+        String result = URI;
+
+        for (String s : splitters) {
+            parts = result.split(s);
+            result = parts[parts.length - 1];
+        }
+
+        return result;
+    }
 }

@@ -1,7 +1,7 @@
 .graphContainer {
     position: relative; 
-    height: 96%; 
-    width: 96%;
+    height: 94%; 
+    width: 94%;
     border: 1px solid black;
 }
 
@@ -28,8 +28,8 @@
 
 .iframe-wiki{
     position: relative; 
-    height: 96%; 
-    width: 96%;
+    height: 94%; 
+    width: 94%;
     border: 1px solid black;
     margin-left: 8px;
 }
@@ -84,7 +84,7 @@ a{
 .copyright {
     clear:both;
     display: flex;
-    height: 37px;
+    height: 35px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -94,7 +94,7 @@ a{
     margin-top: auto;
     position:relative;
     bottom: 0;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .footer-images {

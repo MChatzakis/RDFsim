@@ -48,12 +48,11 @@ public class RafApi {
     }
 
     public HashMap<String, Double> getSimilarEntitiesOfEntity(String entity, int count) throws IOException {
+        String[] contents = getEntityContents(entity);
+        
         HashMap<String, Double> similars = new HashMap<>();
 
-        String[] contents = getEntityContents(entity);
-
         if (contents != null) {
-            System.out.println("Entity " + entity + " found.");
 
             String entityURI = contents[1];
             String rawSimilars = contents[2];
@@ -82,11 +81,13 @@ public class RafApi {
         return CommonUtils.sortEntityMap(similars);
     }
 
-    public String[] getEntityContents(String entity) throws IOException {
+    public String[] getEntityContents(String en) throws IOException {
 
+        String entity = CommonUtils.formatDBpediaURI(en);
+        
         char startingChar = entity.charAt(0);
         long startingIndex = pointerMappings.get(startingChar + "");
-
+        
         raf.seek(startingIndex);
         String line = "";
         while ((line = raf.readUTF()) != null) {
@@ -99,7 +100,7 @@ public class RafApi {
             String curEn = contents[0];
             String currEnURI = contents[1];
 
-            if (curEn.equals(entity) || currEnURI.equals(entity)) {
+            if (curEn.equals(entity)) { // could optimize
                 resetPtr();
                 return contents;
             }
@@ -114,20 +115,23 @@ public class RafApi {
         raf.seek(0);
     }
 
-    public String toUTF() throws IOException {
-        raf.seek(0);
+    public String toString() {
+
         String res = "";
-        String line = "";
-        while ((line = raf.readUTF()) != null) {
-            res += line + "";
-            //System.out.println(line);
+        try {
+            raf.seek(0);
+            String line = "";
+            while ((line = raf.readUTF()) != null) {
+                res += line + "";
 
-            if (line.equals("#end")) {
-                break;
+                if (line.equals("#end")) {
+                    break;
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return res;
     }
 
@@ -158,6 +162,32 @@ public class RafApi {
         }
 
         return closestURIContents;
+    }
+
+    public String getVocabInfo() throws IOException {
+
+        resetPtr();
+
+        int count = 0;
+        String res = "";
+        String line = "";
+        while ((line = raf.readUTF()) != null) {
+
+            if (line.equals("#end")) {
+                break;
+            }
+
+            String[] contents = line.split(" ");
+            String curEn = contents[0];
+            String currEnURI = contents[1];
+
+            res += "[" + count + "] " + curEn + ",(" + currEnURI + ")\n";
+
+            count++;
+        }
+
+        resetPtr();
+        return res;
     }
 
 }

@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import raf.RafApi;
 import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
@@ -44,94 +45,84 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {
 
-    W2VApi vec = null;
-    Collection<String> availableVocabulary = null;
-
-    String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
-
-    String currentEntity = "";
+    String currentPrefix = "http://dbpedia.org/resource/";
     String endpoint = "https://dbpedia.org/sparql";
     String currentInformationService = "wikipedia";
-    String currentPrefix = "http://dbpedia.org/resource/";
+    String currentEntity = "";
 
     int similarsNum = 10;
     int graphDepth = 1;
-    boolean gatherTriples = false;
+
+    RafApi raf = null;
+    SimilarityGraph simg = null;
 
     public SearchServlet() {
         super();
+
         try {
-            String sample2load = samples[0];
-            initDBpediaSample(sample2load);
-            printInfo();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+            initRaf();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void initDBpediaSample(String sampleName) throws FileNotFoundException {
-        String linuxPath = "/tmp/rdfsim/embeddings/" + sampleName + ".vec";
-        String windowsPath = "C:\\tmp\\rdfsim\\embeddings\\" + sampleName + ".vec";
+    private void initRaf() throws FileNotFoundException, IOException {
+        String[] samples = {"philosophers", "movies", "programming_langs", "game_consoles"};
+        String name = samples[0];
+
+        String linuxPath = "/tmp/rdfsim/rafs/" + name + ".txt";
+        String windowsPath = "C:\\tmp\\rdfsim\\rafs\\" + name + ".txt";
 
         File lin = new File(linuxPath);
         File win = new File(windowsPath);
 
         if (lin.exists()) {
-            //server side version
-            vec = new W2VApi(linuxPath);
+            raf = new RafApi(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
         } else if (win.exists()) {
-            //windows local version
-            vec = new W2VApi(windowsPath);
+            raf = new RafApi(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
         } else {
             throw new FileNotFoundException("Could not locate the vector file in current file system");
         }
 
-        String[] w2remove = {"."};
-        vec.removeWordsFromVocab(Arrays.asList(w2remove));
-        availableVocabulary = vec.getVocab();
-    }
-
-    private void printInfo() {
-
-        System.out.println("Available words to search:");
-        for (String s : availableVocabulary) {
-            System.out.println(s);
-        }
+        simg = new SimilarityGraph(raf);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
         String depth = request.getParameter("depth");
         String infoService = request.getParameter("info-service");
+        String rafFilePath = request.getParameter("raf-filepath");
 
+        if (rafFilePath != null) { //to compile..
+            raf = new RafApi(rafFilePath, rafFilePath.replace(".txt", "PTR.txt"));
+            simg = new SimilarityGraph(raf);
+        }
+
+        //Consider entity as URI (with prefix :) )
         if (entity != null) {
-
-            if (!entity.startsWith("http")) {
-                entity = currentPrefix + entity;
-            }
-
-            if (vec.getVec().hasWord(entity)) {
-                currentEntity = entity;
-            } else {
-                String closestEntity = CommonUtils.levenshteinDistance(availableVocabulary, entity);
-                System.out.println("Close: " + closestEntity);
-                currentEntity = closestEntity;
-            }
-
-            System.out.println("Entity Set: " + currentEntity);
+            //currentEntity = entity;
+            String [] conts = raf.getEntityContents(entity);
+            String curEn = conts[0];
+            String curEnURI = conts[1];
+            
+            currentEntity = curEnURI;
         }
 
         if (count != null) {
-            similarsNum = Integer.parseInt(count);
-            System.out.println("Count set: " + similarsNum);
+            if (CommonUtils.isNumeric(count)) {
+                similarsNum = (int) Double.parseDouble(count);
+                System.out.println("Count set: " + similarsNum);
+            }
         }
 
         if (depth != null) {
-            graphDepth = Integer.parseInt(depth);
-            System.out.println("Depth set: " + graphDepth);
+            if (CommonUtils.isNumeric(depth)) {
+                graphDepth = (int) Double.parseDouble(depth);
+                System.out.println("Depth set: " + graphDepth);
+            }
         }
 
         if (infoService != null) {
@@ -148,10 +139,11 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
-        SimilarityGraph simg = new SimilarityGraph(graphDepth, similarsNum, vec, currentEntity);
-        simg.createGraphW2V();
-
-        JSONObject graph2sent = simg.toJSON();
+        JSONObject graph2sent = new JSONObject();
+        if (simg != null) {
+            simg.createGraphRaf(currentEntity, graphDepth, similarsNum);
+            graph2sent = simg.toJSON();
+        }
 
         request.setAttribute("graph", graph2sent.toString());
         request.setAttribute("self", currentEntity);
@@ -177,65 +169,10 @@ public class SearchServlet extends HttpServlet {
         int count = 0;
         JSONObject data2sent = null;
 
-        switch (type) {
-        /*0 stands for TOP_K similars*/
-        case 0:
-            String entity = request.getParameter("entity");
-            count = Integer.parseInt(request.getParameter("count"));
-            data2sent = getSimilarEntities(entity, count);
-            break;
-        /*0 stands for COS_SIM*/
-        case 1:
-            String en1 = request.getParameter("en1");
-            String en2 = request.getParameter("en2");
-            data2sent = getCosineSimilarity(en1, en2);
-            break;
-        /*2 stands for w2v EXPR*/
-        case 2:
-            String positives = request.getParameter("positives");
-            String negatives = request.getParameter("negatives");
-            count = Integer.parseInt(request.getParameter("count"));
-            data2sent = getExpressionEntities(positives, negatives, count);
-            break;
-        }
-
         System.out.println("Server->Sending: " + data2sent.toString(2));
 
         out.print(data2sent);
         out.flush();
-    }
-
-    public JSONObject getSimilarEntities(String entity, int count) {
-        JSONObject data = null;
-        HashMap<String, Double> similarsOfEntity = vec.getSimilarEntitiesWithValues(entity, count);
-        data = CommonUtils.entityMapToJSON(similarsOfEntity);
-        return data;
-    }
-
-    public JSONObject getCosineSimilarity(String en1, String en2) {
-        JSONObject data = new JSONObject();
-        double sim = vec.calculateCosineSimilarity(en1, en2);
-        data.put("cosSim", sim);
-        return data;
-    }
-
-    public JSONObject getExpressionEntities(String positives, String negatives, int count) {
-        JSONObject data = new JSONObject();
-        String[] posEnts = positives.split(",");
-        String[] negEnts = negatives.split(",");
-
-        Collection<String> entities2add = Arrays.asList(posEnts);
-        Collection<String> entities2sub = Arrays.asList(negEnts);
-
-        Collection<String> result = vec.getExpressionResult(entities2add, entities2sub, count);
-
-        String resultAsString = "";
-        for (String s : result) {
-            resultAsString += s + "   ";
-        }
-
-        data.put("expr_result", resultAsString);
-        return data;
     }
 
 }

@@ -24,36 +24,23 @@ import raf.RafApi;
 @Data
 public class SimilarityGraph {
 
-    private int depth;
-    private int similarCount;
-
-    private String startingNodeURI;
     private W2VApi vec;
     private RafApi raf;
+
     private HashMap<String, SimilarityNode> nodes;
 
-    public SimilarityGraph(int depth, int similarCount, W2VApi vec, String startingNodeURI) {
-        this.depth = depth;
-        this.similarCount = similarCount;
+    public SimilarityGraph(W2VApi vec) {
         this.vec = vec;
-        this.startingNodeURI = startingNodeURI;
-
-        nodes = new HashMap<>();
     }
 
-    public SimilarityGraph(int depth, int similarCount, RafApi raf, String startingNodeURI) {
-        this.depth = depth;
-        this.similarCount = similarCount;
+    public SimilarityGraph(RafApi raf) {
         this.raf = raf;
-        this.startingNodeURI = startingNodeURI;
-
-        nodes = new HashMap<>();
     }
 
-    public void createGraphRaf() throws IOException {
+    public void createGraphRaf(String startingNodeURI, int depth, int similarCount) throws IOException {
         int nodeCounter = 0;
         int levelBFS = 0;
-
+        nodes = new HashMap<>();
         ArrayList<Queue<SimilarityNode>> queuesBFS = new ArrayList<>();
 
         Queue<SimilarityNode> currQueue = null;
@@ -71,12 +58,12 @@ public class SimilarityGraph {
 
                 for (Map.Entry<String, Double> entry : neighbours.entrySet()) {
 
-                    if (containsNode(entry.getKey())) {                       
+                    if (containsNode(entry.getKey())) {
                         SimilarityNode oldNode = nodes.get(entry.getKey());
                     } else {
                         SimilarityNode newNode = addNode(entry.getKey(), nodeCounter++);
 
-                        newNode.addLink(entry.getValue(), n.getId()); 
+                        newNode.addLink(entry.getValue(), n.getId());
 
                         lvlCq.add(newNode);
                         queuesBFS.add(lvlCq);
@@ -87,13 +74,15 @@ public class SimilarityGraph {
 
             levelBFS++;
         }
+
     }
 
-    public void createGraphW2V() {
+    public void createGraphW2V(String startingNodeURI, int depth, int similarCount) {
 
         int nodeCounter = 0;
         int levelBFS = 0;
 
+        nodes = new HashMap<>();
         ArrayList<Queue<SimilarityNode>> queuesBFS = new ArrayList<>();
 
         Queue<SimilarityNode> currQueue = null;

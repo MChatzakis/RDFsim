@@ -122,7 +122,7 @@ public class W2VApi {
         vec.vocab().removeElement(word);
     }
 
-    public void createRAF(String filenameRAF, String filenamePTR, Collection<String> words2remove, int count) throws FileNotFoundException, IOException {
+    public void createRAF(String filenameRAF, String filenamePTR, int count) throws FileNotFoundException, IOException {
 
         RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
         raf.seek(0);
@@ -132,8 +132,7 @@ public class W2VApi {
         char currentStartChar = ' ';
         long currentOffset = 0;
 
-        filterDBpediaResourcesOnly();
-
+        //filterDBpediaResourcesOnly();
         Collection<String> words = getVocab();
         TreeMap<String, String> wordsCutted = new TreeMap<>();
 
@@ -149,7 +148,7 @@ public class W2VApi {
             char start = currentEntity.charAt(0);
 
             currentOffset = raf.getFilePointer();
-            
+
             if (start > currentStartChar || currentStartChar == ' ') {
                 currentStartChar = start;
                 characterPointerMappings += currentStartChar + "," + currentOffset + "\n";
@@ -189,4 +188,39 @@ public class W2VApi {
             }
         }
     }
+
+    public void filterVocab(Collection<String> toStartWith, Collection<String> toNotStartWith, Collection<String> toNotContain) {
+        Collection<String> startingVocab = new ArrayList<>(getVocab());
+
+        for (String s : startingVocab) {
+            for (String c : toStartWith) {
+                if (!s.startsWith(c)) {
+                    vec.vocab().removeElement(s);
+                    System.out.println("Removing " + s);
+                }
+            }
+        }
+
+        startingVocab = new ArrayList<>(getVocab());
+        for (String s : startingVocab) {
+            for (String c : toNotStartWith) {
+                if (s.startsWith(c)) {
+                    vec.vocab().removeElement(s);
+                    System.out.println("Removing " + s);
+                }
+            }
+        }
+
+        startingVocab = new ArrayList<>(getVocab());
+        for (String s : startingVocab) {
+            for (String c : toNotContain) {
+                if (s.contains(c)) {
+                    vec.vocab().removeElement(s);
+                    System.out.println("Removing " + s);
+                }
+            }
+        }
+
+    }
+
 }

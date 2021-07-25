@@ -30,7 +30,7 @@
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60">
                     <button class="search-button" type="submit" value="Submit">
-                        <img src="icons/search-icon.png" width="30" height="30" alt=""/></button>
+                        <img src="icons/search-icon.png" width="32px" height="32px" alt=""/></button>
                 </div>
             </form>
             <span class="home-description">Similarity browsing tool for RDF Databases</span>

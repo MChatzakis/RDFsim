@@ -20,7 +20,6 @@ public class Examples {
     public static String dbPediaEndpoint = "https://dbpedia.org/sparql";
     public static String ariadneEndpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
     public static String simplestQuery = "select * where {?s ?p ?o .}";
-
     public static String ariadnePeopleQuery = "select ?s ?p ?o ?p1 ?o1 where {?s a <http://www.cidoc-crm.org/cidoc-crm/E21_Person> . ?o ?p ?s . ?o ?p1 ?o1}";
     public static String dbPediaPhilosophers = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
     public static String dbPediaQueryBiggerSeqs = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
@@ -64,9 +63,9 @@ public class Examples {
 
     public static void simGraph(String filepath, int count, int depth) {
         W2VApi vects = new W2VApi(filepath);
-        SimilarityGraph g = new SimilarityGraph(depth, count, vects, "http://dbpedia.org/resource/Aristotle");
+        SimilarityGraph g = new SimilarityGraph(vects);
 
-        g.createGraphW2V();
+        g.createGraphW2V("http://dbpedia.org/resouce/Aristotle", depth, count);
 
         System.out.println(g.toJSON().toString(2));
     }
@@ -76,12 +75,12 @@ public class Examples {
     }
 
     public static void createRAF(String filenameRAF, String filenamePTR, String modelName, int count) throws IOException {
-        new W2VApi(modelName).createRAF(filenameRAF, filenamePTR, null, count);
+        new W2VApi(modelName).createRAF(filenameRAF, filenamePTR, count);
 
         //System.out.println(new RafApi(filenameRAF, filenamePTR).toUTF());
         RafApi raf = new RafApi(filenameRAF, filenamePTR);
         
-        System.out.println(raf.toUTF());
+        System.out.println(raf.toString());
         
         String en = "Plato";
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(en, count);
