@@ -49,7 +49,7 @@ public class RafApi {
 
     public HashMap<String, Double> getSimilarEntitiesOfEntity(String entity, int count) throws IOException {
         String[] contents = getEntityContents(entity);
-        
+
         HashMap<String, Double> similars = new HashMap<>();
 
         if (contents != null) {
@@ -84,10 +84,25 @@ public class RafApi {
     public String[] getEntityContents(String en) throws IOException {
 
         String entity = CommonUtils.formatDBpediaURI(en);
-        
+
         char startingChar = entity.charAt(0);
-        long startingIndex = pointerMappings.get(startingChar + "");
-        
+
+        long startingIndex = 0;
+
+        if (pointerMappings.containsKey(startingChar + "")) {
+            startingIndex = pointerMappings.get(startingChar + "");
+        } else {
+            String otherLower = (startingChar + "").toLowerCase();
+            String otherUpper = (startingChar + "").toUpperCase();
+
+            if (pointerMappings.containsKey(otherLower)) {
+                startingIndex = pointerMappings.get(otherLower);
+
+            } else if (pointerMappings.containsKey(otherUpper)) {
+                startingIndex = pointerMappings.get(otherUpper);
+            }
+        }
+
         raf.seek(startingIndex);
         String line = "";
         while ((line = raf.readUTF()) != null) {
@@ -141,7 +156,8 @@ public class RafApi {
         String line = "";
         int dist = Integer.MAX_VALUE;
         char startingChar = entity.charAt(0);
-        long startingIndex = pointerMappings.get(startingChar + "");
+        
+       // long startingIndex = pointerMappings.get(startingChar + "");
 
         resetPtr();
         while ((line = raf.readUTF()) != null) {

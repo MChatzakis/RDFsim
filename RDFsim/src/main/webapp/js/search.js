@@ -260,15 +260,17 @@ function calculateExpression() {
 }
 
 /* ---------------------------------- Triples ---------------------------------- */
-function fillTripleTable(data) {
+function fillTripleTable(data, s) {
     var table = getElem("triple-table-id");
     clearElem("triple-table-id");
     var counter = 0;
 
     row = table.insertRow(counter++);
     var cell = row.insertCell(0);
-    cell.innerHTML = "<th>Predicate</th>";
+    cell.innerHTML = "<th>Subject</th>";
     var cell = row.insertCell(1);
+    cell.innerHTML = "<th>Predicate</th>";
+    var cell = row.insertCell(2);
     cell.innerHTML = "<th>Object</th>";
 
     var pref = "./SearchServlet?entity=";
@@ -280,14 +282,15 @@ function fillTripleTable(data) {
 
         var o = data[elem]["o"].replaceAll("@_@", "'");
 
-        var predicate = "<a href=\"" + pref + p + " \">" + formatDBpediaURI(p) + "</a>(<a href=\"" + p + "\">src</a>)";
+        var subject = formatDBpediaURI(s);
+        var predicate = "<a href=\"" + p + " \">" + formatDBpediaURI(p);
         var object = "<a href=\"" + pref + o + " \">" + formatDBpediaURI(o) + "</a>(<a href=\"" + o + "\">src</a>)";
 
-        var arr = [predicate, object];
+        var arr = [subject, predicate, object];
 
         row = table.insertRow(counter);
 
-        for (var j = 0; j < 2; j++) {
+        for (var j = 0; j < arr.length; j++) {
             var cell = row.insertCell(j);
             cell.innerHTML = arr[j] + "";
         }
@@ -358,10 +361,10 @@ $(document).ready(function () {
         hideElem('iframe-wiki-id');
         //var jsonOb = "{ \"array\": " + infoS + "}";
         var jsonTripleArray = JSON.parse(infoS);
-        fillTripleTable(jsonTripleArray);
+        fillTripleTable(jsonTripleArray, curEn);
     }
 
-    setElemValue("search-input-id", curEn);
+    setElemValue("search-input-id", formatDBpediaURI(curEn));
     setElemValue("count-input-id", count);
     setElemValue("depth-input-id", depth)
 

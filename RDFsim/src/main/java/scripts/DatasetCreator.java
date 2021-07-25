@@ -28,16 +28,16 @@ public class DatasetCreator {
         String rdfSourcePath = "C:\\tmp\\rdfsim\\philosophers.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec";
 
-        int count = 10;
+        int count = 30;
 
         boolean usePretrainedFile = false;
         W2VApi vec = null;
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
         } else {
-            vec = new W2VApi(5, 100, 42, 3, rdfSourcePath);
+            vec = new W2VApi(3, 100, 42, 5, rdfSourcePath);
             vec.train();
-            vec.saveVectorSpace(vecTargetPath);
+            //vec.saveVectorSpace(vecTargetPath);
         }
 
         Collection<String> keepWordsStartingWith = new ArrayList<>();
@@ -65,11 +65,11 @@ public class DatasetCreator {
 
         System.out.println(" \n================ Doing Comparison testing ================\n ");
         String entity = "Aristotle";
-        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 5);
+        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
         System.out.println("Similars of Aristotle [RAF]:");
         CommonUtils.printEntityMap(similars);
 
-        similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 5);
+        similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
         System.out.println("Similars of Aristotle [VEC]:");
         CommonUtils.printEntityMap(similars);
 
