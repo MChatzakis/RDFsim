@@ -76,11 +76,61 @@ public class DatasetCreator {
     }
 
     public static void createProgrammingLanguagesDataset() throws IOException {
+        System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
 
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\programming_langs.txt";
+        String rdfSourcePath = "C:\\tmp\\rdfsim\\programming_langs.rdf";
+        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\programming_langs.vec";
+
+        int count = 30;
+
+        boolean usePretrainedFile = false;
+        W2VApi vec = null;
+        if (usePretrainedFile) {
+            vec = new W2VApi(vecTargetPath);
+        } else {
+            vec = new W2VApi(3, 100, 42, 5, rdfSourcePath);
+            vec.train();
+            //vec.saveVectorSpace(vecTargetPath);
+        }
+
+        Collection<String> keepWordsStartingWith = new ArrayList<>();
+        keepWordsStartingWith.add("http://dbpedia.org/resource/");
+
+        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
+
+        Collection<String> removeWordsContaining = new ArrayList<>();
+        removeWordsContaining.add("??");
+
+        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+
+        String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
+        vec.createRAF(rafTargetPath, ptrTargetPath, count);
+
+        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+
+        System.out.println(" \n================ Raf file contents ================\n ");
+        System.out.println(raf.toString());
+
+        System.out.println(" \n================ Available Philosophers ================\n ");
+        System.out.println(raf.getVocabInfo());
+
+        System.out.println(" \n================ Doing Comparison testing ================\n ");
+        String entity = "Cloud_computing"; //http://dbpedia.org/resource/Cloud_computing
+        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
+        System.out.println("Similars of " + entity + " [RAF]:");
+        CommonUtils.printEntityMap(similars);
+
+        similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
+        System.out.println("Similars of " + entity + " [VEC]:");
+        CommonUtils.printEntityMap(similars);
     }
 
     public static void main(String[] args) throws IOException {
-        createPhilosophersDataset();
+        //createPhilosophersDataset();
+        createProgrammingLanguagesDataset();
     }
 
 }
