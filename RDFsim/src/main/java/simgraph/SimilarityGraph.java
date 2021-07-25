@@ -5,7 +5,7 @@
  */
 package simgraph;
 
-import embeddings.Word2VecEmbeddingCreator;
+import embeddings.W2VApi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,11 +28,11 @@ public class SimilarityGraph {
     private int similarCount;
 
     private String startingNodeURI;
-    private Word2VecEmbeddingCreator vec;
+    private W2VApi vec;
     private RafApi raf;
     private HashMap<String, SimilarityNode> nodes;
 
-    public SimilarityGraph(int depth, int similarCount, Word2VecEmbeddingCreator vec, String startingNodeURI) {
+    public SimilarityGraph(int depth, int similarCount, W2VApi vec, String startingNodeURI) {
         this.depth = depth;
         this.similarCount = similarCount;
         this.vec = vec;

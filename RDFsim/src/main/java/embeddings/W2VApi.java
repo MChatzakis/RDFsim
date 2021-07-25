@@ -33,7 +33,7 @@ import utils.CommonUtils;
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
-public class Word2VecEmbeddingCreator {
+public class W2VApi {
 
     Word2Vec vec;
     SentenceIterator iter;
@@ -44,11 +44,11 @@ public class Word2VecEmbeddingCreator {
     int seed;
     int windowSize;
 
-    public Word2VecEmbeddingCreator(String path) {
+    public W2VApi(String path) {
         this.loadVectorFile(path);
     }
 
-    public Word2VecEmbeddingCreator(int minWordFrequency, int layerSize, int seed, int windowSize, String filepath) {
+    public W2VApi(int minWordFrequency, int layerSize, int seed, int windowSize, String filepath) {
         this.minWordFrequency = minWordFrequency;
         this.layerSize = layerSize;
         this.seed = seed;
@@ -74,7 +74,7 @@ public class Word2VecEmbeddingCreator {
         try {
             WordVectorSerializer.writeWord2VecModel(vec, filepath);
         } catch (Exception ex) {
-            Logger.getLogger(Word2VecEmbeddingCreator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(W2VApi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

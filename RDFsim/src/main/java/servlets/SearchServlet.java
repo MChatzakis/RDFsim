@@ -1,6 +1,6 @@
 package servlets;
 
-import embeddings.Word2VecEmbeddingCreator;
+import embeddings.W2VApi;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
@@ -44,7 +44,7 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {
 
-    Word2VecEmbeddingCreator vec = null;
+    W2VApi vec = null;
     Collection<String> availableVocabulary = null;
 
     String[] samples = {"philosophers", "programming_langs", "game_consoles", "movies"};
@@ -79,10 +79,10 @@ public class SearchServlet extends HttpServlet {
 
         if (lin.exists()) {
             //server side version
-            vec = new Word2VecEmbeddingCreator(linuxPath);
+            vec = new W2VApi(linuxPath);
         } else if (win.exists()) {
             //windows local version
-            vec = new Word2VecEmbeddingCreator(windowsPath);
+            vec = new W2VApi(windowsPath);
         } else {
             throw new FileNotFoundException("Could not locate the vector file in current file system");
         }

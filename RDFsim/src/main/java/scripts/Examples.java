@@ -1,6 +1,6 @@
 package scripts;
 
-import embeddings.Word2VecEmbeddingCreator;
+import embeddings.W2VApi;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class Examples {
         SPARQLQuery sq = new SPARQLQuery();
         String path = sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, false);
 
-        //Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, path);
+        //Word2VecEmbeddingCreator vects = new W2VApi(minFreq, 100, 42, 5, path);
         //vects.train();
         //vects.saveVectorSpace(vecFilePath);
 
@@ -48,7 +48,7 @@ public class Examples {
     }
 
     public static void loadPreSaved(String filepath) {
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(filepath);
+        W2VApi vects = new W2VApi(filepath);
         Collection<String> strs = vects.getVocab();
         for (String s : strs) {
             System.out.println(s);
@@ -57,13 +57,13 @@ public class Examples {
     }
 
     public static void trainOnly(String filepath, String output, int minFreq) {
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(minFreq, 100, 42, 5, filepath);
+        W2VApi vects = new W2VApi(minFreq, 100, 42, 5, filepath);
         vects.train();
         vects.saveVectorSpace(output);
     }
 
     public static void simGraph(String filepath, int count, int depth) {
-        Word2VecEmbeddingCreator vects = new Word2VecEmbeddingCreator(filepath);
+        W2VApi vects = new W2VApi(filepath);
         SimilarityGraph g = new SimilarityGraph(depth, count, vects, "http://dbpedia.org/resource/Aristotle");
 
         g.createGraphW2V();
@@ -76,7 +76,7 @@ public class Examples {
     }
 
     public static void createRAF(String filenameRAF, String filenamePTR, String modelName, int count) throws IOException {
-        new Word2VecEmbeddingCreator(modelName).createRAF(filenameRAF, filenamePTR, null, count);
+        new W2VApi(modelName).createRAF(filenameRAF, filenamePTR, null, count);
 
         //System.out.println(new RafApi(filenameRAF, filenamePTR).toUTF());
         RafApi raf = new RafApi(filenameRAF, filenamePTR);
