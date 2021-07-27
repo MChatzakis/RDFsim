@@ -31,6 +31,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import raf.RafApi;
@@ -53,6 +54,9 @@ public class SearchServlet extends HttpServlet {
     int similarsNum = 10;
     int graphDepth = 1;
 
+    final int DEFAULT_SIMILARS = 10;
+    final int DEFAULT_DEPTH = 1;
+
     RafApi raf = null;
     SimilarityGraph simg = null;
 
@@ -70,7 +74,7 @@ public class SearchServlet extends HttpServlet {
         String[] samples = {"philosophers", "movies", "programming_langs", "game_consoles"};
         String name = samples[0];
 
-        String linuxPath = "/tmp/rdfsim/rafs/" + name + ".txt";
+        String linuxPath = "/var/lib/tomcat9/work/rdfsim/rafs/" + name + ".txt";
         String windowsPath = "C:\\tmp\\rdfsim\\rafs\\" + name + ".txt";
 
         File lin = new File(linuxPath);
@@ -81,7 +85,7 @@ public class SearchServlet extends HttpServlet {
         } else if (win.exists()) {
             raf = new RafApi(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
         } else {
-            throw new FileNotFoundException("Could not locate the vector file in current file system");
+            throw new FileNotFoundException("Could not locate the raf in current file system");
         }
 
         simg = new SimilarityGraph(raf);
@@ -90,6 +94,8 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        HttpSession session = request.getSession();
+        
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
         String depth = request.getParameter("depth");
@@ -104,38 +110,44 @@ public class SearchServlet extends HttpServlet {
         //Consider entity as URI (with prefix :) )
         if (entity != null) {
             //currentEntity = entity;
-            String [] conts = raf.getEntityContents(entity);
+            String[] conts = raf.getEntityContents(entity);
             String curEn = conts[0];
             String curEnURI = conts[1];
-            
-            currentEntity = curEnURI;
+
+            //currentEntity = curEnURI;
+            session.setAttribute("entity", curEnURI);
         }
 
         if (count != null) {
             if (CommonUtils.isNumeric(count)) {
-                similarsNum = (int) Double.parseDouble(count);
-                System.out.println("Count set: " + similarsNum);
+                //similarsNum = (int) Double.parseDouble(count);
+                //System.out.println("Count set: " + similarsNum);
+                session.setAttribute("count", count);
             }
         }
 
         if (depth != null) {
             if (CommonUtils.isNumeric(depth)) {
-                graphDepth = (int) Double.parseDouble(depth);
-                System.out.println("Depth set: " + graphDepth);
+                // graphDepth = (int) Double.parseDouble(depth);
+                //System.out.println("Depth set: " + graphDepth);
+                session.setAttribute("depth", depth);
             }
         }
 
         if (infoService != null) {
             if (infoService.equals("wikipedia")) {
-                currentInformationService = "wikipedia";
-                System.out.println("Wikipedia service selected.");
+                //currentInformationService = "wikipedia";
+                //System.out.println("Wikipedia service selected.");
+                session.setAttribute("service", "wikipedia");
             } else if (infoService.equals("dbpedia")) {
-                currentInformationService = "dbpedia";
-                System.out.println("DBpedia service selected.");
+                //currentInformationService = "dbpedia";
+                //System.out.println("DBpedia service selected.");
+                session.setAttribute("service", "dbpedia");
             } else if (infoService.equals("triples")) {
                 JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
-                currentInformationService = jtriples.toString();
-                System.out.println("Triple Services Selected");
+                //currentInformationService = jtriples.toString();
+                //System.out.println("Triple Services Selected");
+                session.setAttribute("service", jtriples.toString());
             }
         }
 
@@ -151,7 +163,7 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("depth", graphDepth);
         request.setAttribute("info-service", currentInformationService);
 
-        System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
+        //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
     }
