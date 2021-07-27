@@ -31,6 +31,16 @@ public class SimilarityNode {
         links.add(new SimilarityLink(weight, toID));
     }
 
+    public boolean hasLink(int toID) {
+        for (SimilarityLink l : links) {
+            if (l.getToID() == toID) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public JSONObject toJSON() {
         JSONObject jnode = new JSONObject();
 
@@ -41,7 +51,7 @@ public class SimilarityNode {
         for (SimilarityLink l : links) {
             jlinks.put(l.toJSON());
         }
-        
+
         jnode.put("links", jlinks);
 
         return jnode;

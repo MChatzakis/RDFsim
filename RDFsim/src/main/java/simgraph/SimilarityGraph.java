@@ -60,6 +60,9 @@ public class SimilarityGraph {
 
                     if (containsNode(entry.getKey())) {
                         SimilarityNode oldNode = nodes.get(entry.getKey());
+                        if (!n.hasLink(oldNode.getId()) && !oldNode.hasLink(n.getId())) {
+                            n.addLink(entry.getValue(), oldNode.getId());
+                        }
                     } else {
                         SimilarityNode newNode = addNode(entry.getKey(), nodeCounter++);
 
