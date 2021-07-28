@@ -24,7 +24,7 @@ public class Examples {
     public static String dbPediaPhilosophers = "select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
     public static String dbPediaQueryBiggerSeqs = "select  ?s ?p ?o ?p1 ?o1 where {?s ?p ?o . ?o ?p1 ?o1 .  ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}";
     public static String dbPediaProgrammingLanguages = "select ?s ?p ?o where {?s ?p ?o . ?s a <http://dbpedia.org/ontology/ProgrammingLanguage> . filter(isURI(?o)) }";
-    public static String dbPediaMovies = "select ?s ?p ?o where { ?s ?p ?o . ?s a <http://schema.org/Movie> . filter(isURI(?o))} ";
+    public static String dbPediaMovies = "select ?s ?p ?o from <http://dbpedia.org> where { ?s ?p ?o . ?s a <http://schema.org/Movie> . filter(isURI(?o))} ";
     public static String dbPediaGameConsoles = "select ?s ?p ?o where { ?s ?p ?o. ?s a <http://dbpedia.org/class/yago/WikicatVideoGameConsoles> . filter(isURI(?o))} ";
 
     public static void completeProc(String rdfFilePath, String vecFilePath, String endpoint, String query, int total, int start, int minFreq) throws IOException {
@@ -96,13 +96,12 @@ public class Examples {
         String datasetName = "movies";
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
-        //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 3, 13512331 , 5);
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 1600032, 2399968 , 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         //loadPreSaved(vectorFilePath);
         //getTriplesOfEntity("http://dbpedia.org/resource/Aristotle", dbPediaEndpoint);
-
-        createRAF("raf.txt", "t.txt", "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec", 20);
+        //createRAF("raf.txt", "t.txt", "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec", 20);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;

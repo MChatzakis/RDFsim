@@ -60,7 +60,7 @@ public class SPARQLQuery {
     
     public String parseData(JSONObject rawData, boolean formatURI) {
         
-        System.out.println(rawData.toString(2));
+        //System.out.println(rawData.toString(2));
         JSONArray vars = (rawData.getJSONObject("head")).getJSONArray("vars");
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
         String res = "";
