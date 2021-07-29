@@ -130,15 +130,13 @@ public class RafApi {
         raf.seek(0);
     }
 
-    public String toString() {
+    public void print() {
 
-        String res = "";
         try {
             raf.seek(0);
             String line = "";
             while ((line = raf.readUTF()) != null) {
-                res += line + "";
-
+                System.out.println(line);
                 if (line.equals("#end")) {
                     break;
                 }
@@ -147,7 +145,6 @@ public class RafApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return res;
     }
 
     public String[] getLevenshteinEntity(String entity) throws IOException {
@@ -156,9 +153,8 @@ public class RafApi {
         String line = "";
         int dist = Integer.MAX_VALUE;
         char startingChar = entity.charAt(0);
-        
-       // long startingIndex = pointerMappings.get(startingChar + "");
 
+        // long startingIndex = pointerMappings.get(startingChar + "");
         resetPtr();
         while ((line = raf.readUTF()) != null) {
 
@@ -180,7 +176,7 @@ public class RafApi {
         return closestURIContents;
     }
 
-    public String getVocabInfo() throws IOException {
+    public void printVocabInfo() throws IOException {
 
         resetPtr();
 
@@ -197,13 +193,12 @@ public class RafApi {
             String curEn = contents[0];
             String currEnURI = contents[1];
 
-            res += "[" + count + "] " + curEn + ",(" + currEnURI + ")\n";
-
+            res = "[" + count + "] " + curEn + ",(" + currEnURI + ")\n";
+            System.out.println(res);
             count++;
         }
 
         resetPtr();
-        return res;
     }
 
 }

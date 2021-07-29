@@ -58,11 +58,11 @@ public class DatasetCreator {
         RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
-        System.out.println(raf.toString());
+        raf.print();
 
         System.out.println(" \n================ Available Philosophers ================\n ");
-        System.out.println(raf.getVocabInfo());
-
+        raf.printVocabInfo();
+        
         System.out.println(" \n================ Doing Comparison testing ================\n ");
         String entity = "Aristotle";
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
@@ -112,11 +112,11 @@ public class DatasetCreator {
         RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
-        System.out.println(raf.toString());
+        raf.print();
 
         System.out.println(" \n================ Available Philosophers ================\n ");
-        System.out.println(raf.getVocabInfo());
-
+        raf.printVocabInfo();
+        
         System.out.println(" \n================ Doing Comparison testing ================\n ");
         String entity = "Cloud_computing"; //http://dbpedia.org/resource/Cloud_computing
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
@@ -128,9 +128,77 @@ public class DatasetCreator {
         CommonUtils.printEntityMap(similars);
     }
 
+    public static void createMoviesDataset() throws IOException {
+        System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
+
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\movies.txt";
+        String rdfSourcePath = "C:\\tmp\\rdfsim\\movies.rdf";
+        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\movies.vec";
+
+        int count = 30;
+
+        boolean usePretrainedFile = false;
+        W2VApi vec = null;
+        if (usePretrainedFile) {
+            vec = new W2VApi(vecTargetPath);
+        } else {
+            vec = new W2VApi(6, 100, 42, 5, rdfSourcePath);
+            vec.train();
+        }
+
+        Collection<String> keepWordsStartingWith = new ArrayList<>();
+        keepWordsStartingWith.add("http://dbpedia.org/resource/");
+
+        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/(");
+        //keepWordsNotStartingWith.add("http://dbpedia.org/resource/_");
+        
+        
+        Collection<String> removeWordsContaining = new ArrayList<>();
+        removeWordsContaining.add("?");
+        removeWordsContaining.add("@");
+        removeWordsContaining.add("%");
+        removeWordsContaining.add("+");
+        removeWordsContaining.add("-");
+        removeWordsContaining.add("*");
+        removeWordsContaining.add("'");
+        removeWordsContaining.add("!");
+        //removeWordsContaining.add("(");
+        //removeWordsContaining.add(")");
+        removeWordsContaining.add("&");
+        //removeWordsContaining.add(".");
+        removeWordsContaining.add("$");
+
+        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+
+        String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
+        vec.createRAF(rafTargetPath, ptrTargetPath, count);
+
+        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+
+        System.out.println(" \n================ Raf file contents ================\n ");
+        raf.print();
+
+        System.out.println(" \n================ Available Movies ================\n ");
+        raf.printVocabInfo();
+
+        System.out.println(" \n================ Doing Comparison testing ================\n ");
+        String entity = "Inception"; //http://dbpedia.org/resource/Cloud_computing
+        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
+        System.out.println("Similars of " + entity + " [RAF]:");
+        CommonUtils.printEntityMap(similars);
+
+        similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
+        System.out.println("Similars of " + entity + " [VEC]:");
+        CommonUtils.printEntityMap(similars);
+    }
+
     public static void main(String[] args) throws IOException {
-        createPhilosophersDataset();
+        //createPhilosophersDataset();
         //createProgrammingLanguagesDataset();
+        createMoviesDataset();
     }
 
 }

@@ -144,7 +144,7 @@ public class W2VApi {
         for (Map.Entry<String, String> entry : wordsCutted.entrySet()) {
             String currentEntity = entry.getKey();
             String currentEntityURI = entry.getValue();
-
+            System.out.println("Writing entity " + currentEntity + " to Raf.");
             char start = currentEntity.charAt(0);
 
             currentOffset = raf.getFilePointer();
@@ -193,11 +193,19 @@ public class W2VApi {
         Collection<String> startingVocab = new ArrayList<>(getVocab());
 
         for (String s : startingVocab) {
+            boolean rem = true;
             for (String c : toStartWith) {
-                if (!s.startsWith(c)) {
-                    vec.vocab().removeElement(s);
-                    System.out.println("Removing " + s);
+                if (s.startsWith(c)) { //lathos!!!!!
+                    //vec.vocab().removeElement(s);
+                    //System.out.println("1. Removing " + s);
+                    rem = false;
+                    break;
                 }
+            }
+
+            if (rem) {
+                vec.vocab().removeElement(s);
+                System.out.println("1. Removing " + s);
             }
         }
 
@@ -206,18 +214,25 @@ public class W2VApi {
             for (String c : toNotStartWith) {
                 if (s.startsWith(c)) {
                     vec.vocab().removeElement(s);
-                    System.out.println("Removing " + s);
+                    System.out.println("2. Removing " + s);
+                    
                 }
             }
         }
 
         startingVocab = new ArrayList<>(getVocab());
         for (String s : startingVocab) {
+            Boolean rem = false;
             for (String c : toNotContain) {
                 if (s.contains(c)) {
-                    vec.vocab().removeElement(s);
-                    System.out.println("Removing " + s);
+                    rem = true;
+                    break;
                 }
+            }
+
+            if (rem) {
+                vec.vocab().removeElement(s);
+                System.out.println("3. Removing " + s);
             }
         }
 

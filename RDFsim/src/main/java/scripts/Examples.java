@@ -96,7 +96,7 @@ public class Examples {
         String datasetName = "movies";
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
-        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 1600032, 2399968 , 5);
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 1000000, 3349937 , 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         //loadPreSaved(vectorFilePath);

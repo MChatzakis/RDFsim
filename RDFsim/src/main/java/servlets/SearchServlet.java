@@ -46,7 +46,7 @@ public class SearchServlet extends HttpServlet {
 
     private void initRaf() throws FileNotFoundException, IOException {
         String[] samples = {"philosophers", "movies", "programming_langs", "game_consoles"};
-        String name = samples[0];
+        String name = samples[1];
 
         String linuxPath = "/var/lib/tomcat9/work/rdfsim/rafs/" + name + ".txt";
         String windowsPath = "C:\\tmp\\rdfsim\\rafs\\" + name + ".txt";
