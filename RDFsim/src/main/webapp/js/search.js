@@ -260,7 +260,7 @@ function calculateExpression() {
 }
 
 /* ---------------------------------- Triples ---------------------------------- */
-function fillTripleTable(data, s) {
+function fillTripleTable(fromData, toData, selfEntity) {
     var table = getElem("triple-table-id");
     clearElem("triple-table-id");
     var counter = 0;
@@ -276,14 +276,13 @@ function fillTripleTable(data, s) {
     var pref = "./SearchServlet?entity=";
     var address = "";
 
-    for (elem in data) {
+    for (elem in fromData) {
 
-        var p = data[elem]["p"].replaceAll("@_@", "'");
+        var p = fromData[elem]["p"].replaceAll("@_@", "'");
+        var o = fromData[elem]["o"].replaceAll("@_@", "'");
 
-        var o = data[elem]["o"].replaceAll("@_@", "'");
-
-        var subject = formatDBpediaURI(s);
-        var predicate = "<a href=\"" + p + " \">" + formatDBpediaURI(p);
+        var subject = formatDBpediaURI(selfEntity);
+        var predicate = formatDBpediaURI(p) + ",(<a href=\"" + p + " \">src</a>)";
         var object = "<a href=\"" + pref + o + " \">" + formatDBpediaURI(o) + "</a>(<a href=\"" + o + "\">src</a>)";
 
         var arr = [subject, predicate, object];
@@ -298,9 +297,31 @@ function fillTripleTable(data, s) {
         counter++;
     }
 
-    showElem("triple-table-id");
+    for (elem in toData) {
 
+        var s = toData[elem]["s"].replaceAll("@_@", "'");
+        var p = toData[elem]["p"].replaceAll("@_@", "'");
+
+        var object = formatDBpediaURI(selfEntity);
+        var predicate = formatDBpediaURI(p) + ",(<a href=\"" + p + " \">src</a>)";
+        var subject = "<a href=\"" + pref + s + " \">" + formatDBpediaURI(s) + "</a>(<a href=\"" + s + "\">src</a>)";
+
+        var arr = [subject, predicate, object];
+
+        row = table.insertRow(counter);
+
+        for (var j = 0; j < arr.length; j++) {
+            var cell = row.insertCell(j);
+            cell.innerHTML = arr[j] + "";
+        }
+
+        counter++;
+    }
+
+    showElem("triple-table-id");
 }
+
+
 
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
@@ -352,7 +373,7 @@ $(document).ready(function () {
 
     console.log("Info:" + infoS);
 
-    if (!infoS.startsWith('[{')) {
+    if (!infoS.startsWith('{')) {
         console.log("Embedded browser selected.");
         hideElem('triple-table-id');
         loadFrameResource(curEn, infoS);
@@ -360,8 +381,10 @@ $(document).ready(function () {
         console.log("Triple table selected.");
         hideElem('iframe-wiki-id');
         //var jsonOb = "{ \"array\": " + infoS + "}";
-        var jsonTripleArray = JSON.parse(infoS);
-        fillTripleTable(jsonTripleArray, curEn);
+        var allTriples = JSON.parse(infoS);
+        var jsonFromTripleArray = allTriples["asSubject"];
+        var jsonToTripleArray = allTriples["asObject"];
+        fillTripleTable(jsonFromTripleArray, jsonToTripleArray, curEn);
     }
 
     setElemValue("search-input-id", formatDBpediaURI(curEn));

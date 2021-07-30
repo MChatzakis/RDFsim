@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -39,20 +40,25 @@ public class W2VApi {
     SentenceIterator iter;
     TokenizerFactory tokenizerFactory;
 
+    List<String> stopWords;
+
     int minWordFrequency;
     int layerSize;
     int seed;
     int windowSize;
+    int iterations;
 
     public W2VApi(String path) {
         this.loadVectorFile(path);
     }
 
-    public W2VApi(int minWordFrequency, int layerSize, int seed, int windowSize, String filepath) {
+    public W2VApi(int minWordFrequency, int layerSize, int seed, int windowSize, int iterations, List<String> stopWords, String filepath) {
         this.minWordFrequency = minWordFrequency;
         this.layerSize = layerSize;
         this.seed = seed;
+        this.stopWords = stopWords;
         this.windowSize = windowSize;
+        this.iterations = iterations;
         this.iter = new LineSentenceIterator(new File(filepath));;
         this.tokenizerFactory = new DefaultTokenizerFactory();
     }
@@ -61,10 +67,12 @@ public class W2VApi {
         vec = new Word2Vec.Builder()
                 .minWordFrequency(minWordFrequency)
                 .layerSize(layerSize)
+                .iterations(iterations)
                 .seed(seed)
                 .windowSize(windowSize)
                 .iterate(iter)
                 .tokenizerFactory(tokenizerFactory)
+                .stopWords(stopWords)
                 .build();
 
         vec.fit();
@@ -112,7 +120,7 @@ public class W2VApi {
         return vec.getVocab().words();
     }
 
-    public void removeWordsFromVocab(Collection<String> words2remove) {
+    /*public void removeWordsFromVocab(Collection<String> words2remove) {
         for (String s : words2remove) {
             vec.vocab().removeElement(s);
         }
@@ -120,8 +128,7 @@ public class W2VApi {
 
     public void removeWord(String word) {
         vec.vocab().removeElement(word);
-    }
-
+    }*/
     public void createRAF(String filenameRAF, String filenamePTR, int count) throws FileNotFoundException, IOException {
 
         RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
@@ -132,7 +139,6 @@ public class W2VApi {
         char currentStartChar = ' ';
         long currentOffset = 0;
 
-        //filterDBpediaResourcesOnly();
         Collection<String> words = getVocab();
         TreeMap<String, String> wordsCutted = new TreeMap<>();
 
@@ -140,7 +146,6 @@ public class W2VApi {
             wordsCutted.put(SPARQLQuery.formatDBpediaURI(w), w);
         }
 
-        //characterPointerMappings = currentStartChar + "," + currentOffset + "\n";
         for (Map.Entry<String, String> entry : wordsCutted.entrySet()) {
             String currentEntity = entry.getKey();
             String currentEntityURI = entry.getValue();
@@ -175,29 +180,13 @@ public class W2VApi {
 
     }
 
-    public void filterDBpediaResourcesOnly() {
-        Collection<String> startingVocab = new ArrayList<>(getVocab());
-
-        for (String s : startingVocab) {
-            if (!s.startsWith("http://dbpedia.org/resource/")) {
-                vec.vocab().removeElement(s);
-            } else if (s.startsWith("http://dbpedia.org/resource/Category") || s.startsWith("http://dbpedia.org/resource/Template")) {
-                vec.vocab().removeElement(s);
-            } else if (s.contains("???")) {
-                vec.vocab().removeElement(s);
-            }
-        }
-    }
-
     public void filterVocab(Collection<String> toStartWith, Collection<String> toNotStartWith, Collection<String> toNotContain) {
         Collection<String> startingVocab = new ArrayList<>(getVocab());
 
         for (String s : startingVocab) {
             boolean rem = true;
             for (String c : toStartWith) {
-                if (s.startsWith(c)) { //lathos!!!!!
-                    //vec.vocab().removeElement(s);
-                    //System.out.println("1. Removing " + s);
+                if (s.startsWith(c)) {
                     rem = false;
                     break;
                 }
@@ -215,24 +204,19 @@ public class W2VApi {
                 if (s.startsWith(c)) {
                     vec.vocab().removeElement(s);
                     System.out.println("2. Removing " + s);
-                    
+                    break;
                 }
             }
         }
 
         startingVocab = new ArrayList<>(getVocab());
         for (String s : startingVocab) {
-            Boolean rem = false;
             for (String c : toNotContain) {
                 if (s.contains(c)) {
-                    rem = true;
+                    vec.vocab().removeElement(s);
+                    System.out.println("3. Removing " + s);
                     break;
                 }
-            }
-
-            if (rem) {
-                vec.vocab().removeElement(s);
-                System.out.println("3. Removing " + s);
             }
         }
 

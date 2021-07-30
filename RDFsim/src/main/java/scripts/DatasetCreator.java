@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import raf.RafApi;
 import utils.CommonUtils;
 
@@ -35,9 +36,10 @@ public class DatasetCreator {
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
         } else {
-            vec = new W2VApi(3, 100, 42, 5, rdfSourcePath);
+            List<String> stopWords = new ArrayList<>();
+            stopWords.add(".");
+            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
             vec.train();
-            //vec.saveVectorSpace(vecTargetPath);
         }
 
         Collection<String> keepWordsStartingWith = new ArrayList<>();
@@ -62,7 +64,7 @@ public class DatasetCreator {
 
         System.out.println(" \n================ Available Philosophers ================\n ");
         raf.printVocabInfo();
-        
+
         System.out.println(" \n================ Doing Comparison testing ================\n ");
         String entity = "Aristotle";
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
@@ -89,7 +91,9 @@ public class DatasetCreator {
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
         } else {
-            vec = new W2VApi(3, 100, 42, 5, rdfSourcePath);
+            List<String> stopWords = new ArrayList<>();
+            stopWords.add(".");
+            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
             vec.train();
             //vec.saveVectorSpace(vecTargetPath);
         }
@@ -116,7 +120,7 @@ public class DatasetCreator {
 
         System.out.println(" \n================ Available Philosophers ================\n ");
         raf.printVocabInfo();
-        
+
         System.out.println(" \n================ Doing Comparison testing ================\n ");
         String entity = "Cloud_computing"; //http://dbpedia.org/resource/Cloud_computing
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
@@ -129,7 +133,7 @@ public class DatasetCreator {
     }
 
     public static void createMoviesDataset() throws IOException {
-        System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
+        System.out.println(" \n================ Creating Movies Dataset ================\n ");
 
         String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\movies.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\movies.rdf";
@@ -142,7 +146,9 @@ public class DatasetCreator {
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
         } else {
-            vec = new W2VApi(6, 100, 42, 5, rdfSourcePath);
+            List<String> stopWords = new ArrayList<>();
+            stopWords.add(".");
+            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
             vec.train();
         }
 
@@ -154,8 +160,7 @@ public class DatasetCreator {
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/(");
         //keepWordsNotStartingWith.add("http://dbpedia.org/resource/_");
-        
-        
+
         Collection<String> removeWordsContaining = new ArrayList<>();
         removeWordsContaining.add("?");
         removeWordsContaining.add("@");
@@ -198,7 +203,7 @@ public class DatasetCreator {
     public static void main(String[] args) throws IOException {
         //createPhilosophersDataset();
         //createProgrammingLanguagesDataset();
-        createMoviesDataset();
+        //createMoviesDataset();
     }
 
 }

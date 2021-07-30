@@ -106,20 +106,8 @@ public class SearchServlet extends HttpServlet {
         }
 
         if (infoService != null) {
-            /*if (infoService.equals("wikipedia")) {
-                //session.setAttribute("service", "wikipedia");
-                currentService = "wikipedia";
-            } else if (infoService.equals("dbpedia")) {
-                // session.setAttribute("service", "dbpedia");
-                currentService = "dbpedia";
-            } else if (infoService.equals("triples")) {
-                //JSONArray jtriples = SPARQLQuery.getTriplesOfURI((String) session.getAttribute("entity"), endpoint);
-                //session.setAttribute("service", jtriples.toString());
-                currentService = "triples";
-            }*/
             currentService = infoService;
         } else if (currentService == null) {
-            //session.setAttribute("service", "wikipedia");
             currentService = "wikipedia";
         }
 
@@ -134,8 +122,11 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("depth", currentDepth);
 
         if (currentService.equals("triples")) {
-            JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
-            request.setAttribute("info-service", jtriples.toString());
+            //JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
+            //request.setAttribute("info-service", jtriples.toString());
+
+            JSONObject allTriples = SPARQLQuery.getAllTriplesOfURI(currentEntity, endpoint);
+            request.setAttribute("info-service", allTriples.toString());
         } else {
             request.setAttribute("info-service", currentService);
         }

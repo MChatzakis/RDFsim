@@ -56,7 +56,7 @@ public class Examples {
     }
 
     public static void trainOnly(String filepath, String output, int minFreq) {
-        W2VApi vects = new W2VApi(minFreq, 100, 42, 5, filepath);
+        W2VApi vects = null;//new W2VApi(minFreq, 100, 42, 5, filepath);
         vects.train();
         vects.saveVectorSpace(output);
     }
@@ -71,7 +71,7 @@ public class Examples {
     }
 
     public static void getTriplesOfEntity(String entity, String endpoint) throws ProtocolException, IOException {
-        System.out.println(SPARQLQuery.getTriplesOfURI(entity, endpoint).toString(2));
+        //System.out.println(SPARQLQuery.getTriplesOfURI(entity, endpoint).toString(2));
     }
 
     public static void createRAF(String filenameRAF, String filenamePTR, String modelName, int count) throws IOException {
@@ -96,7 +96,7 @@ public class Examples {
         String datasetName = "movies";
         String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
-        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 1000000, 3349937 , 5);
+        completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaMovies, 2000000, 7389858 , 5);
         //completeProc(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaPhilosophers, 15000000, 0, 3);
         //trainOnly(rdfFilePath, vectorFilePath, 2);
         //loadPreSaved(vectorFilePath);
