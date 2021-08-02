@@ -122,9 +122,6 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("depth", currentDepth);
 
         if (currentService.equals("triples")) {
-            //JSONArray jtriples = SPARQLQuery.getTriplesOfURI(currentEntity, endpoint);
-            //request.setAttribute("info-service", jtriples.toString());
-
             JSONObject allTriples = SPARQLQuery.getAllTriplesOfURI(currentEntity, endpoint);
             request.setAttribute("info-service", allTriples.toString());
         } else {
