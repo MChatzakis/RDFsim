@@ -54,6 +54,7 @@ public class SearchServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         String s;
+        
         /*Connection attributes*/
         String currentEntity = String.valueOf(session.getAttribute("entity"));
         Integer currentCount = ((s = String.valueOf(session.getAttribute("count"))).equals("null")) ? null : Integer.parseInt(s);
