@@ -40,7 +40,7 @@
                     <option value="dbpedia_philosophers">DBpedia Philosophers</option>
                     <option value="dbpedia_movies">DBpedia Movies</option>
                     <option value="dbpedia_video_games">DBpedia Video Games</option>
-                    <option value="dbpedia_programming_languages">DBpedia Programming Languages</option>
+                    <option value="dbpedia_programming_langs">DBpedia Programming Languages</option>
                 </select>
             </form>
         </div>
