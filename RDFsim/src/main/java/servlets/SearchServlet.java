@@ -32,21 +32,7 @@ public class SearchServlet extends HttpServlet {
     final int DEFAULT_SIMILARS = 10;
     final int DEFAULT_DEPTH = 1;
 
-    RafApi raf = null;
-
-    public SearchServlet() {
-        super();
-
-        try {
-            initRaf();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initRaf() throws FileNotFoundException, IOException {
-        String[] samples = {"philosophers", "movies", "programming_langs", "game_consoles"};
-        String name = samples[1];
+    private RafApi initRaf(String name) throws IOException {
 
         String linuxPath = "/var/lib/tomcat9/work/rdfsim/rafs/" + name + ".txt";
         String windowsPath = "C:\\tmp\\rdfsim\\rafs\\" + name + ".txt";
@@ -55,13 +41,12 @@ public class SearchServlet extends HttpServlet {
         File win = new File(windowsPath);
 
         if (lin.exists()) {
-            raf = new RafApi(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
+            return new RafApi(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
         } else if (win.exists()) {
-            raf = new RafApi(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
-        } else {
-            throw new FileNotFoundException("Could not locate the raf in current file system");
+            return new RafApi(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
         }
 
+        return null;
     }
 
     @Override
@@ -74,15 +59,27 @@ public class SearchServlet extends HttpServlet {
         Integer currentCount = ((s = String.valueOf(session.getAttribute("count"))).equals("null")) ? null : Integer.parseInt(s);
         Integer currentDepth = ((s = String.valueOf(session.getAttribute("depth"))).equals("null")) ? null : Integer.parseInt(s);
         String currentService = String.valueOf(session.getAttribute("service"));
+        RafApi currentRaf = ((s = String.valueOf(session.getAttribute("raf"))).equals("null")) ? null : (RafApi) session.getAttribute("raf");
 
         /*Attributes sent from the client forms*/
         String entity = request.getParameter("entity");
         String count = request.getParameter("count");
         String depth = request.getParameter("depth");
         String infoService = request.getParameter("info-service");
+        String dataset = request.getParameter("dataset");
+
+        /*Crucial Thing: Check current raf*/
+        if (dataset != null) {
+            currentRaf = initRaf(dataset);
+        }
+
+        if (currentRaf == null) {
+            System.out.println("NULL RAF!");
+            return;
+        }
 
         if (entity != null) {
-            String[] conts = (raf.getEntityContents(entity));
+            String[] conts = (currentRaf.getEntityContents(entity));
             String curEnURI = conts[1];
             currentEntity = curEnURI;
         } else if (currentEntity == null) {
@@ -112,7 +109,8 @@ public class SearchServlet extends HttpServlet {
         }
 
         JSONObject graph2sent = null;
-        SimilarityGraph g = new SimilarityGraph(raf);
+
+        SimilarityGraph g = new SimilarityGraph(currentRaf);
         g.createGraphRaf(currentEntity, currentDepth, currentCount);
         graph2sent = g.toJSON();
 
@@ -132,6 +130,7 @@ public class SearchServlet extends HttpServlet {
         session.setAttribute("count", currentCount);
         session.setAttribute("depth", currentDepth);
         session.setAttribute("service", currentService);
+        session.setAttribute("raf", currentRaf);
 
         //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");

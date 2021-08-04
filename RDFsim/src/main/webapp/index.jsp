@@ -32,8 +32,17 @@
                     <button class="search-button" type="submit" value="Submit">
                         <img src="icons/search-icon.png" width="32px" height="32px" alt=""/></button>
                 </div>
+                <span class="home-description">Similarity browsing tool for RDF Databases</span>
+                <br>
+                <br>
+                <label for="dataset-conf">Dataset:</label>
+                <select name="dataset" id="dataset-selection-id">
+                    <option value="dbpedia_philosophers">DBpedia Philosophers</option>
+                    <option value="dbpedia_movies">DBpedia Movies</option>
+                    <option value="dbpedia_video_games">DBpedia Video Games</option>
+                    <option value="dbpedia_programming_languages">DBpedia Programming Languages</option>
+                </select>
             </form>
-            <span class="home-description">Similarity browsing tool for RDF Databases</span>
         </div>
 
         <!--Footer -->

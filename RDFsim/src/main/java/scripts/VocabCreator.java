@@ -26,7 +26,7 @@ public class VocabCreator {
     public static String dbPediaGetAll = "select ?s ?p ?o from <http://dbpedia.org> where  { ?s ?p ?o . filter(isURI(?o))} ";
     public static String dbPediaVideoGames = "select * from <http://dbpedia.org> where { ?s ?p ?o . ?s a <http://dbpedia.org/ontology/VideoGame> . filter(isURI(?o))}";
 
-    public static void createVocab(String rdfFilePath, String vecFilePath, String endpoint, String query, int total, int start, boolean formatURI) throws IOException {
+    public static void createVocab(String rdfFilePath, String endpoint, String query, int total, int start, boolean formatURI) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
         sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, formatURI);
     }
@@ -34,16 +34,32 @@ public class VocabCreator {
     public static void main(String[] args) throws IOException {
         long start = System.currentTimeMillis();
 
-        String datasetName = "video_games";
-        String vectorFilePath = "C:\\tmp\\rdfsim\\embeddings\\" + datasetName + ".vec";
+        String datasetName = "all_triples";
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
 
-        createVocab(rdfFilePath, vectorFilePath, dbPediaEndpoint, dbPediaVideoGames, 5000000, 0, false);
+        //createVocabOnSingleFile(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 1000, 0, false);
+        createVocabOnFilePartitions(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 1000, 0, 100, false);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
 
         System.out.println("Time elapsed: " + (double) timeElapsed / 1000.0 + " seconds");
+    }
+
+    public static void createVocabOnSingleFile(String rdfFilePath, String endpoint, String query, int total, int start, boolean formatURI) throws IOException {
+        createVocab(rdfFilePath, dbPediaEndpoint, dbPediaVideoGames, 5000000, 0, false);
+    }
+
+    public static void createVocabOnFilePartitions(String rdfFilePath, String endpoint, String query, int total, int start, int step, boolean formatURIs) throws IOException {
+        int totalTriples = 0;
+        int count = 0;
+        while (totalTriples < total) {
+            String currentFileName = rdfFilePath + "" + count;
+            createVocab(currentFileName, endpoint, query, step, totalTriples, formatURIs);
+
+            totalTriples += step;
+            count++;
+        }
     }
 
 }
