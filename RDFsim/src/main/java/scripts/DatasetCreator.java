@@ -135,7 +135,7 @@ public class DatasetCreator {
     public static void createMoviesDataset() throws IOException {
         System.out.println(" \n================ Creating Movies Dataset ================\n ");
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\movies.txt";
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\movies.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\movies.vec";
 

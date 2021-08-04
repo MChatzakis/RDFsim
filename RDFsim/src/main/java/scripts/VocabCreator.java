@@ -35,10 +35,10 @@ public class VocabCreator {
         long start = System.currentTimeMillis();
 
         String datasetName = "all_triples";
-        String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName + ".rdf";
+        String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName;
 
-        //createVocabOnSingleFile(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 1000, 0, false);
-        createVocabOnFilePartitions(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 1000, 0, 100, false);
+        //createVocabOnSingleFile(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 3, 0, false);
+        createVocabOnFilePartitions(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 3000000, 0, 1000000, false);
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
@@ -47,14 +47,16 @@ public class VocabCreator {
     }
 
     public static void createVocabOnSingleFile(String rdfFilePath, String endpoint, String query, int total, int start, boolean formatURI) throws IOException {
-        createVocab(rdfFilePath, dbPediaEndpoint, dbPediaVideoGames, 5000000, 0, false);
+        createVocab(rdfFilePath + ".rdf", endpoint, query, total, start, formatURI);
     }
 
     public static void createVocabOnFilePartitions(String rdfFilePath, String endpoint, String query, int total, int start, int step, boolean formatURIs) throws IOException {
         int totalTriples = 0;
         int count = 0;
         while (totalTriples < total) {
-            String currentFileName = rdfFilePath + "" + count;
+            String currentFileName = rdfFilePath + "" + count + ".rdf";
+            System.out.println("Current File: " + currentFileName);
+
             createVocab(currentFileName, endpoint, query, step, totalTriples, formatURIs);
 
             totalTriples += step;

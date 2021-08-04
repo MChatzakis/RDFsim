@@ -1,10 +1,12 @@
 package utils;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -134,4 +136,26 @@ public class CommonUtils {
 
         return result;
     }
+
+    public static void mergeFilesToFile(String[] filenames, String target) throws Exception {
+
+        BufferedWriter targetWriter = new BufferedWriter(new FileWriter(target));
+        System.out.println("File Merging Started. Target Destination: " + target);
+
+        for (String filename : filenames) {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            System.out.println("Current File: " + filename);
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                targetWriter.write(line);
+            }
+
+            reader.close();
+        }
+
+        targetWriter.close();
+        System.out.println("File Merging Completed.");
+    }
+
 }
