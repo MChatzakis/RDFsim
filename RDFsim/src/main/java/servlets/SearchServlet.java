@@ -54,12 +54,13 @@ public class SearchServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         String s;
-        
+
         /*Connection attributes*/
-        String currentEntity = String.valueOf(session.getAttribute("entity"));
+        String currentEntity = ((s = String.valueOf(session.getAttribute("entity"))).equals("null")) ? null : s;
         Integer currentCount = ((s = String.valueOf(session.getAttribute("count"))).equals("null")) ? null : Integer.parseInt(s);
         Integer currentDepth = ((s = String.valueOf(session.getAttribute("depth"))).equals("null")) ? null : Integer.parseInt(s);
-        String currentService = String.valueOf(session.getAttribute("service"));
+        String currentService = ((s = String.valueOf(session.getAttribute("service"))).equals("null")) ? null : s;
+        String currentVisMode = ((s = String.valueOf(session.getAttribute("visMode"))).equals("null")) ? null : s;
         RafApi currentRaf = ((s = String.valueOf(session.getAttribute("raf"))).equals("null")) ? null : (RafApi) session.getAttribute("raf");
 
         /*Attributes sent from the client forms*/
@@ -68,6 +69,7 @@ public class SearchServlet extends HttpServlet {
         String depth = request.getParameter("depth");
         String infoService = request.getParameter("info-service");
         String dataset = request.getParameter("dataset");
+        String visMode = request.getParameter("vis-mode");
 
         /*Crucial Thing: Check current raf*/
         if (dataset != null) {
@@ -109,6 +111,15 @@ public class SearchServlet extends HttpServlet {
             currentService = "wikipedia";
         }
 
+        if (visMode != null) {
+            currentVisMode = visMode;
+            if (visMode.equals("simcloud")) {
+                currentDepth = DEFAULT_DEPTH;
+            }
+        } else if (currentVisMode == null) {
+            currentVisMode = "simgraph";
+        }
+
         JSONObject graph2sent = null;
 
         SimilarityGraph g = new SimilarityGraph(currentRaf);
@@ -119,6 +130,7 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("self", currentEntity);
         request.setAttribute("count", currentCount);
         request.setAttribute("depth", currentDepth);
+        request.setAttribute("visMode", currentVisMode);
 
         if (currentService.equals("triples")) {
             JSONObject allTriples = SPARQLQuery.getAllTriplesOfURI(currentEntity, endpoint);
@@ -132,6 +144,7 @@ public class SearchServlet extends HttpServlet {
         session.setAttribute("depth", currentDepth);
         session.setAttribute("service", currentService);
         session.setAttribute("raf", currentRaf);
+        session.setAttribute("visMode", currentVisMode);
 
         //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");

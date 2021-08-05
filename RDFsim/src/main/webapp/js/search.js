@@ -53,6 +53,47 @@ function dispElemFromButtonClick(id) {
 }
 
 /* ---------------------------------- Graph Drawing ---------------------------------- */
+function drawTagCloud(entitiesJSON) {
+    var data = []
+
+    for (var k in entitiesJSON) {
+        var currentID = entitiesJSON[k]['id'];
+        var currentLabel = k;
+        var links = entitiesJSON[k]['links'];
+        var value = 0;
+
+        for (var link in links) {
+            value = links[link]["weight"];
+        }
+
+        if (currentID === 0) {
+            data.push({x: formatDBpediaURI(currentLabel), value: 100, URI: currentLabel});
+        } else {
+            data.push({x: formatDBpediaURI(currentLabel), value: roundTo(value, 2) * 100, URI: currentLabel});
+        }
+    }
+
+    // create a chart and set the data
+    chart = anychart.tagCloud(data);
+
+    //chart.mode("rect");
+    //chart.angles([0]);
+    //chart.normal().fontSize(5);
+    // set the container id
+    chart.container("graphContainer-id");
+
+    chart.listen("pointClick", function (e) {
+        //var url = "//en.wiktionary.org/wiki/" + e.point.get("x");
+        window.location.href = "./SearchServlet?entity=" + e.point.get("URI");
+        //window.open(url, "_blank");
+    });
+
+    // initiate drawing the chart
+    chart.draw();
+
+    showElem("graphContainer-id");
+}
+
 function drawGraph(entitiesJSON) {
     var nodeArr = [];
     var edgeArr = [];
@@ -150,6 +191,7 @@ function drawGraph(entitiesJSON) {
 
     showElem("graphContainer-id");
 }
+
 
 /* ---------------------------------- Embeddings ---------------------------------- */
 function createTOPKresultsTable(jsonData, self) {
@@ -365,11 +407,18 @@ $(document).ready(function () {
     var infoS = infoService;
     var count = currCount;
     var depth = currDepth;
+    var visMode = currVisMode;
 
     console.log("Current entity: " + curEn);
     console.log("Data recieved from server: " + graphJson);
 
-    drawGraph(JSON.parse(graphJson));
+    console.log("VIS: " + visMode);
+
+    if (visMode === "simcloud") {
+        drawTagCloud(JSON.parse(graphJson));
+    } else {
+        drawGraph(JSON.parse(graphJson));
+    }
 
     console.log("Info:" + infoS);
 

@@ -19,6 +19,7 @@
             var infoService = '<%=request.getAttribute("info-service")%>';
             var currCount = '<%=request.getAttribute("count")%>';
             var currDepth = '<%=request.getAttribute("depth")%>';
+            var currVisMode = '<%=request.getAttribute("visMode")%>';
         </script>
     </head>
 
@@ -28,6 +29,8 @@
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-tag-cloud.min.js"></script>
     <script type="text/javascript" src="js/search.js"></script>
 
     <body>
@@ -78,6 +81,12 @@
                     <img src="icons/settings-icon-trans.png" width="26" height="26" alt="searchIcon"/>
                 </button>
                 <form class = "graph-conf" id ="graph-conf-id" action= "./SearchServlet">
+                    <label>Mode:</label>
+                    <select name="vis-mode" id="vis-mode-id">
+                        <option value="simgraph">Similarity Graph</option>
+                        <option value="simcloud">Similarity Tag Cloud</option>
+                    </select>
+                    <br>    
                     <label>Similars:</label>
                     <input type="text" size="3" name="count" id = "count-input-id" class = "count-input">
                     <br>

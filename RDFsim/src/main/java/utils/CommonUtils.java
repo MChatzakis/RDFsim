@@ -123,21 +123,7 @@ public class CommonUtils {
         return true;
     }
 
-    public static String formatDBpediaURI(String URI) {
-
-        String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
-        String[] parts;
-        String result = URI;
-
-        for (String s : splitters) {
-            parts = result.split(s);
-            result = parts[parts.length - 1];
-        }
-
-        return result;
-    }
-
-    public static void mergeFilesToFile(String[] filenames, String target) throws Exception {
+    public static void mergeFilesToFile(ArrayList<String> filenames, String target) throws Exception {
 
         BufferedWriter targetWriter = new BufferedWriter(new FileWriter(target));
         System.out.println("File Merging Started. Target Destination: " + target);

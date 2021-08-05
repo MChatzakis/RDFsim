@@ -14,6 +14,7 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
+import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
@@ -83,7 +84,7 @@ public class RafApi {
 
     public String[] getEntityContents(String en) throws IOException {
 
-        String entity = CommonUtils.formatDBpediaURI(en);
+        String entity = SPARQLQuery.formatDBpediaURI(en);
 
         char startingChar = entity.charAt(0);
 

@@ -22,7 +22,6 @@ import org.nd4j.shade.guava.io.CharSink;
 
 /**
  * Class providing methods to retrieve data from REST and Virtuoso endpoints.
- * TODO: Update retrieval methods to also create a list of Entities
  *
  * @author Manos Chatzakis
  */
@@ -117,7 +116,7 @@ public class SPARQLQuery {
 
     public static String formatDBpediaURI(String URI) {
 
-        String[] splitters = {"/", "#", ":"}; //Possible improvement: Use regexes!
+        String[] splitters = {"/", "#"}; /*Removed : as many times it was useful, etc: Star Wars: A new hope*/ 
         String[] parts;
         String result = URI;
 
@@ -141,7 +140,7 @@ public class SPARQLQuery {
     public static JSONArray getTriplesOfURIAsObject(String o, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
-        String query = "select ?s ?p where { ?s ?p <" + o + ">. }";
+        String query = "select ?s ?p from <http://dbpedia.org> where { ?s ?p <" + o + ">. }";
 
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
@@ -173,8 +172,7 @@ public class SPARQLQuery {
     public static JSONArray getTriplesOfURIAsSubject(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
-        String query = "select ?p ?o where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
-        String pref = "./SearchServlet?entity=";
+        String query = "select ?p ?o from <http://dbpedia.org> where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
 
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");

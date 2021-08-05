@@ -6,7 +6,6 @@
 package scripts;
 
 import embeddings.W2VApi;
-import embeddings.W2VApi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,38 +20,51 @@ import utils.CommonUtils;
  */
 public class DatasetCreator {
 
-    public static void createPhilosophersDataset() throws IOException {
-
-        System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
-
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\philosophers.txt";
-        String rdfSourcePath = "C:\\tmp\\rdfsim\\philosophers.rdf";
-        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec";
-
-        int count = 30;
-
-        boolean usePretrainedFile = false;
+    public static W2VApi trainModel(String vecTargetPath, String rdfSourcePath, boolean usePretrainedFile) {
         W2VApi vec = null;
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
         } else {
             List<String> stopWords = new ArrayList<>();
             stopWords.add(".");
-            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
+            vec = new W2VApi(5, 100, 42, 3, 10, stopWords, rdfSourcePath);
             vec.train();
         }
+        return vec;
+    }
 
-        Collection<String> keepWordsStartingWith = new ArrayList<>();
+    public static void defaultDatasetCleanUp(W2VApi vec) {
+        Collection< String> keepWordsStartingWith = new ArrayList<>();
         keepWordsStartingWith.add("http://dbpedia.org/resource/");
 
         Collection<String> keepWordsNotStartingWith = new ArrayList<>();
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/?");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/*");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/-");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/:");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/%");
 
         Collection<String> removeWordsContaining = new ArrayList<>();
-        removeWordsContaining.add("???");
+        removeWordsContaining.add("?");
 
         vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+    }
+
+    public static void createPhilosophersDataset() throws IOException {
+
+        System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
+
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
+        String rdfSourcePath = "C:\\tmp\\rdfsim\\philosophers.rdf";
+        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec";
+
+        int count = 30;
+
+        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+
+        defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
@@ -86,29 +98,9 @@ public class DatasetCreator {
 
         int count = 30;
 
-        boolean usePretrainedFile = false;
-        W2VApi vec = null;
-        if (usePretrainedFile) {
-            vec = new W2VApi(vecTargetPath);
-        } else {
-            List<String> stopWords = new ArrayList<>();
-            stopWords.add(".");
-            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
-            vec.train();
-            //vec.saveVectorSpace(vecTargetPath);
-        }
+        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
 
-        Collection<String> keepWordsStartingWith = new ArrayList<>();
-        keepWordsStartingWith.add("http://dbpedia.org/resource/");
-
-        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
-
-        Collection<String> removeWordsContaining = new ArrayList<>();
-        removeWordsContaining.add("??");
-
-        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+        defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
@@ -141,42 +133,9 @@ public class DatasetCreator {
 
         int count = 30;
 
-        boolean usePretrainedFile = false;
-        W2VApi vec = null;
-        if (usePretrainedFile) {
-            vec = new W2VApi(vecTargetPath);
-        } else {
-            List<String> stopWords = new ArrayList<>();
-            stopWords.add(".");
-            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
-            vec.train();
-        }
+        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
 
-        Collection<String> keepWordsStartingWith = new ArrayList<>();
-        keepWordsStartingWith.add("http://dbpedia.org/resource/");
-
-        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/(");
-        //keepWordsNotStartingWith.add("http://dbpedia.org/resource/_");
-
-        Collection<String> removeWordsContaining = new ArrayList<>();
-        removeWordsContaining.add("?");
-        removeWordsContaining.add("@");
-        removeWordsContaining.add("%");
-        removeWordsContaining.add("+");
-        removeWordsContaining.add("-");
-        removeWordsContaining.add("*");
-        removeWordsContaining.add("'");
-        removeWordsContaining.add("!");
-        //removeWordsContaining.add("(");
-        //removeWordsContaining.add(")");
-        removeWordsContaining.add("&");
-        //removeWordsContaining.add(".");
-        removeWordsContaining.add("$");
-
-        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+        defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
@@ -209,32 +168,9 @@ public class DatasetCreator {
 
         int count = 30;
 
-        boolean usePretrainedFile = false;
-        W2VApi vec = null;
-        if (usePretrainedFile) {
-            vec = new W2VApi(vecTargetPath);
-        } else {
-            List<String> stopWords = new ArrayList<>();
-            stopWords.add(".");
-            vec = new W2VApi(6, 100, 42, 5, 5, stopWords, rdfSourcePath);
-            vec.train();
-            vec.saveVectorSpace(vecTargetPath);
-        }
+        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
 
-        Collection<String> keepWordsStartingWith = new ArrayList<>();
-        keepWordsStartingWith.add("http://dbpedia.org/resource/");
-
-        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Template");
-        keepWordsNotStartingWith.add("http://dbpedia.org/resource/Category");
-
-        Collection<String> removeWordsContaining = new ArrayList<>();
-        removeWordsContaining.add("?");
-        removeWordsContaining.add("%");
-        removeWordsContaining.add("*");
-        //removeWordsContaining.add("-");
-
-        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+        defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
@@ -246,16 +182,6 @@ public class DatasetCreator {
 
         System.out.println(" \n================ Available Video Games ================\n ");
         raf.printVocabInfo();
-
-        /*System.out.println(" \n================ Doing Comparison testing ================\n ");
-        String entity = "Cloud_computing"; //http://dbpedia.org/resource/Cloud_computing
-        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, 4);
-        System.out.println("Similars of " + entity + " [RAF]:");
-        CommonUtils.printEntityMap(similars);
-
-        similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
-        System.out.println("Similars of " + entity + " [VEC]:");
-        CommonUtils.printEntityMap(similars);*/
     }
 
     public static void main(String[] args) throws IOException {
