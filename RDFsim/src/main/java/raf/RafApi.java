@@ -32,6 +32,12 @@ public class RafApi {
         processPrtFile(ptrPath);
     }
 
+    public RafApi(String rafPath) throws FileNotFoundException, IOException {
+        raf = new RandomAccessFile(rafPath, "rw");
+        String ptrPath = rafPath.replace(".txt", "PTR.txt");
+        processPrtFile(ptrPath);
+    }
+
     private void processPrtFile(String ptrPath) throws IOException {
         pointerMappings = new HashMap<>();
 

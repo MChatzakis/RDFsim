@@ -40,6 +40,7 @@ public class SimilarityGraph {
     public void createGraphRaf(String startingNodeURI, int depth, int similarCount) throws IOException {
         int nodeCounter = 0;
         int levelBFS = 0;
+
         nodes = new HashMap<>();
         ArrayList<Queue<SimilarityNode>> queuesBFS = new ArrayList<>();
 
@@ -54,15 +55,36 @@ public class SimilarityGraph {
             Queue<SimilarityNode> lvlCq = new LinkedList<>();
 
             for (SimilarityNode n : currQueue) {
+
+                System.out.println(" ===================== Getting similars of node with URI: " + n.getURI() + " ===================== ");
                 HashMap<String, Double> neighbours = raf.getSimilarEntitiesOfEntity(n.getURI(), similarCount);
 
                 for (Map.Entry<String, Double> entry : neighbours.entrySet()) {
 
+                    System.out.println("Similar Process: " + entry.getKey());
+
                     if (containsNode(entry.getKey())) {
+
                         SimilarityNode oldNode = nodes.get(entry.getKey());
-                        if (!n.hasLink(oldNode.getId()) && !oldNode.hasLink(n.getId())) {
+                        System.out.println("Graph already contains the node " + oldNode.getURI() + " found as neighbour!");
+
+                        /*if (!n.hasLink(oldNode.getId()) && !oldNode.hasLink(n.getId())) {
+                            System.out.println("There does not exist a link between " + oldNode.getId() + "and" + n.getId() + ". Adding the link!");
+                            n.addLink(entry.getValue(), oldNode.getId());
+                        }*/
+                        
+                        SimilarityLink l;
+                        if ((l = oldNode.getLinkToID(n.getId())) != null) {
+                            l.setUL(true);
+                            System.out.println("There exists a link between " + oldNode.getId() + "and" + n.getId() + ". Made it undirected!");
+                        } else if ((l = n.getLinkToID(oldNode.getId())) != null) {
+                            l.setUL(true);
+                            System.out.println("There exists a link between " + oldNode.getId() + "and" + n.getId() + ". Made it undirected!");
+                        } else {
+                            System.out.println("There does not exist a link between " + oldNode.getId() + "and" + n.getId() + ". Adding the link!");
                             n.addLink(entry.getValue(), oldNode.getId());
                         }
+
                     } else {
                         SimilarityNode newNode = addNode(entry.getKey(), nodeCounter++);
 
@@ -70,6 +92,8 @@ public class SimilarityGraph {
 
                         lvlCq.add(newNode);
                         queuesBFS.add(lvlCq);
+
+                        System.out.println("There did not exist a node with name " + newNode.getURI() + ". Added the node and the link!");
                     }
                 }
 

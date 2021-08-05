@@ -94,7 +94,7 @@ function drawTagCloud(entitiesJSON) {
     showElem("graphContainer-id");
 }
 
-function drawGraph(entitiesJSON) {
+function drawGraph(entitiesJSON, depth) {
     var nodeArr = [];
     var edgeArr = [];
 
@@ -103,7 +103,11 @@ function drawGraph(entitiesJSON) {
         var currentLabel = k;
         var links = entitiesJSON[k]['links'];
 
-        nodeArr.push({id: currentID, label: formatDBpediaURI(currentLabel), url: currentLabel});
+        if (currentID === 0 && depth > 1) {
+            nodeArr.push({id: currentID, label: formatDBpediaURI(currentLabel), url: currentLabel, color: "red"});
+        } else {
+            nodeArr.push({id: currentID, label: formatDBpediaURI(currentLabel), url: currentLabel});
+        }
 
         console.log("Current Label: " + currentLabel);
         console.log("Current ID: " + currentID);
@@ -113,11 +117,19 @@ function drawGraph(entitiesJSON) {
 
             var toID = links[link]["toID"];
             var weight = links[link]["weight"];
+            var isUL = links[link]["isUL"];
 
+            var arrowsConf = "from";
             console.log("Link toID: " + toID);
             console.log("Weight: " + weight);
 
-            edgeArr.push({from: currentID, to: toID, label: roundTo(weight, 2) + "", length: 250});
+            //arrows: "to, from",
+            if (isUL || depth == 1) {
+                console.log("askfiusdgs");
+                arrowsConf = "";
+            }
+
+            edgeArr.push({from: currentID, to: toID, label: roundTo(weight, 2) + "", length: 250, arrows: arrowsConf});
         }
     }
 
@@ -130,12 +142,15 @@ function drawGraph(entitiesJSON) {
         edges: edges,
     };
 
+
+
     var options = {
         autoResize: true,
         height: '100%',
         width: '100%',
         edges: {
             width: 0.1,
+
         },
         nodes: {
             color: {
@@ -417,7 +432,7 @@ $(document).ready(function () {
     if (visMode === "simcloud") {
         drawTagCloud(JSON.parse(graphJson));
     } else {
-        drawGraph(JSON.parse(graphJson));
+        drawGraph(JSON.parse(graphJson), depth);
     }
 
     console.log("Info:" + infoS);

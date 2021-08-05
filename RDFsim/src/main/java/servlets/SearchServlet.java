@@ -52,10 +52,10 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        /*Connection attributes*/
         HttpSession session = request.getSession();
         String s;
 
-        /*Connection attributes*/
         String currentEntity = ((s = String.valueOf(session.getAttribute("entity"))).equals("null")) ? null : s;
         Integer currentCount = ((s = String.valueOf(session.getAttribute("count"))).equals("null")) ? null : Integer.parseInt(s);
         Integer currentDepth = ((s = String.valueOf(session.getAttribute("depth"))).equals("null")) ? null : Integer.parseInt(s);
@@ -89,6 +89,8 @@ public class SearchServlet extends HttpServlet {
             currentEntity = "";
         }
 
+        //
+        
         if (count != null) {
             if (CommonUtils.isNumeric(count)) {
                 currentCount = Integer.parseInt(count);
@@ -149,6 +151,7 @@ public class SearchServlet extends HttpServlet {
         //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
+
     }
 
     @Override

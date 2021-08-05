@@ -41,6 +41,16 @@ public class SimilarityNode {
         return false;
     }
 
+    public SimilarityLink getLinkToID(int toID) {
+        for (SimilarityLink l : links) {
+            if (l.getToID() == toID) {
+                return l;
+            }
+        }
+
+        return null;
+    }
+
     public JSONObject toJSON() {
         JSONObject jnode = new JSONObject();
 
