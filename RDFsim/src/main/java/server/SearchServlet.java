@@ -1,4 +1,4 @@
-package servlets;
+package server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,11 +26,8 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {
 
-    String currentPrefix = "http://dbpedia.org/resource/";
-    String endpoint = "https://dbpedia.org/sparql";
-
-    final int DEFAULT_SIMILARS = 10;
-    final int DEFAULT_DEPTH = 1;
+    private String currentPrefix = "http://dbpedia.org/resource/";
+    private String endpoint = "https://dbpedia.org/sparql";
 
     private RafApi initRaf(String name) throws IOException {
 
@@ -55,13 +52,7 @@ public class SearchServlet extends HttpServlet {
         /*Connection attributes*/
         HttpSession session = request.getSession();
         String s;
-
-        String currentEntity = ((s = String.valueOf(session.getAttribute("entity"))).equals("null")) ? null : s;
-        Integer currentCount = ((s = String.valueOf(session.getAttribute("count"))).equals("null")) ? null : Integer.parseInt(s);
-        Integer currentDepth = ((s = String.valueOf(session.getAttribute("depth"))).equals("null")) ? null : Integer.parseInt(s);
-        String currentService = ((s = String.valueOf(session.getAttribute("service"))).equals("null")) ? null : s;
-        String currentVisMode = ((s = String.valueOf(session.getAttribute("visMode"))).equals("null")) ? null : s;
-        RafApi currentRaf = ((s = String.valueOf(session.getAttribute("raf"))).equals("null")) ? null : (RafApi) session.getAttribute("raf");
+        SessionData currentData = ((s = String.valueOf(session.getAttribute("sessionData"))).equals("null")) ? new SessionData() : (SessionData) session.getAttribute("sessionData");
 
         /*Attributes sent from the client forms*/
         String entity = request.getParameter("entity");
@@ -73,85 +64,67 @@ public class SearchServlet extends HttpServlet {
 
         /*Crucial Thing: Check current raf*/
         if (dataset != null) {
-            currentRaf = initRaf(dataset);
+            currentData.setRaf(initRaf(dataset));
         }
 
-        if (currentRaf == null) {
-            System.out.println("NULL RAF!");
+        if (currentData.getRaf() == null) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error.jsp");
+            requestDispatcher.forward(request, response);
             return;
         }
 
         if (entity != null) {
-            String[] conts = (currentRaf.getEntityContents(entity));
-            String curEnURI = conts[1];
-            currentEntity = curEnURI;
-        } else if (currentEntity == null) {
-            currentEntity = "";
+            String[] conts = (currentData.getRaf().getEntityContents(entity));
+            currentData.setEntityURI(conts[1]);
         }
 
-        //
-        
+        if (currentData.getEntityURI() == null) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error.jsp");
+            requestDispatcher.forward(request, response);
+            return;
+        }
+
         if (count != null) {
             if (CommonUtils.isNumeric(count)) {
-                currentCount = Integer.parseInt(count);
+                currentData.setCount(Integer.parseInt(count));
             }
-        } else if (currentCount == null) {
-            currentCount = DEFAULT_SIMILARS;
         }
 
         if (depth != null) {
             if (CommonUtils.isNumeric(depth)) {
-                currentDepth = Integer.parseInt(depth);
+                currentData.setDepth(Integer.parseInt(depth));
             }
-        } else if (currentDepth == null) {
-            currentDepth = DEFAULT_DEPTH;
         }
 
         if (infoService != null) {
-            currentService = infoService;
-        } else if (currentService == null) {
-            currentService = "wikipedia";
+            currentData.setInfoService(infoService);
         }
 
         if (visMode != null) {
-            currentVisMode = visMode;
-            if (visMode.equals("simcloud")) {
-                currentDepth = DEFAULT_DEPTH;
+            currentData.setVisMode(visMode);
+        }
+
+        request.setAttribute("graph", currentData.getJSONGraph().toString());
+        request.setAttribute("self", currentData.getEntityURI());
+        request.setAttribute("count", currentData.getCount());
+        request.setAttribute("depth", currentData.getDepth());
+        request.setAttribute("visMode", currentData.getVisMode());
+        request.setAttribute("info-service", currentData.getInfoService());
+
+        if (currentData.getInfoService().equals("triples") || currentData.getVisMode().equals("triplegraph")) {
+            if (currentData.getTriples() == null) {
+                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), endpoint));
             }
-        } else if (currentVisMode == null) {
-            currentVisMode = "simgraph";
-        }
-
-        JSONObject graph2sent = null;
-
-        SimilarityGraph g = new SimilarityGraph(currentRaf);
-        g.createGraphRaf(currentEntity, currentDepth, currentCount);
-        graph2sent = g.toJSON();
-
-        request.setAttribute("graph", graph2sent.toString());
-        request.setAttribute("self", currentEntity);
-        request.setAttribute("count", currentCount);
-        request.setAttribute("depth", currentDepth);
-        request.setAttribute("visMode", currentVisMode);
-
-        if (currentService.equals("triples")) {
-            JSONObject allTriples = SPARQLQuery.getAllTriplesOfURI(currentEntity, endpoint);
-            request.setAttribute("info-service", allTriples.toString());
+            request.setAttribute("triples", currentData.getTriples().toString());
         } else {
-            request.setAttribute("info-service", currentService);
+            request.setAttribute("triples", new JSONObject().toString());
         }
 
-        session.setAttribute("entity", currentEntity);
-        session.setAttribute("count", currentCount);
-        session.setAttribute("depth", currentDepth);
-        session.setAttribute("service", currentService);
-        session.setAttribute("raf", currentRaf);
-        session.setAttribute("visMode", currentVisMode);
+        session.setAttribute("sessionData", currentData);
 
         //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
         requestDispatcher.forward(request, response);
-
     }
 
     @Override

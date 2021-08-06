@@ -2,11 +2,6 @@
  * Basic search controller
  * Manos Chatzakis (chatzakis@ics.forth.gr)
  */
-var URL = "http://localhost:8080/RDFsim/SearchServlet";
-var TOP_K = 0;
-var COS_SIM = 1;
-var EXPR = 2;
-var BIG_GRAPH = 3;
 
 /* ---------------------------------- Basic control functions ---------------------------------- */
 function getElem(id) {
@@ -142,8 +137,6 @@ function drawGraph(entitiesJSON, depth) {
         edges: edges,
     };
 
-
-
     var options = {
         autoResize: true,
         height: '100%',
@@ -206,7 +199,6 @@ function drawGraph(entitiesJSON, depth) {
 
     showElem("graphContainer-id");
 }
-
 
 /* ---------------------------------- Embeddings ---------------------------------- */
 function createTOPKresultsTable(jsonData, self) {
@@ -378,8 +370,96 @@ function fillTripleTable(fromData, toData, selfEntity) {
     showElem("triple-table-id");
 }
 
+function drawTripleGraph(fromData, toData, selfEntity) {
+    var limit = 100000;
+    var counter = 0;
+    var nodeArr = [];
+    var edgeArr = [];
 
+    nodeArr.push({id: counter++, label: formatDBpediaURI(selfEntity), url: selfEntity});
 
+    for (elem in fromData) {
+
+        var p = fromData[elem]["p"].replaceAll("@_@", "'");
+        var o = fromData[elem]["o"].replaceAll("@_@", "'");
+
+        nodeArr.push({id: counter, label: formatDBpediaURI(o), url: o});
+        edgeArr.push({from: counter++, to: 0, label: formatDBpediaURI(p) + "", length: 250, });
+
+        if (counter === limit) {
+            break;
+        }
+    }
+    var nodes = new vis.DataSet(nodeArr);
+    var edges = new vis.DataSet(edgeArr);
+
+    var container = document.getElementById("graphContainer-id");
+
+    var data = {
+        nodes: nodes,
+        edges: edges,
+    };
+
+    var options = {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        edges: {
+            width: 0.1,
+
+        },
+        nodes: {
+            color: {
+                border: 'red',
+                background: 'white',
+                highlight: {
+                    border: 'red',
+                    background: 'gray'
+                },
+                hover: {
+                    border: 'black',
+                    background: 'black'
+                }
+            },
+            font: {
+                color: 'black',
+                size: 18, // px
+                face: 'arial',
+            },
+            shape: 'box',
+        },
+        physics: {
+            enabled: true,
+            barnesHut: {
+                theta: 0.5,
+                gravitationalConstant: -2000,
+                centralGravity: 0.3,
+                springLength: 95,
+                springConstant: 0.04,
+                damping: 0.09,
+                avoidOverlap: 0
+            }
+        }
+    };
+
+    var network = new vis.Network(container, data, options);
+
+    network.on("click", function (params) {
+        var nodeID = params.nodes[0];
+        if (nodeID) {
+            var clickedNode = this.body.nodes[nodeID];
+            var nodeInfo = clickedNode.options;
+            window.location.href = nodeInfo.url;
+        }
+    });
+
+    network.on("stabilizationIterationsDone", function () {
+        network.setOptions({physics: false});
+    });
+
+    showElem("graphContainer-id");
+
+}
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
@@ -417,42 +497,46 @@ function loadFrameResource(url, mode) {
 
 /* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
+
+    /* --------- Getting connection attributes ---------*/
     var curEn = currentEntity;
     var graphJson = graph;
+    var currTriples = JSON.parse(triples);
     var infoS = infoService;
     var count = currCount;
     var depth = currDepth;
     var visMode = currVisMode;
 
-    console.log("Current entity: " + curEn);
-    console.log("Data recieved from server: " + graphJson);
-
-    console.log("VIS: " + visMode);
+    //console.log("Current entity: " + curEn);
+    //console.log("Data recieved from server: " + graphJson);
+    //console.log("VIS: " + visMode);
 
     if (visMode === "simcloud") {
         drawTagCloud(JSON.parse(graphJson));
-    } else {
+        //setElemValue("vis-mode-id", "Similarity Graph");
+    } else if (visMode === "simgraph") {
         drawGraph(JSON.parse(graphJson), depth);
+        //setElemValue("vis-mode-id", "Similarity Tag Cloud");
+    } else { //triples: triplegraph
+        drawTripleGraph(currTriples["asSubject"], currTriples["asObject"], curEn);
+        //setElemValue("vis-mode-id", "Triple Graph (Knowledge Subgraph)");
     }
 
-    console.log("Info:" + infoS);
-
-    if (!infoS.startsWith('{')) {
+    if (infoS === "triples") {
+        console.log("Triple table selected.");
+        hideElem('iframe-wiki-id');
+        fillTripleTable(currTriples["asSubject"], currTriples["asObject"], curEn);
+    } else {
         console.log("Embedded browser selected.");
         hideElem('triple-table-id');
         loadFrameResource(curEn, infoS);
-    } else {
-        console.log("Triple table selected.");
-        hideElem('iframe-wiki-id');
-        //var jsonOb = "{ \"array\": " + infoS + "}";
-        var allTriples = JSON.parse(infoS);
-        var jsonFromTripleArray = allTriples["asSubject"];
-        var jsonToTripleArray = allTriples["asObject"];
-        fillTripleTable(jsonFromTripleArray, jsonToTripleArray, curEn);
     }
 
+    /* --------- UI updates --------- */
     setElemValue("search-input-id", formatDBpediaURI(curEn));
     setElemValue("count-input-id", count);
     setElemValue("depth-input-id", depth)
+
+
 
 });

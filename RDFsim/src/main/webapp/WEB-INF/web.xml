@@ -10,7 +10,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>servlets.SearchServlet</servlet-class>
+        <servlet-class>server.SearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>

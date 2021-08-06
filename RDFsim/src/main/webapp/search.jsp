@@ -20,6 +20,7 @@
             var currCount = '<%=request.getAttribute("count")%>';
             var currDepth = '<%=request.getAttribute("depth")%>';
             var currVisMode = '<%=request.getAttribute("visMode")%>';
+            var triples = '<%=request.getAttribute("triples")%>';
         </script>
     </head>
 
@@ -85,6 +86,7 @@
                     <select name="vis-mode" id="vis-mode-id">
                         <option value="simgraph">Similarity Graph</option>
                         <option value="simcloud">Similarity Tag Cloud</option>
+                        <option value="triplegraph">Triple Graph (Knowledge Subgraph)</option>
                     </select>
                     <br>    
                     <label>Similars:</label>
