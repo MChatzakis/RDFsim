@@ -31,10 +31,10 @@ import org.json.JSONObject;
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 public class CommonUtils {
-
+    
     public static String writeStringToFile(String data, String filepath) {
         File file = new File(filepath);
-
+        
         try (FileOutputStream fos = new FileOutputStream(file);
                 BufferedOutputStream bos = new BufferedOutputStream(fos)) {
             byte[] bytes = data.getBytes();
@@ -44,30 +44,30 @@ public class CommonUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         return file.getAbsolutePath();
     }
-
+    
     public static String getFileContent(String filePath) throws IOException {
         Charset encoding = Charset.defaultCharset();
-
+        
         byte[] bytes = Files.readAllBytes(Paths.get(filePath));
         String string = new String(bytes, encoding);
-
+        
         return string;
     }
-
+    
     public static void printEntityMap(HashMap<String, Double> map) {
         //map.forEach((key, value) -> System.out.println(key + ":" + value)); //why is Java 7 enabled?????????
         for (Map.Entry<String, Double> entry : map.entrySet()) {
             System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
         }
     }
-
+    
     public static String levenshteinDistance(Collection<String> URIs, String URI) {
         String closestURI = "";
         int dist = Integer.MAX_VALUE;
-
+        
         for (String curr : URIs) {
             int currDist = StringUtils.getLevenshteinDistance(curr, URI);
             if (currDist < dist) {
@@ -75,26 +75,26 @@ public class CommonUtils {
                 closestURI = curr;
             }
         }
-
+        
         return closestURI;
     }
-
+    
     public static JSONObject entityMapToJSON(HashMap<String, Double> map) {
         JSONObject mapObj = new JSONObject();
-
+        
         for (Map.Entry<String, Double> entry : map.entrySet()) {
             //System.out.println(entry.getKey() + "=>" + entry.getValue().toString());
             mapObj.put(entry.getKey(), entry.getValue().toString());
         }
-
+        
         return mapObj;
     }
-
+    
     public static HashMap<String, Double> sortEntityMap(HashMap<String, Double> map) {
-
+        
         List<Map.Entry<String, Double>> list
                 = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
-
+        
         Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
             public int compare(Map.Entry<String, Double> o1,
                     Map.Entry<String, Double> o2) {
@@ -102,15 +102,15 @@ public class CommonUtils {
                 return (o2.getValue()).compareTo(o1.getValue());
             }
         });
-
+        
         HashMap<String, Double> temp = new LinkedHashMap<String, Double>();
         for (Map.Entry<String, Double> aa : list) {
             temp.put(aa.getKey(), aa.getValue());
         }
-
+        
         return temp;
     }
-
+    
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
@@ -122,26 +122,30 @@ public class CommonUtils {
         }
         return true;
     }
-
-    public static void mergeFilesToFile(ArrayList<String> filenames, String target) throws Exception {
-
+    
+    public static void mergeFilesToFile(String directory, ArrayList<String> filenames, String target) throws Exception {
+        
         BufferedWriter targetWriter = new BufferedWriter(new FileWriter(target));
+        
+        Collections.sort(filenames);
+        
         System.out.println("File Merging Started. Target Destination: " + target);
-
+        System.out.println("Files to be merged: " + filenames.toString());
+        
         for (String filename : filenames) {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            BufferedReader reader = new BufferedReader(new FileReader(directory + "\\" + filename));
             System.out.println("Current File: " + filename);
-
+            
             String line;
             while ((line = reader.readLine()) != null) {
                 targetWriter.write(line);
             }
-
+            
             reader.close();
         }
-
+        
         targetWriter.close();
         System.out.println("File Merging Completed.");
     }
-
+    
 }

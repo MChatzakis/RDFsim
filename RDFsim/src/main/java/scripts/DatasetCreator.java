@@ -27,7 +27,7 @@ public class DatasetCreator {
         } else {
             List<String> stopWords = new ArrayList<>();
             stopWords.add(".");
-            vec = new W2VApi(5, 100, 42, 3, 10, stopWords, rdfSourcePath);
+            vec = new W2VApi(50, 50, 42, 3, 1, stopWords, rdfSourcePath);
             vec.train();
         }
         return vec;
@@ -184,11 +184,37 @@ public class DatasetCreator {
         raf.printVocabInfo();
     }
 
+    public static void createCompleteDataset() throws IOException {
+        System.out.println(" \n================ Creating Complete Dataset ================\n ");
+
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\all_triples_0_38.txt";
+        String rdfSourcePath = "C:\\tmp\\rdfsim\\all_triples_0_38.rdf";
+        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\all_triples_0_38.vec";
+
+        int count = 30;
+
+        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+
+        defaultDatasetCleanUp(vec);
+
+        String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
+        vec.createRAF(rafTargetPath, ptrTargetPath, count);
+
+        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+
+        System.out.println(" \n================ Raf file contents ================\n ");
+        raf.print();
+
+        System.out.println(" \n================ Available Entities ================\n ");
+        raf.printVocabInfo();
+    }
+
     public static void main(String[] args) throws IOException {
         //createPhilosophersDataset();
         //createProgrammingLanguagesDataset();
         //createMoviesDataset();
-        createVideoGamesDataset();
+        //createVideoGamesDataset();
+        createCompleteDataset();
     }
 
 }

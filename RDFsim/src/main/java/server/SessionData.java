@@ -30,8 +30,7 @@ public class SessionData {
 
     private String infoService = DEFAULT_INFO_SERVICE;
     private String visMode = DEFAULT_VIS_MODE;
-    private String currentPrefix = "http://dbpedia.org/resource/";
-    private String endpoint = "https://dbpedia.org/sparql";
+
     private String entityURI = null;
 
     private RafApi raf = null;
