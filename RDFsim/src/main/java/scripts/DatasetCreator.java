@@ -27,7 +27,7 @@ public class DatasetCreator {
         } else {
             List<String> stopWords = new ArrayList<>();
             stopWords.add(".");
-            vec = new W2VApi(50, 50, 42, 3, 1, stopWords, rdfSourcePath);
+            vec = new W2VApi(5, 200, 42, 3, 10, stopWords, rdfSourcePath);
             vec.train();
         }
         return vec;
@@ -45,6 +45,7 @@ public class DatasetCreator {
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/-");
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/:");
         keepWordsNotStartingWith.add("http://dbpedia.org/resource/%");
+        keepWordsNotStartingWith.add("http://dbpedia.org/resource/.");
 
         Collection<String> removeWordsContaining = new ArrayList<>();
         removeWordsContaining.add("?");
@@ -212,9 +213,9 @@ public class DatasetCreator {
     public static void main(String[] args) throws IOException {
         //createPhilosophersDataset();
         //createProgrammingLanguagesDataset();
-        //createMoviesDataset();
+        createMoviesDataset();
         //createVideoGamesDataset();
-        createCompleteDataset();
+        //createCompleteDataset();
     }
 
 }

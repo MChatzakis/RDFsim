@@ -116,7 +116,7 @@ public class SPARQLQuery {
 
     public static String formatDBpediaURI(String URI) {
 
-        String[] splitters = {"/", "#"}; /*Removed : as many times it was useful, etc: Star Wars: A new hope*/ 
+        String[] splitters = {"/", "#"}; /*Removed : as many times it was useful, etc: Star Wars: A new hope, or Thor: Dark World*/ 
         String[] parts;
         String result = URI;
 
