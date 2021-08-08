@@ -1,0 +1,41 @@
+/* ------------------------ General ------------------------*/
+html{
+    margin: 0;
+} 
+
+body {
+    margin: 0;
+    min-height: 400px;
+    min-width: 400px;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+a{
+    color:red;
+}
+
+/* ------------------------ Footer ------------------------ */
+.copyright {
+    display: flex;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    background: black;
+    color: #fff;
+    margin-top: auto;
+    position:absolute;
+    bottom: 0;
+    font-size: 14px;
+}
+
+.footer-images {
+    position: absolute;
+    right: 5px;
+}
+
+.about-link{
+    position: absolute;
+    left: 5px;
+}

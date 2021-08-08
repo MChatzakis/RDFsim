@@ -48,8 +48,6 @@
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="40">
-                    <!--<button class="search-button" type="submit" value="Submit">
-                        <img src="icons/search-icon.png" width="25" height="25" alt="searchIcon"/></button>-->
                 </div>
             </form>
 
@@ -118,6 +116,7 @@
 
             <!-- Footer -->
             <div class="copyright">
+                <a class = "about-link" href="./about.jsp">About</a>
                 <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
                 |
                 <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>

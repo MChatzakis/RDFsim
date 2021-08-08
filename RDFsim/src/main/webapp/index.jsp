@@ -46,6 +46,7 @@
 
         <!--Footer -->
         <div class="copyright">
+            <a class = "about-link" href="./about.jsp">About</a>
             <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
             |
             <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
