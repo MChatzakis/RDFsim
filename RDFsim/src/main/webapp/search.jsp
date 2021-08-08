@@ -48,8 +48,8 @@
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="40">
-                    <button class="search-button" type="submit" value="Submit">
-                        <img src="icons/search-icon.png" width="25" height="25" alt="searchIcon"/></button>
+                    <!--<button class="search-button" type="submit" value="Submit">
+                        <img src="icons/search-icon.png" width="25" height="25" alt="searchIcon"/></button>-->
                 </div>
             </form>
 

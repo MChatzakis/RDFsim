@@ -29,8 +29,7 @@
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60">
-                    <button class="search-button" type="submit" value="Submit">
-                        <img src="icons/search-icon.png" width="32px" height="32px" alt=""/></button>
+                    <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
                 </div>
                 <span class="home-description">Similarity browsing tool for RDF Databases</span>
                 <br>

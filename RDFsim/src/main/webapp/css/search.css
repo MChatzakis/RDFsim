@@ -1,3 +1,16 @@
+/* ------------------------ General ------------------------*/
+html{
+    margin: 0;
+} 
+
+body {
+    margin: 0;
+    min-height: 400px;
+    min-width: 400px;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+
 .graphContainer {
     position: relative; 
     height: 94%; 
@@ -102,16 +115,6 @@ a{
     right: 5px;
 }
 
-html{
-    margin: 0;
-} 
-
-body {
-    margin: 0;
-    min-height: 400px;
-    min-width: 400px;
-    font-family: 'Open Sans', Arial, sans-serif;
-}
 
 .search-button {
     color: #900;
