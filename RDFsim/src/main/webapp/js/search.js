@@ -460,12 +460,13 @@ function drawTripleGraph(fromData, toData, selfEntity) {
     showElem("graphContainer-id");
 
 }
+
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     console.log("Formatting URI");
 
     var formattedURI = URI;
-    var beforeSplitters = ['/', '#', ':'];
+    var beforeSplitters = ['/', '#'];
 
     for (var s = 0; s < beforeSplitters.length; s++) {
         var arr = formattedURI.split(beforeSplitters[s]);
@@ -495,18 +496,38 @@ function loadFrameResource(url, mode) {
     showElem("iframe-wiki-id");
 }
 
+function allValuesAreSet(arr) {
+    for (val in arr) {
+        if (val === "undefined") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function redirToErrorPage() {
+    window.location.href = "./error.jsp";
+}
 /* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
 
     /* --------- Getting connection attributes ---------*/
     var curEn = currentEntity;
     var graphJson = graph;
-    var currTriples = JSON.parse(triples);
+    var currTriples = triples;//JSON.parse(triples);
     var infoS = infoService;
     var count = currCount;
     var depth = currDepth;
     var visMode = currVisMode;
 
+    var valArr = [curEn, graphJson, currTriples, infoS, count, depth, visMode];
+    if (!allValuesAreSet(valArr)) {
+        redirToErrorPage();
+        return;
+    }
+
+    currTriples = JSON.parse(triples);
     //console.log("Current entity: " + curEn);
     //console.log("Data recieved from server: " + graphJson);
     //console.log("VIS: " + visMode);
@@ -536,7 +557,5 @@ $(document).ready(function () {
     setElemValue("search-input-id", formatDBpediaURI(curEn));
     setElemValue("count-input-id", count);
     setElemValue("depth-input-id", depth)
-
-
 
 });

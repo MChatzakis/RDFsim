@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simgraph;
 
 import embeddings.W2VApi;
@@ -84,7 +79,7 @@ public class SimilarityGraph {
                             System.out.println("There does not exist a link between " + oldNode.getId() + "and" + n.getId() + ". Adding the link!");
                             n.addLink(entry.getValue(), oldNode.getId());
                         }
-
+                        
                     } else {
                         SimilarityNode newNode = addNode(entry.getKey(), nodeCounter++);
 
@@ -169,5 +164,4 @@ public class SimilarityGraph {
 
         return jgraph;
     }
-
 }

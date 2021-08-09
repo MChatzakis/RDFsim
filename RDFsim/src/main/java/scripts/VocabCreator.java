@@ -41,8 +41,8 @@ public class VocabCreator {
         String rdfFilePath = "C:\\tmp\\rdfsim\\" + datasetName;
 
         //createVocabOnSingleFile(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 3, 0, false);
-        //createVocabOnFilePartitions(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 100000000, 35, 1000000, false);
-        createFileFromParitions("C:\\tmp\\rdfsim\\all_triples\\", "C:\\tmp\\rdfsim\\all_triples_0_38.rdf");
+        createVocabOnFilePartitions(rdfFilePath, dbPediaEndpoint, dbPediaGetAll, 100000000, 59, 1000000, false);
+        //createFileFromParitions("C:\\tmp\\rdfsim\\all_triples\\", "C:\\tmp\\rdfsim\\all_triples_0_38.rdf");
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
