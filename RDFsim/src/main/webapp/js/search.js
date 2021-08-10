@@ -49,7 +49,7 @@ function dispElemFromButtonClick(id) {
 
 function setOptionValue(id, index) {
     var op = getElem(id);
-    op.leaveCode[index].selected = true;
+    op.options.selectedIndex = index;
 }
 
 /* ---------------------------------- Graph Drawing ---------------------------------- */
@@ -532,12 +532,18 @@ $(document).ready(function () {
     /* --------- Visualization Service Setup --------- */
     switch (visMode) {
         case 0:
+            //showElem('depth-input-id');
+            // showElem('count-input-id');
             drawGraph(graphJson, depth);
             break;
         case 1:
+            //hideElem('depth-input-id');
+            //showElem('count-input-id');
             drawTagCloud(graphJson);
             break;
         case 2:
+            //hideElem('depth-input-id');
+            //hideElem('count-input-id');
             drawTripleGraph(currTriples["asSubject"], currTriples["asObject"], curEn);
             break;
     }
