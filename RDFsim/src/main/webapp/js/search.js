@@ -533,7 +533,7 @@ $(document).ready(function () {
     switch (visMode) {
         case 0:
             //showElem('depth-input-id');
-            // showElem('count-input-id');
+            //showElem('count-input-id');
             drawGraph(graphJson, depth);
             break;
         case 1:
