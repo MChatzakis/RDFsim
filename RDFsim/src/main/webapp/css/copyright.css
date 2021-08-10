@@ -9,7 +9,7 @@
     background: black;
     color: #fff;
     margin-top: auto;
-    /*position:relative;*/
+    position:absolute;
     bottom: 0;
     font-size: 14px;
 }
