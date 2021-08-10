@@ -61,29 +61,3 @@ a{
     color: #999;
     font-size: 16px;
 }
-
-/* ------------------------ Footer ------------------------ */
-.copyright {
-    display: flex;
-    height: 38px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
-    background: black;
-    color: #fff;
-    margin-top: auto;
-    position:absolute;
-    bottom: 0;
-    font-size: 14px;
-}
-
-.footer-images {
-    position: absolute;
-    right: 5px;
-}
-
-.about-link{
-    position: absolute;
-    left: 5px;
-}
