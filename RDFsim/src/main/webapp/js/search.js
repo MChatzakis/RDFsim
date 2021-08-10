@@ -47,9 +47,14 @@ function dispElemFromButtonClick(id) {
     }
 }
 
+function setOptionValue(id, index) {
+    var op = getElem(id);
+    op.leaveCode[index].selected = true;
+}
+
 /* ---------------------------------- Graph Drawing ---------------------------------- */
 function drawTagCloud(entitiesJSON) {
-    var data = []
+    var data = [];
 
     for (var k in entitiesJSON) {
         var currentID = entitiesJSON[k]['id'];
@@ -68,22 +73,14 @@ function drawTagCloud(entitiesJSON) {
         }
     }
 
-    // create a chart and set the data
     chart = anychart.tagCloud(data);
 
-    //chart.mode("rect");
-    //chart.angles([0]);
-    //chart.normal().fontSize(5);
-    // set the container id
     chart.container("graphContainer-id");
 
     chart.listen("pointClick", function (e) {
-        //var url = "//en.wiktionary.org/wiki/" + e.point.get("x");
         window.location.href = "./SearchServlet?entity=" + e.point.get("URI");
-        //window.open(url, "_blank");
     });
 
-    // initiate drawing the chart
     chart.draw();
 
     showElem("graphContainer-id");
@@ -104,9 +101,9 @@ function drawGraph(entitiesJSON, depth) {
             nodeArr.push({id: currentID, label: formatDBpediaURI(currentLabel), url: currentLabel});
         }
 
-        console.log("Current Label: " + currentLabel);
-        console.log("Current ID: " + currentID);
-        console.log("Current Links: " + links);
+        //console.log("Current Label: " + currentLabel);
+        //console.log("Current ID: " + currentID);
+        //console.log("Current Links: " + links);
 
         for (var link in links) {
 
@@ -115,12 +112,12 @@ function drawGraph(entitiesJSON, depth) {
             var isUL = links[link]["isUL"];
 
             var arrowsConf = "from";
-            console.log("Link toID: " + toID);
-            console.log("Weight: " + weight);
+            //console.log("Link toID: " + toID);
+            //console.log("Weight: " + weight);
 
             //arrows: "to, from",
             if (isUL || depth == 1) {
-                console.log("askfiusdgs");
+                //console.log("askfiusdgs");
                 arrowsConf = "";
             }
 
@@ -180,15 +177,14 @@ function drawGraph(entitiesJSON, depth) {
     };
     var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
-        //console.log("Something was clicked!");
         var nodeID = params.nodes[0];
         if (nodeID) {
             var clickedNode = this.body.nodes[nodeID];
             var nodeInfo = clickedNode.options;
-            console.log('clicked node:', nodeInfo.label);
-            //console.log('pointer', params.pointer);
-            setElemValue("search-input-id", nodeInfo.url);
-            //searchEntity();
+
+            //console.log('clicked node:', nodeInfo.label);
+            //setElemValue("search-input-id", nodeInfo.url);
+
             window.location.href = "./SearchServlet?entity=" + nodeInfo.url;
         }
     });
@@ -463,7 +459,7 @@ function drawTripleGraph(fromData, toData, selfEntity) {
 
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
-    console.log("Formatting URI");
+    //console.log("Formatting URI");
 
     var formattedURI = URI;
     var beforeSplitters = ['/', '#'];
@@ -498,7 +494,7 @@ function loadFrameResource(url, mode) {
 
 function allValuesAreSet(arr) {
     for (val in arr) {
-        if (val === "undefined") {
+        if (typeof val === "undefined") {
             return false;
         }
     }
@@ -509,17 +505,20 @@ function allValuesAreSet(arr) {
 function redirToErrorPage() {
     window.location.href = "./error.jsp";
 }
+
 /* ---------------------------------- Document Load ---------------------------------- */
 $(document).ready(function () {
 
-    /* --------- Getting connection attributes ---------*/
-    var curEn = currentEntity;
-    var graphJson = graph;
-    var currTriples = triples;//JSON.parse(triples);
-    var infoS = infoService;
-    var count = currCount;
-    var depth = currDepth;
-    var visMode = currVisMode;
+    /* --------- Setting current attributes --------- */
+    var attributes = JSON.parse(rawAttributes);
+
+    var curEn = attributes["self"];
+    var depth = attributes["depth"];
+    var count = attributes["count"];
+    var visMode = attributes["visMode"];
+    var currTriples = attributes["triples"];
+    var infoS = attributes["infoService"];
+    var graphJson = attributes["graph"];
 
     var valArr = [curEn, graphJson, currTriples, infoS, count, depth, visMode];
     if (!allValuesAreSet(valArr)) {
@@ -527,35 +526,43 @@ $(document).ready(function () {
         return;
     }
 
-    currTriples = JSON.parse(triples);
-    //console.log("Current entity: " + curEn);
-    //console.log("Data recieved from server: " + graphJson);
-    //console.log("VIS: " + visMode);
+    /* --------- Logging --------- */
+    console.log("Data: " + JSON.stringify(attributes, 0, 2));
 
-    if (visMode === "simcloud") {
-        drawTagCloud(JSON.parse(graphJson));
-        //setElemValue("vis-mode-id", "Similarity Graph");
-    } else if (visMode === "simgraph") {
-        drawGraph(JSON.parse(graphJson), depth);
-        //setElemValue("vis-mode-id", "Similarity Tag Cloud");
-    } else { //triples: triplegraph
-        drawTripleGraph(currTriples["asSubject"], currTriples["asObject"], curEn);
-        //setElemValue("vis-mode-id", "Triple Graph (Knowledge Subgraph)");
+    /* --------- Visualization Service Setup --------- */
+    switch (visMode) {
+        case 0:
+            drawGraph(graphJson, depth);
+            break;
+        case 1:
+            drawTagCloud(graphJson);
+            break;
+        case 2:
+            drawTripleGraph(currTriples["asSubject"], currTriples["asObject"], curEn);
+            break;
     }
 
-    if (infoS === "triples") {
-        console.log("Triple table selected.");
-        hideElem('iframe-wiki-id');
-        fillTripleTable(currTriples["asSubject"], currTriples["asObject"], curEn);
-    } else {
-        console.log("Embedded browser selected.");
-        hideElem('triple-table-id');
-        loadFrameResource(curEn, infoS);
+    /* --------- Information Service Setup --------- */
+    switch (infoS) {
+        case 0:
+            hideElem('triple-table-id');
+            loadFrameResource(curEn, "wikipedia");
+            break;
+        case 1:
+            hideElem('triple-table-id');
+            loadFrameResource(curEn, "dbpedia");
+            break;
+        case 2:
+            hideElem('iframe-wiki-id');
+            fillTripleTable(currTriples["asSubject"], currTriples["asObject"], curEn);
+            break;
     }
 
     /* --------- UI updates --------- */
     setElemValue("search-input-id", formatDBpediaURI(curEn));
     setElemValue("count-input-id", count);
-    setElemValue("depth-input-id", depth)
+    setElemValue("depth-input-id", depth);
 
+    setOptionValue("service-selection-id", infoS);
+    setOptionValue("vis-mode-id", visMode);
 });

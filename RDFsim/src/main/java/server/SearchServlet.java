@@ -51,8 +51,7 @@ public class SearchServlet extends HttpServlet {
 
         /*Connection attributes*/
         HttpSession session = request.getSession();
-        String s;
-        SessionData currentData = ((s = String.valueOf(session.getAttribute("sessionData"))).equals("null")) ? new SessionData() : (SessionData) session.getAttribute("sessionData");
+        SessionData currentData = (String.valueOf(session.getAttribute("sessionData")).equals("null")) ? new SessionData() : (SessionData) session.getAttribute("sessionData");
 
         /*Attributes sent from the client forms*/
         String entity = request.getParameter("entity");
@@ -68,8 +67,7 @@ public class SearchServlet extends HttpServlet {
         }
 
         if (currentData.getRaf() == null) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error.jsp");
-            requestDispatcher.forward(request, response);
+            redirectToPage(request, response, "/error.jsp");
             return;
         }
 
@@ -79,8 +77,7 @@ public class SearchServlet extends HttpServlet {
         }
 
         if (currentData.getEntityURI() == null) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/error.jsp");
-            requestDispatcher.forward(request, response);
+            redirectToPage(request, response, "/error.jsp");
             return;
         }
 
@@ -97,34 +94,41 @@ public class SearchServlet extends HttpServlet {
         }
 
         if (infoService != null) {
-            currentData.setInfoService(infoService);
+            if (CommonUtils.isNumeric(infoService)) {
+                currentData.setInfoService(Integer.parseInt(infoService));
+            }
         }
 
         if (visMode != null) {
-            currentData.setVisMode(visMode);
+            if (CommonUtils.isNumeric(visMode)) {
+                currentData.setVisMode(Integer.parseInt(visMode));
+            }
         }
 
-        request.setAttribute("graph", currentData.getJSONGraph().toString());
-        request.setAttribute("self", currentData.getEntityURI());
-        request.setAttribute("count", currentData.getCount());
-        request.setAttribute("depth", currentData.getDepth());
-        request.setAttribute("visMode", currentData.getVisMode());
-        request.setAttribute("info-service", currentData.getInfoService());
+        JSONObject requestAttributes = new JSONObject();
+        requestAttributes.put("graph", currentData.getJSONGraph());
+        requestAttributes.put("self", currentData.getEntityURI());
+        requestAttributes.put("count", currentData.getCount());
+        requestAttributes.put("depth", currentData.getDepth());
+        requestAttributes.put("visMode", currentData.getVisMode());
+        requestAttributes.put("infoService", currentData.getInfoService());
 
-        if (currentData.getInfoService().equals("triples") || currentData.getVisMode().equals("triplegraph")) {
+        if (currentData.getInfoService() == 2 || currentData.getVisMode() == 2) {
             if (currentData.getTriples() == null) {
                 currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), endpoint));
             }
-            request.setAttribute("triples", currentData.getTriples().toString());
+            requestAttributes.put("triples", currentData.getTriples());
         } else {
-            request.setAttribute("triples", new JSONObject().toString());
+            requestAttributes.put("triples", new JSONObject());
         }
 
+        request.setAttribute("attributes", requestAttributes.toString());
         session.setAttribute("sessionData", currentData);
 
-        //System.out.println("Server connection attribute--graph: " + graph2sent.toString(2));
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/search.jsp");
-        requestDispatcher.forward(request, response);
+        System.out.println("Session Data: " + currentData.toJSON().toString(2));
+        System.out.println("Attribute Data" + requestAttributes.toString(2));
+
+        redirectToPage(request, response, "/search.jsp");
     }
 
     @Override
@@ -146,4 +150,8 @@ public class SearchServlet extends HttpServlet {
         out.flush();
     }
 
+    protected void redirectToPage(HttpServletRequest request, HttpServletResponse response, String page) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
+        requestDispatcher.forward(request, response);
+    }
 }

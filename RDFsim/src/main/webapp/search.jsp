@@ -14,13 +14,7 @@
         <title>RDFsim</title>
 
         <script type="text/javascript">
-            var graph = '<%=request.getAttribute("graph")%>';
-            var currentEntity = '<%=request.getAttribute("self")%>';
-            var infoService = '<%=request.getAttribute("info-service")%>';
-            var currCount = '<%=request.getAttribute("count")%>';
-            var currDepth = '<%=request.getAttribute("depth")%>';
-            var currVisMode = '<%=request.getAttribute("visMode")%>';
-            var triples = '<%=request.getAttribute("triples")%>';
+            var rawAttributes = '<%=request.getAttribute("attributes")%>';
         </script>
     </head>
 
@@ -65,9 +59,9 @@
                 <form class = "info-conf" id ="info-conf-id">
                     <label for="info-conf">Information service:</label>
                     <select name="info-service" id="service-selection-id">
-                        <option value="dbpedia">DBpedia</option>
-                        <option value="wikipedia">Wikipedia</option>
-                        <option value="triples">Triples</option>
+                        <option value="0">Wikipedia</option>
+                        <option value="1">DBpedia</option>
+                        <option value="2">Triples</option>
                     </select>
                     <br>
                     <input type="submit" value="Configure!">
@@ -82,9 +76,9 @@
                 <form class = "graph-conf" id ="graph-conf-id" action= "./SearchServlet">
                     <label>Mode:</label>
                     <select name="vis-mode" id="vis-mode-id">
-                        <option value="simgraph">Similarity Graph</option>
-                        <option value="simcloud">Similarity Tag Cloud</option>
-                        <option value="triplegraph">Triple Graph (Knowledge Subgraph)</option>
+                        <option value="0">Similarity Graph</option>
+                        <option value="1">Similarity Tag Cloud</option>
+                        <option value="2">Triple Graph (Knowledge Subgraph)</option>
                     </select>
                     <br>    
                     <label>Similars:</label>

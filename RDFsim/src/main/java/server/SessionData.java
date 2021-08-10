@@ -21,15 +21,15 @@ public class SessionData {
     /* Default RDFsim values. Any change here should be supported at front!*/
     public final int DEFAULT_COUNT = 10;
     public final int DEFAULT_DEPTH = 1;
-    public final String DEFAULT_INFO_SERVICE = "wikipedia";
-    public final String DEFAULT_VIS_MODE = "simgraph";
+    public final int DEFAULT_INFO_SERVICE = 0; 
+    public final int DEFAULT_VIS_MODE = 0;
 
     /* Session Attributes: */
     private Integer count = DEFAULT_COUNT;
     private Integer depth = DEFAULT_DEPTH;
 
-    private String infoService = DEFAULT_INFO_SERVICE;
-    private String visMode = DEFAULT_VIS_MODE;
+    private int infoService = DEFAULT_INFO_SERVICE;
+    private int visMode = DEFAULT_VIS_MODE;
 
     private String entityURI = null;
 
@@ -37,9 +37,10 @@ public class SessionData {
     private SimilarityGraph simGraph = null;
     private JSONObject triples = null;
 
-    public void setVisMode(String visMode) {
+    public void setVisMode(int visMode) {
         this.visMode = visMode;
-        if (visMode.equals("simcloud")) {
+
+        if (visMode == 1) { //1 stands for simcloud
             this.depth = 1;
         }
     }
@@ -77,5 +78,20 @@ public class SessionData {
         this.entityURI = null;
         this.simGraph = null;
         this.triples = null;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+
+        obj.put("URI", this.getEntityURI());
+        obj.put("count", this.getCount());
+        obj.put("depth", this.getDepth());
+        obj.put("infoService", this.getInfoService());
+        obj.put("visMode", this.getVisMode());
+        obj.put("graph", this.getSimGraph().toJSON());
+        obj.put("triples", this.getTriples());
+        obj.put("raf", this.getRaf().getPath());
+
+        return obj;
     }
 }

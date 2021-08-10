@@ -24,15 +24,18 @@ import utils.CommonUtils;
 @Data
 public class RafApi {
 
+    private String path;
     private RandomAccessFile raf;
     private HashMap<String, Long> pointerMappings;
 
     public RafApi(String rafPath, String ptrPath) throws FileNotFoundException, IOException {
+        path = rafPath;
         raf = new RandomAccessFile(rafPath, "rw");
         processPrtFile(ptrPath);
     }
 
     public RafApi(String rafPath) throws FileNotFoundException, IOException {
+        path = rafPath;
         raf = new RandomAccessFile(rafPath, "rw");
         String ptrPath = rafPath.replace(".txt", "PTR.txt");
         processPrtFile(ptrPath);
