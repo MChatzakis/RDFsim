@@ -15,6 +15,7 @@
 
         <script type="text/javascript">
             var rawAttributes = '<%=request.getAttribute("attributes")%>';
+            rawAttributes = rawAttributes.replace(/&#39;/g, "'");
         </script>
     </head>
 

@@ -122,11 +122,13 @@ public class SearchServlet extends HttpServlet {
             requestAttributes.put("triples", new JSONObject());
         }
 
-        request.setAttribute("attributes", requestAttributes.toString());
+        String data2sent = requestAttributes.toString().replaceAll("'", "&#39;");
+
+        request.setAttribute("attributes", data2sent);
         session.setAttribute("sessionData", currentData);
 
         System.out.println("Session Data: " + currentData.toJSON().toString(2));
-        System.out.println("Attribute Data" + requestAttributes.toString(2));
+        System.out.println("Attribute Data" + data2sent);
 
         redirectToPage(request, response, "/search.jsp");
     }
