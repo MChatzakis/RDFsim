@@ -21,7 +21,7 @@ public class SessionData {
     /* Default RDFsim values. Any change here should be supported at front!*/
     public final int DEFAULT_COUNT = 10;
     public final int DEFAULT_DEPTH = 1;
-    public final int DEFAULT_INFO_SERVICE = 0; 
+    public final int DEFAULT_INFO_SERVICE = 0;
     public final int DEFAULT_VIS_MODE = 0;
 
     /* Session Attributes: */
@@ -32,6 +32,8 @@ public class SessionData {
     private int visMode = DEFAULT_VIS_MODE;
 
     private String entityURI = null;
+    private String prefix = null;
+    private String endpoint = null;
 
     private RafApi raf = null;
     private SimilarityGraph simGraph = null;
@@ -46,8 +48,10 @@ public class SessionData {
     }
 
     public void setEntityURI(String entityURI) {
-        resetEntityData();
-        this.entityURI = entityURI;
+        if (this.entityURI == null || !this.entityURI.equals(entityURI)) {
+            resetEntityData();
+            this.entityURI = entityURI;
+        }
     }
 
     public void setRaf(RafApi raf) {
@@ -93,5 +97,16 @@ public class SessionData {
         obj.put("raf", this.getRaf().getPath());
 
         return obj;
+    }
+
+    /* I should automate that one */
+    public void processDatasetName(String dataset) {
+        if (dataset.startsWith("dbpedia")) {
+            this.prefix = "http://dbpedia.org/resource/";
+            this.endpoint = "https://dbpedia.org/sparql";
+        } else if (dataset.startsWith("ariadne")) {
+            this.prefix = "";
+            this.endpoint = "https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01";
+        }
     }
 }

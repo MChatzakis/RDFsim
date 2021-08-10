@@ -26,8 +26,13 @@ import utils.CommonUtils;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {
 
-    private String currentPrefix = "http://dbpedia.org/resource/";
-    private String endpoint = "https://dbpedia.org/sparql";
+    private final int WIKIPEDIA_INDEX = 0;
+    private final int DBPEDIA_INDEX = 1;
+    private final int TRIPLE_ARRAY_INDEX = 2;
+
+    private final int SIMGRAPH_INDEX = 0;
+    private final int SIMCLOUD_INDEX = 1;
+    private final int TRIPLEGRAPH_INDEX = 2;
 
     private RafApi initRaf(String name) throws IOException {
 
@@ -63,6 +68,7 @@ public class SearchServlet extends HttpServlet {
 
         /*Crucial Thing: Check current raf*/
         if (dataset != null) {
+            currentData.processDatasetName(dataset);
             currentData.setRaf(initRaf(dataset));
         }
 
@@ -113,9 +119,9 @@ public class SearchServlet extends HttpServlet {
         requestAttributes.put("visMode", currentData.getVisMode());
         requestAttributes.put("infoService", currentData.getInfoService());
 
-        if (currentData.getInfoService() == 2 || currentData.getVisMode() == 2) {
+        if (currentData.getInfoService() == TRIPLE_ARRAY_INDEX || currentData.getVisMode() == TRIPLEGRAPH_INDEX) {
             if (currentData.getTriples() == null) {
-                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), endpoint));
+                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), currentData.getEndpoint()));
             }
             requestAttributes.put("triples", currentData.getTriples());
         } else {

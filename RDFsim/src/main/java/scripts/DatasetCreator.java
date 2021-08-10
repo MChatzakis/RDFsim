@@ -211,10 +211,10 @@ public class DatasetCreator {
     }
 
     public static void main(String[] args) throws IOException {
-        //createPhilosophersDataset();
+        createPhilosophersDataset();
         //createProgrammingLanguagesDataset();
         //createMoviesDataset();
-        createVideoGamesDataset();
+        //createVideoGamesDataset();
         //createCompleteDataset();
     }
 
