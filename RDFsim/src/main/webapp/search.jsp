@@ -19,6 +19,7 @@
     </head>
 
     <!-- RDFsim frameworks and styling -->
+    <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="css/copyright.css">
 
@@ -111,7 +112,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="copyright">
+            <div class="copyright" style="position:relative;">
                 <a class = "about-link" href="./about.jsp">About</a>
                 <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
                 |

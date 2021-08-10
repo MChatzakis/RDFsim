@@ -2,9 +2,10 @@
 <!DOCTYPE html>
 <html>
 
+    <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/copyright.css">
-    
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>About RDFsim</title>

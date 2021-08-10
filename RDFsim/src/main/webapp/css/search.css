@@ -1,4 +1,4 @@
-/* ------------------------ General ------------------------*/
+/* ------------------------ General ------------------------
 html{
     margin: 0;
 } 
@@ -13,6 +13,7 @@ body {
 a{
     color:red;
 }
+*/
 
 /* ------------------------ Top Search Frame ------------------------*/
 .search-top{
@@ -114,33 +115,6 @@ a{
 
 .graph-conf{
     display: none;
-}
-
-/* ------------------------ Footer ------------------------*/
-.copyright {
-    clear:both;
-    display: flex;
-    height: 35px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 100%;
-    background: black;
-    color: #fff;
-    margin-top: auto;
-    position:relative;
-    bottom: 0;
-    font-size: 12px;
-}
-
-.footer-images {
-    position: absolute;
-    right: 5px;
-}
-
-.about-link{
-    position: absolute;
-    left: 5px;
 }
 
 /* ------------------------ TODO ------------------------*/

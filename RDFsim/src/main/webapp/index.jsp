@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
 
+    <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/copyright.css">
 
@@ -46,7 +47,7 @@
         </div>
 
         <!--Footer -->
-        <div class="copyright">
+        <div class="copyright" style="position:absolute;">
             <a class = "about-link" href="./about.jsp">About</a>
             <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
             |
