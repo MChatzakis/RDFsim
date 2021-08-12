@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <!--<servlet>
-        <servlet-name>ConfServlet</servlet-name>
-        <servlet-class>servlets.ConfServlet</servlet-class>
+    <servlet>
+        <servlet-name>IndexServlet</servlet-name>
+        <servlet-class>server.IndexServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ConfServlet</servlet-name>
-        <url-pattern>/ConfServlet</url-pattern>
-    </servlet-mapping>-->
+        <servlet-name>IndexServlet</servlet-name>
+        <url-pattern>/IndexServlet</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>server.SearchServlet</servlet-class>
