@@ -21,6 +21,7 @@
         <div class ="">
             <h1>Ooops! Something went wrong..</h1>
             <a href="./"><img class="logo-img" src="./icons/rdfsim-logo4.png" alt="rdfsim-logo" height="150px;"></a>
+            <p>Possible reasons for this could be searching an unknown entity with special characters. Try Again.</p>
         </div>
 
         <!--Footer -->

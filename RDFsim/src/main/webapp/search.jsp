@@ -94,36 +94,38 @@
                     <input type="submit" value="Configure!">
                 </form>
             </div>
+        </div>
 
-            <!-- Results -->
-            <div class = "results" id = "results-id" >
-                <div class = "results-info" id = "results-info-id"> 
-                    <iframe class = "iframe-wiki" id ="iframe-wiki-id" frameBorder="0" src=""></iframe>
-                    <table class="triple-table" id = "triple-table-id">
-                        <tr>
-                            <th>Predicate</th>
-                            <th>Object</th>
-                        </tr>
-                    </table>
-                </div>
-                <div class = "results-graph" id = "results-graph-id"> 
-                    <div class ="graphContainer" id ="graphContainer-id"></div>
-                </div>
-                <div style="clear:both"></div>
+        <!-- Results -->
+        <div class = "results" id = "results-id" >
+            <div class = "results-info" id = "results-info-id"> 
+                <iframe class = "iframe-wiki" id ="iframe-wiki-id" frameBorder="0" src=""></iframe>
+                <table class="triple-table" id = "triple-table-id">
+                    <tr>
+                        <th>Predicate</th>
+                        <th>Object</th>
+                    </tr>
+                </table>
             </div>
+            <div class = "results-graph" id = "results-graph-id"> 
+                <div class ="graphContainer" id ="graphContainer-id"></div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
 
-            <!-- Footer -->
-            <div class="copyright" style="position:relative;">
-                <a class = "about-link" href="./about.jsp">About</a>
-                <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
-                |
-                <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
-                | © Copyright 2021 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
-                <div class="footer-images">
-                    <a href="https://www.ics.forth.gr/isl/"><img src="./icons/isl-logo.png" height="26"></a>
-                    <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="26"></a>
-                </div>
+        <!-- Footer -->
+        <div class="copyright" style="position:relative;">
+            <a class = "about-link" href="./about.jsp">About</a>
+            <a href="http://www.ics.forth.gr/isl/sar/privacy/TermsOfUse-ISL_EN.pdf" target="_blank">Terms of Use</a>
+            |
+            <a href="http://www.ics.forth.gr/isl/sar/privacy/PrivacyPolicy-ISL_EN.pdf" style="padding-left:0px!important;" target="_blank">Privacy Policy</a>
+            | © Copyright 2021 FOUNDATION FOR RESEARCH &amp; TECHNOLOGY - HELLAS, All rights reserved.
+            <div class="footer-images">
+                <a href="https://www.ics.forth.gr/isl/"><img src="./icons/isl-logo.png" height="26"></a>
+                <a href="https://www.ics.forth.gr/"><img src="./icons/ics-logo.png" height="26"></a>
             </div>
+        </div>
+
 
     </body>
 
