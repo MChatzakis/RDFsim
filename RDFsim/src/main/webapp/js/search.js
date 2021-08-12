@@ -3,59 +3,9 @@
  * Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 
-/* ---------------------------------- Basic control functions ---------------------------------- */
-function getElem(id) {
-    return document.getElementById(id);
-}
-
-function hideElem(id) {
-    getElem(id).style.display = "none";
-}
-
-function clearElem(id) {
-    getElem(id).innerHTML = "";
-}
-
-function showElem(id) {
-    getElem(id).style.display = "block";
-}
-
-function sendAjaxWithPromise(jsonData) {
-    console.log("Getting the promise ready. Data to sent: " + JSON.stringify(jsonData, null, 4));
-    return $.ajax({
-        type: "POST",
-        url: URL,
-        data: jsonData,
-        dataType: "json"
-    });
-}
-
-function getElemValue(id) {
-    return getElem(id).value;
-}
-
-function setElemValue(id, val) {
-    getElem(id).value = val;
-}
-
-function dispElemFromButtonClick(id) {
-    var el = getElem(id);
-    if (el.style.display === "block") {
-        hideElem(id);
-    } else {
-        showElem(id);
-    }
-}
-
-function setOptionValue(id, index) {
-    var op = getElem(id);
-    op.options.selectedIndex = index;
-}
-
 /* ---------------------------------- Graph Drawing ---------------------------------- */
 function drawTagCloud(entitiesJSON) {
     var data = [];
-
     for (var k in entitiesJSON) {
         var currentID = entitiesJSON[k]['id'];
         var currentLabel = k;
@@ -229,21 +179,6 @@ function createTOPKresultsTable(jsonData, self) {
     showElem("resultsContainer");
 }
 
-function searchEntity() {
-    var currentEntity = getElemValue("inputSearchEntity");
-    var jsonData = {
-        type: TOP_K,
-        count: 5,
-        entity: currentEntity,
-    };
-    sendAjaxWithPromise(jsonData).then(function (data) {
-        console.log("Data response from the server for TOP K entity search: " + JSON.stringify(data, null, 4));
-        //createTOPKresultsTable(data, currentEntity);
-        drawGraph(data, currentEntity);
-    });
-    loadFrameResource(currentEntity);
-}
-
 function compareEntities() {
     var ent1 = getElemValue("cosineEntity1");
     var ent2 = getElemValue("cosineEntity2");
@@ -252,55 +187,12 @@ function compareEntities() {
         en1: getElemValue("cosineEntity1"),
         en2: getElemValue("cosineEntity2"),
     };
+    
     sendAjaxWithPromise(jsonData).then(function (data) {
         var dataAsJSON = JSON.stringify(data, null, 4);
         console.log("Data response from the server for cosine similarity: " + dataAsJSON);
         var cosVal = data.cosSim;
         getElem("cosineAnswer").innerHTML = "Cosine similarity is " + cosVal + ".";
-    });
-}
-
-function updateExpressionAns(toAddArr, toSubArr, data) {
-    clearElem("exprAnsPar");
-    elem = getElem("exprAnsPar");
-    var answer = "";
-    for (var i = 0; i < toAddArr.length; i++) {
-        answer += toAddArr[i];
-        if (i < toAddArr.length - 1) {
-            answer += " + ";
-        }
-    }
-
-    for (var i = 0; i < toSubArr.length; i++) {
-        if (i === 0) {
-            answer += " - ";
-        }
-
-        answer += toSubArr[i];
-        if (i < toSubArr.length - 1) {
-            answer += "-";
-        }
-    }
-
-    answer += " = [" + data["expr_result"] + "].";
-    elem.innerHTML = answer;
-}
-
-function calculateExpression() {
-    var resCount = getElemValue("entitiesExpressionCount");
-    var toAddArr = getElemValue("entities2add").split(",");
-    var toSubArr = getElemValue("entities2sub").split(",");
-
-    var jsonData = {
-        type: EXPR,
-        count: getElemValue("entitiesExpressionCount"),
-        positives: getElemValue("entities2add"),
-        negatives: getElemValue("entities2sub")
-    };
-
-    sendAjaxWithPromise(jsonData).then(function (data) {
-        console.log("Data response from the server for expression: " + JSON.stringify(data, null, 4));
-        updateExpressionAns(toAddArr, toSubArr, data);
     });
 }
 
@@ -458,27 +350,6 @@ function drawTripleGraph(fromData, toData, selfEntity) {
 }
 
 /* ---------------------------------- Utilities ---------------------------------- */
-function formatDBpediaURI(URI) {
-    //console.log("Formatting URI");
-
-    var formattedURI = URI;
-    var beforeSplitters = ['/', '#'];
-
-    for (var s = 0; s < beforeSplitters.length; s++) {
-        var arr = formattedURI.split(beforeSplitters[s]);
-        formattedURI = arr[arr.length - 1];
-    }
-
-    formattedURI = formattedURI.replaceAll("_", " ");
-
-    return formattedURI;
-}
-
-function roundTo(num, points) {
-    const x = Math.pow(10, points);
-    return Math.round(num * x) / x;
-}
-
 function loadFrameResource(url, mode) {
     var wikiLink = "https://en.wikipedia.org/wiki/" + formatDBpediaURI(url);
     var dbpLink = url;
@@ -490,20 +361,6 @@ function loadFrameResource(url, mode) {
     }
 
     showElem("iframe-wiki-id");
-}
-
-function allValuesAreSet(arr) {
-    for (val in arr) {
-        if (typeof val === "undefined") {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function redirToErrorPage() {
-    window.location.href = "./error.jsp";
 }
 
 /* ---------------------------------- Document Load ---------------------------------- */
@@ -532,18 +389,12 @@ $(document).ready(function () {
     /* --------- Visualization Service Setup --------- */
     switch (visMode) {
         case 0:
-            //showElem('depth-input-id');
-            //showElem('count-input-id');
             drawGraph(graphJson, depth);
             break;
         case 1:
-            //hideElem('depth-input-id');
-            //showElem('count-input-id');
             drawTagCloud(graphJson);
             break;
         case 2:
-            //hideElem('depth-input-id');
-            //hideElem('count-input-id');
             drawTripleGraph(currTriples["asSubject"], currTriples["asObject"], curEn);
             break;
     }
