@@ -45,10 +45,10 @@
             <h2>Involved people</h2>
             <ul>
                 <li>
-                    Manos Chatzakis (Web Application and general programming development)
+                    Yannis Tzitzikas (Conceptualization of the application, Lead Author)
                 </li>
                 <li>
-                    Yannis Tzitzikas (Conceptualization of the application, Lead Author)
+                    Manos Chatzakis (Web Application and general programming development)
                 </li>
                 <li>
                     Mike Mountantonakis (Conceptualization of the application)
