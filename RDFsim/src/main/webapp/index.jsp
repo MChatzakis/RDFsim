@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/copyright.css">
-
+    <link rel="icon" href="./icons/rdfsim-icon.png">
+    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>RDFsim</title>

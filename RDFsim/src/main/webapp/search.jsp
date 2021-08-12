@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="css/copyright.css">
+    <link rel="icon" href="./icons/rdfsim-icon.png">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -30,7 +31,7 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-tag-cloud.min.js"></script>
-    
+
     <script type="text/javascript" src="js/utilities.js"></script>
     <script type="text/javascript" src="js/search.js"></script>
 
