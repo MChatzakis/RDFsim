@@ -187,7 +187,7 @@ function compareEntities() {
         en1: getElemValue("cosineEntity1"),
         en2: getElemValue("cosineEntity2"),
     };
-    
+
     sendAjaxWithPromise(jsonData).then(function (data) {
         var dataAsJSON = JSON.stringify(data, null, 4);
         console.log("Data response from the server for cosine similarity: " + dataAsJSON);
@@ -423,3 +423,12 @@ $(document).ready(function () {
     setOptionValue("service-selection-id", infoS);
     setOptionValue("vis-mode-id", visMode);
 });
+
+/* ---------------------------------- AutoComplete ---------------------------------- */
+function autoCompleteSearch(prefix) {
+    var dataListID = "autoCompleteList-id";
+    var URL = "SearchServlet";
+
+    console.log("Starting auto complete sequence with prefix: " + prefix);
+    autoComplete(prefix, dataListID, URL);
+}

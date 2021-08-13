@@ -20,6 +20,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    
     <script type="text/javascript" src="js/utilities.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
 
@@ -36,7 +37,7 @@
             <!-- Search -->
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Type Something to search..." size="60" list="autoCompleteList-id">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Type Something to search..." size="60" list="autoCompleteList-id" onkeyup="autoCompleteIndex(this.value);">
                     <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
                     <datalist id="autoCompleteList-id"></datalist>
                 </div>
