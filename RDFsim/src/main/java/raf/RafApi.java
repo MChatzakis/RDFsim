@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.HashMap;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -209,6 +210,12 @@ public class RafApi {
         }
 
         resetPtr();
+    }
+
+    public ArrayList<String> getWordRecomendations(String prefix) {
+        ArrayList<String> recomendations = new ArrayList<>();
+        
+        return recomendations;
     }
 
 }
