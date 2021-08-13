@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 
 /**
  *
@@ -28,7 +29,20 @@ public class IndexServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         int type = Integer.parseInt(request.getParameter("type"));
 
+        PrintWriter out = response.getWriter();
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        int count = 0;
+        JSONObject data2sent = null;
+
+        System.out.println("Server->Sending: " + data2sent.toString(2));
+
+        out.print(data2sent);
+        out.flush();
     }
 
     protected void redirectToPage(HttpServletRequest request, HttpServletResponse response, String page) throws ServletException, IOException {

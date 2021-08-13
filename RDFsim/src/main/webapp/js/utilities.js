@@ -42,6 +42,10 @@ function setOptionValue(id, index) {
     op.options.selectedIndex = index;
 }
 
+function setInnerHTML(id, val) {
+    getElem(id).innerHTML = val;
+}
+
 /* ---------------------------------- Utilities ---------------------------------- */
 function formatDBpediaURI(URI) {
     //console.log("Formatting URI");
@@ -87,3 +91,30 @@ function sendAjax(jsonData, URL) {
         dataType: "json"
     });
 }
+
+/* ---------------------------------- AutoComplete ---------------------------------- */
+var AUTOCOMPLETE_CODE = 0;
+
+function autoComplete(prefix, listID, URL) {
+
+    if (prefix.length >= 4 && !prefix.startsWith("http://")) {
+        var options = "";
+        var data2sent = {
+            type:AUTOCOMPLETE_CODE,
+            prefix: prefix
+        };
+
+        sendAjax(data2sent, URL).then(function (data) {
+            data = JSON.parse(data); //?
+
+            for (var i = 0; i < data.length; i++) {
+                var recEntity = data[i];
+                options += '<option value="' + recEntity + '" >' + recEntity + '</option>';
+            }
+
+        });
+
+        setInnerHTML(listID, options);
+    }
+}
+
