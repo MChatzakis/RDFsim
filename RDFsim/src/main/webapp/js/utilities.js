@@ -105,10 +105,11 @@ function autoComplete(prefix, listID, URL) {
         };
 
         sendAjax(data2sent, URL).then(function (data) {
-            data = JSON.parse(data); //?
+                    //data = JSON.parse(data); //?
 
             for (var i = 0; i < data.length; i++) {
                 var recEntity = data[i];
+                console.log("AutoComplete: Adding as option entity " + recEntity);
                 options += '<option value="' + recEntity + '" >' + recEntity + '</option>';
             }
 

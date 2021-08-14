@@ -142,6 +142,10 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        /*Connection attributes*/
+        HttpSession session = request.getSession();
+        SessionData currentData = (String.valueOf(session.getAttribute("sessionData")).equals("null")) ? new SessionData() : (SessionData) session.getAttribute("sessionData");
+
         int type = Integer.parseInt(request.getParameter("type"));
 
         PrintWriter out = response.getWriter();
@@ -149,11 +153,14 @@ public class SearchServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        int count = 0;
-        JSONObject data2sent = null;
-
-        System.out.println("Server->Sending: " + data2sent.toString(2));
-
+        JSONArray data2sent = null;
+        if (type == 0) {
+            String prefix = request.getParameter("prefix");
+            data2sent = currentData.getRaf().getWordRecomendations(prefix);
+        }
+        
+        System.out.println("Answering post request with: " + data2sent.toString(2));
+        
         out.print(data2sent);
         out.flush();
     }

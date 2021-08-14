@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -212,10 +213,14 @@ public class RafApi {
         resetPtr();
     }
 
-    public ArrayList<String> getWordRecomendations(String prefix) {
-        ArrayList<String> recomendations = new ArrayList<>();
-        
-        return recomendations;
+    public JSONArray getWordRecomendations(String prefix) {
+        JSONArray words2recomend = new JSONArray();
+
+        words2recomend.put("dummy0");
+        words2recomend.put("dummy1");
+        words2recomend.put("dummy2");
+
+        return words2recomend;
     }
 
 }
