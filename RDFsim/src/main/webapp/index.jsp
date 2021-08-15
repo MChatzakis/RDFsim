@@ -31,7 +31,7 @@
             <!-- Search -->
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Type Something to search..." size="60" list="autoCompleteList-id">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60" list="autoCompleteList-id">
                     <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
                     <datalist id="autoCompleteList-id"></datalist>
                 </div>

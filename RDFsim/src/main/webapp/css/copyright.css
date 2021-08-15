@@ -1,7 +1,7 @@
 /* ------------------------ Footer ------------------------ */
 .copyright {
     display: flex;
-    height: 38px;
+    height: 36px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -11,7 +11,7 @@
     margin-top: auto;
     position:absolute;
     bottom: 0;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .footer-images {
