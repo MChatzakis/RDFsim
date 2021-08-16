@@ -154,13 +154,23 @@ public class SearchServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         JSONArray data2sent = null;
-        if (type == 0) {
+
+        switch (type) {
+        case 0:
             String prefix = request.getParameter("prefix");
-            data2sent = currentData.getRaf().getWordRecomendations(prefix);
+            String dataset = request.getParameter("dataset");
+
+            if (dataset.equals("empty")) {
+                data2sent = currentData.getRaf().getWordRecomendations(prefix);
+            } else {
+                data2sent = initRaf(dataset).getWordRecomendations(prefix);
+            }
+
+            break;
         }
-        
+
         System.out.println("Answering post request with: " + data2sent.toString(2));
-        
+
         out.print(data2sent);
         out.flush();
     }

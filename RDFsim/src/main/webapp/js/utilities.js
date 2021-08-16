@@ -95,27 +95,33 @@ function sendAjax(jsonData, URL) {
 /* ---------------------------------- AutoComplete ---------------------------------- */
 var AUTOCOMPLETE_CODE = 0;
 
-function autoComplete(prefix, listID, URL) {
+function autoComplete(prefix, listID, URL, dataset = "empty") {
 
-    if (prefix.length >= 4 && !prefix.startsWith("http://")) {
+    /*if (dataset === "null") {
+        console.log("Setting null val");
+        dataset = "empty";
+    }*/
+
+    if (prefix.length >= 3 && !prefix.startsWith("http://")) {
         var options = "";
         var data2sent = {
-            type:AUTOCOMPLETE_CODE,
-            prefix: prefix
+            type: AUTOCOMPLETE_CODE,
+            prefix: prefix,
+            dataset: dataset
         };
 
         sendAjax(data2sent, URL).then(function (data) {
-                    //data = JSON.parse(data); //?
 
             for (var i = 0; i < data.length; i++) {
                 var recEntity = data[i];
-                console.log("AutoComplete: Adding as option entity " + recEntity);
+                //console.log("AutoComplete: Adding as option entity " + recEntity);
                 options += '<option value="' + recEntity + '" >' + recEntity + '</option>';
             }
 
+            console.log("Options set: " + options);
+            setInnerHTML(listID, options);
         });
-
-        setInnerHTML(listID, options);
     }
+
 }
 

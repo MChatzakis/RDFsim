@@ -213,13 +213,43 @@ public class RafApi {
         resetPtr();
     }
 
-    public JSONArray getWordRecomendations(String prefix) {
+    public JSONArray getWordRecomendations(String prefix) throws IOException {
         JSONArray words2recomend = new JSONArray();
+        char startingChar = prefix.charAt(0);
+        long startingIndex = 0;
 
-        words2recomend.put("dummy0");
-        words2recomend.put("dummy1");
-        words2recomend.put("dummy2");
+        if (pointerMappings.containsKey(startingChar + "")) {
+            startingIndex = pointerMappings.get(startingChar + "");
+        } else {
+            String otherLower = (startingChar + "").toLowerCase();
+            String otherUpper = (startingChar + "").toUpperCase();
 
+            if (pointerMappings.containsKey(otherLower)) {
+                startingIndex = pointerMappings.get(otherLower);
+
+            } else if (pointerMappings.containsKey(otherUpper)) {
+                startingIndex = pointerMappings.get(otherUpper);
+            }
+        }
+
+        raf.seek(startingIndex);
+        String line = "";
+        while ((line = raf.readUTF()) != null) {
+
+            if (line.equals("#end") || line.charAt(0) != startingChar) { //could optimize
+                break;
+            }
+
+            String[] contents = line.split(" ");
+            String curEn = contents[0];
+
+            if (curEn.startsWith(prefix)) { // could optimize
+                words2recomend.put(curEn);
+            }
+
+        }
+
+        resetPtr();
         return words2recomend;
     }
 

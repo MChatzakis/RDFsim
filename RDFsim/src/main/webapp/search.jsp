@@ -49,11 +49,8 @@
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="40" list="autoCompleteList-id" onkeyup="autoCompleteSearch(this.value);" autocomplete="off">
-                    <!--<img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">-->
-                    <datalist id="autoCompleteList-id"> 
-                      
-                    </datalist>
-
+                    <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
+                    <datalist id="autoCompleteList-id"> </datalist>
                 </div>
             </form>
 

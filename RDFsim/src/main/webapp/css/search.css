@@ -11,7 +11,7 @@
 }
 
 .search-div{
-    float: left;
+    /*float: left;
     margin-top: 40px;
     border: 1px solid #ccc;
     -moz-border-radius: 10px;
@@ -20,12 +20,21 @@
     padding: 4px 7px;
     outline: 0;
     -webkit-appearance: none;
-    height:26px;
+    height:26px;*/
+    float: left;
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    border-radius: 60px;
+    padding: 0 4px 0px;
+    height:36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .search-input{
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     outline: 0;
     margin-left: 10px;
     display: inline-block;
@@ -40,6 +49,42 @@
     position: relative;
     float: left;
     margin: 5px;
+}
+
+.search-img{
+    height:23px;
+    width:23px;
+    margin-right: 8px;
+}
+
+/* ------------------------ Information Service Configuration ------------------------*/
+.settings-button-info-container{
+    text-align: center; 
+    width: 49%; 
+    float: left;   
+}
+
+.settings-button-info{
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ------------------------ Visualization Service Configuration ------------------------*/
+.settings-button-graph-container{
+    text-align: center;
+    margin-left: 50%;
+    width: 49%; 
+}
+
+.settings-button-graph{
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 /* ------------------------ Main Frame ------------------------*/
@@ -119,32 +164,3 @@
 .settings-config{
     background: gray;
 }
-
-.settings-button-graph{
-    width: 35px;
-    height: 35px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.settings-button-info{
-    width: 35px;
-    height: 35px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.settings-button-info-container{
-    text-align: center; 
-    width: 49%; 
-    float: left;   
-}
-
-.settings-button-graph-container{
-    text-align: center;
-    margin-left: 50%;
-    width: 49%; 
-}
-

@@ -18,6 +18,12 @@
         <title>RDFsim</title>
     </head>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <script type="text/javascript" src="js/utilities.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
     <body>
 
         <!-- Main Container -->
@@ -31,9 +37,13 @@
             <!-- Search -->
             <form id = "search-form-id" action= "./SearchServlet">
                 <div id="search-div-id" class="search-div">
-                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60" list="autoCompleteList-id">
+                    <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60" list="autoCompleteList-id" onkeyup="autoCompleteIndex(this.value);" autocomplete="off">
                     <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
-                    <datalist id="autoCompleteList-id"></datalist>
+                    <datalist id="autoCompleteList-id">
+                        <option value ="d1">d1</option>
+                        <option value ="d2">d2</option>
+                        <option value ="d3">d3</option>
+                    </datalist>
                 </div>
                 <span class="home-description">Similarity browsing tool for RDF Databases</span>
                 <br>
