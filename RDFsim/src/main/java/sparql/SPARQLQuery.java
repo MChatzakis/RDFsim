@@ -127,9 +127,7 @@ public class SPARQLQuery {
 
         return result;
     }
-
-    
-    
+      
     public static JSONObject getAllTriplesOfURI(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONObject allTriples = new JSONObject();
 
