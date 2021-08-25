@@ -61,22 +61,14 @@ public class RafApi {
 
     public HashMap<String, Double> getSimilarEntitiesOfEntity(String entity, int count) throws IOException {
         String[] contents = getEntityContents(entity);
-
         HashMap<String, Double> similars = new HashMap<>();
 
         if (contents != null) {
-
-            String entityURI = contents[1];
             String rawSimilars = contents[2];
-
-            //System.out.println("AA: " + rawSimilars);
             String[] similarPairs = rawSimilars.split("@");
 
-            //System.out.println("BB: " + similarPairs[0]);
-            //System.out.println("CC: " + similarPairs[1]);
             for (String sim : similarPairs) {
                 String[] info = sim.split("%%%");
-                //System.out.println(info[0] + "+++" + info[1]);
                 if (info.length == 2) {
                     similars.put(info[0], Double.parseDouble(info[1]));
                 }
@@ -84,12 +76,32 @@ public class RafApi {
                 if (similars.size() >= count) {
                     break;
                 }
-
-                //System.out.println("CC: " + sim);
             }
 
         }
+        return CommonUtils.sortEntityMap(similars);
+    }
 
+    public HashMap<String, Double> getSimilarEntitiesOfEntitySequential(String entity, int count) throws IOException {
+        String[] contents = getEntityContentsSequential(entity);
+        HashMap<String, Double> similars = new HashMap<>();
+
+        if (contents != null) {
+            String rawSimilars = contents[2];
+            String[] similarPairs = rawSimilars.split("@");
+
+            for (String sim : similarPairs) {
+                String[] info = sim.split("%%%");
+                if (info.length == 2) {
+                    similars.put(info[0], Double.parseDouble(info[1]));
+                }
+
+                if (similars.size() >= count) {
+                    break;
+                }
+            }
+
+        }
         return CommonUtils.sortEntityMap(similars);
     }
 
@@ -128,6 +140,34 @@ public class RafApi {
             String currEnURI = contents[1];
 
             if (curEn.equals(entity)) { // could optimize
+                resetPtr();
+                return contents;
+            }
+
+        }
+
+        resetPtr();
+        return getLevenshteinEntity(entity);
+    }
+
+    public String[] getEntityContentsSequential(String en) throws IOException {
+        String entity = SPARQLQuery.formatDBpediaURI(en);
+        char startingChar = entity.charAt(0);
+        long startingIndex = 0;
+
+        raf.seek(startingIndex);
+
+        String line = "";
+        while ((line = raf.readUTF()) != null) {
+
+            if (line.equals("#end") || line.charAt(0) != startingChar) {
+                break;
+            }
+
+            String[] contents = line.split(" ");
+            String curEn = contents[0];
+
+            if (curEn.equals(entity)) {
                 resetPtr();
                 return contents;
             }
