@@ -23,7 +23,8 @@ public class TimeCalculator {
 
     public static void calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode) throws IOException {
         RafApi raf = new RafApi(dataset);
-
+        //raf.printVocabInfo();
+        
         long start;
         long end;
         double elapsedTime = -1;
@@ -65,17 +66,18 @@ public class TimeCalculator {
     public static void indexingTests() throws IOException {
         String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
         String entity = "Inception";
+        String lastEntity = "stay_night_characters";
         int count = 10;
 
-        calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.POINTER);
-        calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.SEQUENTIAL);
+        calculateIndexingTime(rafTargetPath, lastEntity, count, IndexingMode.POINTER);
+        calculateIndexingTime(rafTargetPath, lastEntity, count, IndexingMode.SEQUENTIAL);
     }
 
     public static void graphTests() throws IOException {
         String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
         String entity = "Inception";
-        int count = 10;
-        int depth = 1;
+        int count = 20;
+        int depth = 20;
         calculateGraphTime(rafTargetPath, entity, count, depth);
     }
 }
