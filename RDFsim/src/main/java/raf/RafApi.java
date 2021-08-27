@@ -105,6 +105,10 @@ public class RafApi {
         return CommonUtils.sortEntityMap(similars);
     }
 
+    public String getEntityURI(String en) throws IOException{
+        return getEntityContents(en)[1];
+    }
+    
     public String[] getEntityContents(String en) throws IOException {
 
         String entity = SPARQLQuery.formatDBpediaURI(en);

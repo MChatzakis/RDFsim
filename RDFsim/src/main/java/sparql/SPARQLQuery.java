@@ -114,9 +114,17 @@ public class SPARQLQuery {
         return new File(filename).getAbsolutePath();
     }
 
+    public boolean askQuery(String endpoint, String query) throws MalformedURLException, ProtocolException, IOException {
+        JSONObject res = retrieveData(endpoint, query);
+        //System.out.println(res.toString());
+
+        return res.getBoolean("boolean");
+    }
+
     public static String formatDBpediaURI(String URI) {
 
-        String[] splitters = {"/", "#"}; /*Removed : as many times it was useful, etc: Star Wars: A new hope, or Thor: Dark World*/ 
+        String[] splitters = {"/", "#"};
+        /*Removed : as many times it was useful, etc: Star Wars: A new hope, or Thor: Dark World*/
         String[] parts;
         String result = URI;
 
@@ -127,16 +135,16 @@ public class SPARQLQuery {
 
         return result;
     }
-      
+
     public static JSONObject getAllTriplesOfURI(String s, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONObject allTriples = new JSONObject();
 
         allTriples.put("asSubject", getTriplesOfURIAsSubject(s, endpoint));
         allTriples.put("asObject", getTriplesOfURIAsObject(s, endpoint));
-        
+
         return allTriples;
     }
-    
+
     public static JSONArray getTriplesOfURIAsObject(String o, String endpoint) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
