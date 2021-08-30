@@ -116,9 +116,13 @@ public class SPARQLQuery {
 
     public boolean askQuery(String endpoint, String query) throws MalformedURLException, ProtocolException, IOException {
         JSONObject res = retrieveData(endpoint, query);
-        //System.out.println(res.toString());
-
         return res.getBoolean("boolean");
+    }
+    
+    public int countQuery(String endpoint, String query) throws MalformedURLException, ProtocolException, IOException {
+        JSONObject res = retrieveData(endpoint, query);
+        //System.out.println(res.toString(2));
+        return Integer.parseInt(res.getJSONObject("results").getJSONArray("bindings").getJSONObject(0).getJSONObject("count").getString("value"));
     }
 
     public static String formatDBpediaURI(String URI) {

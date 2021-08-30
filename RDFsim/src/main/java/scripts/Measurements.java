@@ -24,9 +24,9 @@ import utils.CommonUtils;
 public class Measurements {
 
     public static void main(String[] args) throws IOException {
-        indexingTests();
+        //indexingTests();
         //graphTests();
-        //askQueryTests();
+        askQueryTests();
     }
 
     public static void indexingTests() throws IOException {
@@ -130,6 +130,8 @@ public class Measurements {
         int count = 20;
         int depth = 20;
         calculateGraphTime(rafTargetPath, entity, count, depth);
+        
+        
     }
 
     public static void askQueryTests() throws ProtocolException, IOException {
@@ -150,7 +152,8 @@ public class Measurements {
         }
 
         CommonUtils.generateTeXTable(results, header, "C:\\tmp\\percentageTable.tex");
-
+        
+        //System.out.println(new SPARQLQuery().countQuery("https://dbpedia.org/sparql", "select count(*) as ?count from <http://dbpedia.org> where {?s ?p dbr:Plato . ?s ?p dbr:Sextus_Empiricus}"));
     }
 
     public static double calculateTripleLinkPerc(String entity, int count, String dataset) throws IOException {
@@ -176,7 +179,6 @@ public class Measurements {
 
         return (existingLinksCount * 100.0) / count;
     }
-
 }
 
 enum IndexingMode {
