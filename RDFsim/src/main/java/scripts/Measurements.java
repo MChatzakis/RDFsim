@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Map;
 import raf.RafApi;
 import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
@@ -22,9 +23,9 @@ import sparql.SPARQLQuery;
 public class Measurements {
 
     public static void main(String[] args) throws IOException {
-        //indexingTests();
-        //graphTests();
-        askQueryTests();
+        indexingTests();
+        graphTests();
+        //askQueryTests();
     }
 
     public static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
@@ -83,7 +84,7 @@ public class Measurements {
         String[] entitiesToTest = {"Inception", "stay_night_characters"};
         String[][] results = new String[entitiesToTest.length][4];
 
-        int count = 10;
+        int count = 30;
 
         for (int i = 0; i < entitiesToTest.length; i++) {
             String entity = entitiesToTest[i];
@@ -100,7 +101,7 @@ public class Measurements {
             results[i][3] = Math.round(speedup) + "";
         }
 
-        generateTeXTable(results, header, "./indexingTable.tex");
+        generateTeXTable(results, header, "C:\\tmp\\indexingTable.tex");
     }
 
     public static void generateTeXTable(String[][] data, String[] header, String filepath) {
@@ -161,10 +162,50 @@ public class Measurements {
     }
 
     public static void askQueryTests() throws ProtocolException, IOException {
-        SPARQLQuery sq = new SPARQLQuery();
-        Boolean res = sq.askQuery("https://dbpedia.org/sparql", "ASK FROM <http://dbpedia.org> WHERE { <http://dbpedia.org/resource/Aristotle> ?p <http://dbpedia.org/resource/Java> }");
-        System.out.println(res);
+
+        String dataset = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
+        
+        String[] entities2test = {"Batman", "Riddler"};
+        String[] header = {"Entity", "Percentage"};
+        String[][] results = new String[entities2test.length][header.length];
+
+        int count = 20;
+
+        for (int i = 0; i < entities2test.length; i++) {
+            String en = entities2test[i];
+            double perc = calculateTripleLinkPerc(en, count, dataset);
+            results[i][0] = en;
+            results[i][1] = perc + "%";
+        }
+
+        generateTeXTable(results, header, "C:\\tmp\\percentageTable.tex");
+
     }
+
+    public static double calculateTripleLinkPerc(String entity, int count, String dataset) throws IOException {
+        RafApi raf = new RafApi(dataset);
+        HashMap<String, Double> sims = raf.getSimilarEntitiesOfEntity(entity, count);
+        int existingLinksCount = 0;
+
+        for (Map.Entry<String, Double> entry : sims.entrySet()) {
+
+            String entityURI = raf.getEntityURI(entity);
+            String simEntityURI = raf.getEntityURI(entry.getKey());
+
+            String askQuery = "ASK FROM <http://dbpedia.org> WHERE { <" + entityURI + "> ?p <" + simEntityURI + "> }";
+            String askQueryRR = "ASK FROM <http://dbpedia.org> WHERE { <" + simEntityURI + "> ?p <" + entityURI + "> }";
+
+            SPARQLQuery sq = new SPARQLQuery();
+            if (sq.askQuery("https://dbpedia.org/sparql", askQuery) || sq.askQuery("https://dbpedia.org/sparql", askQueryRR)) {
+                existingLinksCount++;
+            }else{
+                //print something?
+            }
+        }
+
+        return (existingLinksCount * 100.0) / count;
+    }
+
 }
 
 enum IndexingMode {
