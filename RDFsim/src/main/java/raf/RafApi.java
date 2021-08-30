@@ -164,7 +164,7 @@ public class RafApi {
         String line = "";
         while ((line = raf.readUTF()) != null) {
 
-            if (line.equals("#end") || line.charAt(0) != startingChar) {
+            if (line.equals("#end")) {
                 break;
             }
 

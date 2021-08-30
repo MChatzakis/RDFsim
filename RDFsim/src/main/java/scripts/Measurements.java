@@ -15,6 +15,7 @@ import java.util.Map;
 import raf.RafApi;
 import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
+import utils.CommonUtils;
 
 /**
  *
@@ -24,8 +25,34 @@ public class Measurements {
 
     public static void main(String[] args) throws IOException {
         indexingTests();
-        graphTests();
+        //graphTests();
         //askQueryTests();
+    }
+
+    public static void indexingTests() throws IOException {
+        CalculationUnit cu = CalculationUnit.MS;
+        int count = 10;
+        String[] header = {"Entity", "Pointer Time", "Sequential Time", "Speedup"};
+
+        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
+        String texFileName = "C:\\tmp\\moviesIndexingTable.tex";
+        String[] entities2testMovies = {"Avengers:_Infinity_War", "Captain_America:_The_First_Avenger", "Guardians_of_the_Galaxy_(film)", "Spider-Man:_Far_From_Home", "Thor:_Ragnarok"};
+        //indexingTests(rafTargetPath, entities2testMovies, header, count, cu, texFileName);
+
+        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_video_games.txt";
+        texFileName = "C:\\tmp\\videoGamesIndexingTable.tex";
+        String[] entities2testVideoGames = {"Batman:_Arkham_Asylum", "Gotham_Knights_(video_game)", "Minecraft", "Pac-Man", "Tetris", "Winter_Olympics_(video_game)"};
+        //indexingTests(rafTargetPath, entities2testVideoGames, header, count, cu, texFileName);
+
+        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_programming_langs.txt";
+        texFileName = "C:\\tmp\\programmingIndexingTable.tex";
+        String[] entities2testProgramming = {"Apache_Maven", "C++", "Java", "Python_(language)", "Z++"};
+        //indexingTests(rafTargetPath, entities2testProgramming, header, count, cu, texFileName);
+
+        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
+        texFileName = "C:\\tmp\\philosophersIndexingTable.tex";
+        String[] entities2testPhilosophers = {"Aristotle", "Plato", "Socrates", "Zeno_Of_Tarsus"};
+        indexingTests(rafTargetPath, entities2testPhilosophers, header, count, cu, texFileName);
     }
 
     public static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
@@ -74,20 +101,13 @@ public class Measurements {
         System.out.println("Graph creation - Time Passed: " + elapsedTime / 1000.0 + " seconds");
     }
 
-    public static void indexingTests() throws IOException {
+    public static void indexingTests(String rafTargetPath, String[] entities2test, String[] header, int count, CalculationUnit cu, String texFileName) throws IOException {
         DecimalFormat df = new DecimalFormat(".##");
-        CalculationUnit cu = CalculationUnit.MS;
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
+        String[][] results = new String[entities2test.length][4];
 
-        String[] header = {"Entity", "Pointer Time", "Sequential Time", "Speedup"};
-        String[] entitiesToTest = {"Inception", "stay_night_characters"};
-        String[][] results = new String[entitiesToTest.length][4];
-
-        int count = 30;
-
-        for (int i = 0; i < entitiesToTest.length; i++) {
-            String entity = entitiesToTest[i];
+        for (int i = 0; i < entities2test.length; i++) {
+            String entity = entities2test[i];
 
             double pointerTime = calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.POINTER, cu);
             double sequentialTime = calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.SEQUENTIAL, cu);
@@ -98,59 +118,10 @@ public class Measurements {
             results[i][0] = entity.replace("_", " ");
             results[i][1] = pointerTime + "s";
             results[i][2] = sequentialTime + "s";
-            results[i][3] = Math.round(speedup) + "";
+            results[i][3] = Math.round(speedup) + "x";
         }
 
-        generateTeXTable(results, header, "C:\\tmp\\indexingTable.tex");
-    }
-
-    public static void generateTeXTable(String[][] data, String[] header, String filepath) {
-        try {
-            BufferedWriter texWriter = new BufferedWriter(new FileWriter(filepath));
-
-            texWriter.write("\\begin{center}\n");
-            texWriter.write("\\begin{tabular}");
-
-            String cc = "{|| ";
-            String tabHeader = "";
-            for (int i = 0; i < header.length; i++) {
-
-                if (i != header.length - 1) {
-                    cc += "c ";
-                    tabHeader += header[i] + " & ";
-                } else {
-                    cc += "c ||}\n";
-                    tabHeader += header[i] + " \\\\ [0.5ex]\n";
-                }
-
-            }
-
-            texWriter.write(cc);
-            texWriter.write("\\hline\n");
-            texWriter.write(tabHeader);
-            texWriter.write("\\hline\\hline\n");
-
-            for (int i = 0; i < data.length; i++) {
-                String[] contents = data[i];
-                for (int k = 0; k < contents.length; k++) {
-                    if (k != contents.length - 1) {
-                        texWriter.write(contents[k] + " & ");
-                    } else {
-                        texWriter.write(contents[k] + " \\\\ \n");
-                    }
-                }
-
-                texWriter.write("\\hline\n");
-            }
-
-            texWriter.write("\\end{tabular}\n");
-            texWriter.write("\\end{center}\n");
-
-            texWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        CommonUtils.generateTeXTable(results, header, texFileName);
     }
 
     public static void graphTests() throws IOException {
@@ -164,7 +135,7 @@ public class Measurements {
     public static void askQueryTests() throws ProtocolException, IOException {
 
         String dataset = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
-        
+
         String[] entities2test = {"Batman", "Riddler"};
         String[] header = {"Entity", "Percentage"};
         String[][] results = new String[entities2test.length][header.length];
@@ -178,7 +149,7 @@ public class Measurements {
             results[i][1] = perc + "%";
         }
 
-        generateTeXTable(results, header, "C:\\tmp\\percentageTable.tex");
+        CommonUtils.generateTeXTable(results, header, "C:\\tmp\\percentageTable.tex");
 
     }
 
@@ -198,7 +169,7 @@ public class Measurements {
             SPARQLQuery sq = new SPARQLQuery();
             if (sq.askQuery("https://dbpedia.org/sparql", askQuery) || sq.askQuery("https://dbpedia.org/sparql", askQueryRR)) {
                 existingLinksCount++;
-            }else{
+            } else {
                 //print something?
             }
         }
