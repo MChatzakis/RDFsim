@@ -197,4 +197,32 @@ public class CommonUtils {
 
     }
 
+    public static void generateCSV(String[][] data, String[] header, String filepath) {
+        try {
+            BufferedWriter wr = new BufferedWriter(new FileWriter(filepath));
+            for (int i = 0; i < header.length; i++) {
+                if (i != header.length - 1) {
+                    wr.write(header[i] + ",");
+                } else {
+                    wr.write(header[i] + "\n");
+                }
+            }
+
+            for (int i = 0; i < data.length; i++) {
+                String[] contents = data[i];
+                for (int k = 0; k < contents.length; k++) {
+                    if (k != contents.length - 1) {
+                        wr.write(contents[k] + ",");
+                    } else {
+                        wr.write(contents[k] + "\n");
+                    }
+                }
+            }
+
+            wr.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

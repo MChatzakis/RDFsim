@@ -105,10 +105,10 @@ public class RafApi {
         return CommonUtils.sortEntityMap(similars);
     }
 
-    public String getEntityURI(String en) throws IOException{
+    public String getEntityURI(String en) throws IOException {
         return getEntityContents(en)[1];
     }
-    
+
     public String[] getEntityContents(String en) throws IOException {
 
         String entity = SPARQLQuery.formatDBpediaURI(en);
@@ -295,6 +295,48 @@ public class RafApi {
 
         resetPtr();
         return words2recomend;
+    }
+
+    public boolean exists(String en) throws IOException {
+        String entity = SPARQLQuery.formatDBpediaURI(en);
+
+        char startingChar = entity.charAt(0);
+        long startingIndex = 0;
+
+        if (pointerMappings.containsKey(startingChar + "")) {
+            startingIndex = pointerMappings.get(startingChar + "");
+        } else {
+            String otherLower = (startingChar + "").toLowerCase();
+            String otherUpper = (startingChar + "").toUpperCase();
+
+            if (pointerMappings.containsKey(otherLower)) {
+                startingIndex = pointerMappings.get(otherLower);
+
+            } else if (pointerMappings.containsKey(otherUpper)) {
+                startingIndex = pointerMappings.get(otherUpper);
+            }
+        }
+
+        raf.seek(startingIndex);
+        String line = "";
+        while ((line = raf.readUTF()) != null) {
+
+            if (line.equals("#end") || line.charAt(0) != startingChar) {
+                break;
+            }
+
+            String[] contents = line.split(" ");
+            String curEn = contents[0];
+
+            if (curEn.equals(entity)) { // could optimize
+                resetPtr();
+                return true;
+            }
+
+        }
+
+        resetPtr();
+        return false;
     }
 
 }

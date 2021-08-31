@@ -22,69 +22,7 @@ import utils.CommonUtils;
  * @author manos
  */
 public class Measurements {
-
-    public static void main(String[] args) throws IOException {
-        //indexingTests();
-        //graphTests();
-        askQueryTests();
-    }
-
-    public static void indexingTests() throws IOException {
-        CalculationUnit cu = CalculationUnit.MS;
-        int count = 10;
-        String[] header = {"Entity", "Pointer Time", "Sequential Time", "Speedup"};
-
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
-        String texFileName = "C:\\tmp\\moviesIndexingTable.tex";
-        String[] entities2testMovies = {"Avengers:_Infinity_War", "Captain_America:_The_First_Avenger", "Guardians_of_the_Galaxy_(film)", "Spider-Man:_Far_From_Home", "Thor:_Ragnarok"};
-        //indexingTests(rafTargetPath, entities2testMovies, header, count, cu, texFileName);
-
-        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_video_games.txt";
-        texFileName = "C:\\tmp\\videoGamesIndexingTable.tex";
-        String[] entities2testVideoGames = {"Batman:_Arkham_Asylum", "Gotham_Knights_(video_game)", "Minecraft", "Pac-Man", "Tetris", "Winter_Olympics_(video_game)"};
-        //indexingTests(rafTargetPath, entities2testVideoGames, header, count, cu, texFileName);
-
-        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_programming_langs.txt";
-        texFileName = "C:\\tmp\\programmingIndexingTable.tex";
-        String[] entities2testProgramming = {"Apache_Maven", "C++", "Java", "Python_(language)", "Z++"};
-        //indexingTests(rafTargetPath, entities2testProgramming, header, count, cu, texFileName);
-
-        rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
-        texFileName = "C:\\tmp\\philosophersIndexingTable.tex";
-        String[] entities2testPhilosophers = {"Aristotle", "Plato", "Socrates", "Zeno_Of_Tarsus"};
-        indexingTests(rafTargetPath, entities2testPhilosophers, header, count, cu, texFileName);
-    }
-
-    public static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
-        RafApi raf = new RafApi(dataset);
-        //raf.printVocabInfo();
-
-        long start;
-        long end;
-        double elapsedTime = -1;
-
-        switch (mode) {
-        case POINTER:
-            start = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
-            raf.getSimilarEntitiesOfEntity(entity, count);
-            end = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
-            elapsedTime = end - start;
-            break;
-        case SEQUENTIAL:
-            start = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
-            raf.getSimilarEntitiesOfEntitySequential(entity, count);
-            end = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
-            elapsedTime = end - start;
-            break;
-        }
-
-        if (cu == CalculationUnit.MS) {
-            return elapsedTime * 1.0 / 1000.0;
-        }
-
-        return elapsedTime * 1.0 / 1000000000;
-    }
-
+    
     public static void calculateGraphTime(String dataset, String entity, int count, int depth) throws IOException {
         RafApi raf = new RafApi(dataset);
         SimilarityGraph g = new SimilarityGraph(raf);
@@ -99,29 +37,6 @@ public class Measurements {
         elapsedTime = end - start;
 
         System.out.println("Graph creation - Time Passed: " + elapsedTime / 1000.0 + " seconds");
-    }
-
-    public static void indexingTests(String rafTargetPath, String[] entities2test, String[] header, int count, CalculationUnit cu, String texFileName) throws IOException {
-        DecimalFormat df = new DecimalFormat(".##");
-
-        String[][] results = new String[entities2test.length][4];
-
-        for (int i = 0; i < entities2test.length; i++) {
-            String entity = entities2test[i];
-
-            double pointerTime = calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.POINTER, cu);
-            double sequentialTime = calculateIndexingTime(rafTargetPath, entity, count, IndexingMode.SEQUENTIAL, cu);
-            double speedup = sequentialTime / pointerTime;
-
-            System.out.println(entity + ": [" + pointerTime + "s," + sequentialTime + "s," + speedup + "]");
-
-            results[i][0] = entity.replace("_", " ");
-            results[i][1] = pointerTime + "s";
-            results[i][2] = sequentialTime + "s";
-            results[i][3] = Math.round(speedup) + "x";
-        }
-
-        CommonUtils.generateTeXTable(results, header, texFileName);
     }
 
     public static void graphTests() throws IOException {
@@ -181,12 +96,3 @@ public class Measurements {
     }
 }
 
-enum IndexingMode {
-    POINTER,
-    SEQUENTIAL
-}
-
-enum CalculationUnit {
-    MS,
-    NS
-}
