@@ -10,7 +10,6 @@ import java.net.ProtocolException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import raf.RafApi;
-import static scripts.Measurements.calculateIndexingTime;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -153,4 +152,5 @@ public class Statistics {
 
         return elapsedTime * 1.0 / 1000000000;
     }
+
 }
