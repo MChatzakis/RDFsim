@@ -225,4 +225,26 @@ public class CommonUtils {
         }
     }
 
+    public static String getCSVtext(String[][] data, String[] header) {
+        String dataCSV = "";
+        for (int i = 0; i < header.length; i++) {
+            if (i != header.length - 1) {
+                dataCSV += header[i] + ",";
+            } else {
+                dataCSV += header[i] + "\n";
+            }
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            String[] contents = data[i];
+            for (int k = 0; k < contents.length; k++) {
+                if (k != contents.length - 1) {
+                    dataCSV += contents[k] + ",";
+                } else {
+                    dataCSV += contents[k] + "\n";
+                }
+            }
+        }
+        return dataCSV;
+    }
 }

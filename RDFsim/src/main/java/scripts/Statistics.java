@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import raf.RafApi;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
@@ -78,9 +80,12 @@ public class Statistics {
 
     public static void main(String[] args) throws ProtocolException, IOException {
         initSamples();
-        indexingTimeTests();
+        //indexingTimeTests();
+        embeddingStatisticsTests();
+
     }
 
+    /* ========================== Indexing ========================== */
     public static void indexingTimeTests() throws IOException {
         CalculationUnit cu = CalculationUnit.MS;
         int count = 10;
@@ -153,4 +158,57 @@ public class Statistics {
         return elapsedTime * 1.0 / 1000000000;
     }
 
+    /* ========================== Embeddings ========================== */
+    public static void embeddingStatisticsTests() throws IOException {
+        System.out.println("========================== Testing Programming Languages Embeddings ==========================");
+        embeddingTests(programmingLangsFilepath, programmingLangsSamples, 10, "C:\\tmp\\programmingLangsTOPK");
+
+        System.out.println("========================== Testing Philosophers Embeddings ==========================");
+        embeddingTests(philosophersFilepath, philosophersSamples, 10, "C:\\tmp\\philosophersTOPK");
+
+        System.out.println("========================== Testing Video Games Embeddings ==========================");
+        embeddingTests(videoGamesFilepath, videoGamesSamples, 10, "C:\\tmp\\videoGamesTOPK");
+
+        System.out.println("========================== Testing Movies Embeddings ==========================");
+        embeddingTests(moviesFilepath, moviesSamples, 10, "C:\\tmp\\moviesTOPK");
+    }
+
+    public static void embeddingTests(String rafFilePath, ArrayList<String> entities2test, int count, String filename) throws IOException {
+        RafApi raf = new RafApi(rafFilePath);
+        String data = "";
+        for (String en : entities2test) {
+            data += createEmbeddingData(en, raf, count);
+        }
+
+        CommonUtils.writeStringToFile(data, filename + ".txt");
+    }
+
+    public static String createEmbeddingData(String entity, RafApi raf, int count) throws IOException {
+        SPARQLQuery sq = new SPARQLQuery();
+        DecimalFormat df = new DecimalFormat(".##");
+        String[] header = {entity, "hasLink", "similars", "score"};
+        String[][] results = new String[count][header.length];
+        int index = 0;
+        HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, count);
+
+        for (Map.Entry<String, Double> entry : similars.entrySet()) {
+
+            String entityURI = raf.getEntityURI(entity);
+            String simEntityURI = raf.getEntityURI(entry.getKey());
+
+            String askQuery = "ASK FROM <http://dbpedia.org> WHERE { <" + entityURI + "> ?p <" + simEntityURI + "> }";
+            String askQueryRR = "ASK FROM <http://dbpedia.org> WHERE { <" + simEntityURI + "> ?p <" + entityURI + "> }";
+
+            String countQuery = "select count(*) as ?count from <http://dbpedia.org> where {?s ?p <" + entityURI + "> . ?s ?p <" + simEntityURI + ">}";
+            String countQueryRR = "select count(*) as ?count from <http://dbpedia.org> where {?s ?p <" + simEntityURI + "> . ?s ?p <" + entityURI + ">}";
+
+            results[index][0] = entry.getKey();
+            results[index][1] = (sq.askQuery(dbpediaEndpoint, askQuery) || sq.askQuery(dbpediaEndpoint, askQueryRR)) ? "yes" : "no";
+            results[index][2] = (sq.countQuery(dbpediaEndpoint, countQuery) + sq.countQuery(dbpediaEndpoint, countQueryRR)) + "";
+            results[index][3] = df.format(entry.getValue()) + "";
+            index++;
+        }
+
+        return CommonUtils.getCSVtext(results, header) + "\n";
+    }
 }

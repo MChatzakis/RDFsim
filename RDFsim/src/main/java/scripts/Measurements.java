@@ -22,7 +22,7 @@ import utils.CommonUtils;
  * @author manos
  */
 public class Measurements {
-    
+
     public static void calculateGraphTime(String dataset, String entity, int count, int depth) throws IOException {
         RafApi raf = new RafApi(dataset);
         SimilarityGraph g = new SimilarityGraph(raf);
@@ -45,8 +45,7 @@ public class Measurements {
         int count = 20;
         int depth = 20;
         calculateGraphTime(rafTargetPath, entity, count, depth);
-        
-        
+
     }
 
     public static void askQueryTests() throws ProtocolException, IOException {
@@ -67,7 +66,7 @@ public class Measurements {
         }
 
         CommonUtils.generateTeXTable(results, header, "C:\\tmp\\percentageTable.tex");
-        
+
         //System.out.println(new SPARQLQuery().countQuery("https://dbpedia.org/sparql", "select count(*) as ?count from <http://dbpedia.org> where {?s ?p dbr:Plato . ?s ?p dbr:Sextus_Empiricus}"));
     }
 
@@ -84,6 +83,7 @@ public class Measurements {
             String askQuery = "ASK FROM <http://dbpedia.org> WHERE { <" + entityURI + "> ?p <" + simEntityURI + "> }";
             String askQueryRR = "ASK FROM <http://dbpedia.org> WHERE { <" + simEntityURI + "> ?p <" + entityURI + "> }";
 
+            
             SPARQLQuery sq = new SPARQLQuery();
             if (sq.askQuery("https://dbpedia.org/sparql", askQuery) || sq.askQuery("https://dbpedia.org/sparql", askQueryRR)) {
                 existingLinksCount++;
@@ -95,4 +95,3 @@ public class Measurements {
         return (existingLinksCount * 100.0) / count;
     }
 }
-
