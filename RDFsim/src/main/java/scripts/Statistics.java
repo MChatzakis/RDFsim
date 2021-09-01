@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import raf.RafApi;
+import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -29,9 +31,17 @@ enum CalculationUnit {
     NS
 }
 
+enum TestTypes {
+    INDEXING,
+    EMBEDDINGS,
+    GRAPHS,
+    ALL
+}
+
 public class Statistics {
 
     public static final int SAMPLE_LIMIT = 100;
+    public static final TestTypes TEST_TYPE = TestTypes.GRAPHS;
 
     public static String dbpediaEndpoint = "https://dbpedia.org/sparql";
     public static String philosophersFilepath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
@@ -39,10 +49,41 @@ public class Statistics {
     public static String videoGamesFilepath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_video_games.txt";
     public static String moviesFilepath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
 
+    public static String programmingClass = "http://dbpedia.org/ontology/ProgrammingLanguage";
+    public static String philosophersClass = "http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers";
+    public static String videoGamesClass = "http://dbpedia.org/ontology/VideoGame";
+    public static String moviesClass = "http://schema.org/Movie";
+
     public static ArrayList<String> moviesSamples;
     public static ArrayList<String> philosophersSamples;
     public static ArrayList<String> videoGamesSamples;
     public static ArrayList<String> programmingLangsSamples;
+
+    public static String [] selectedMovieSamples = {};
+    public static String [] selectedPhilosophersSamples = {};
+    public static String [] selectedVideoGamesSamples = {};
+    public static String [] selectedProgrammingLangsSamples = {};
+    
+    public static void main(String[] args) throws ProtocolException, IOException {
+        initSamples();
+
+        switch (TEST_TYPE) {
+        case INDEXING:
+            indexingTimeTests();
+            break;
+        case GRAPHS:
+            graphCreationTimeTests();
+            break;
+        case EMBEDDINGS:
+            embeddingStatisticsTests();
+            break;
+        case ALL:
+            indexingTimeTests();
+            graphCreationTimeTests();
+            embeddingStatisticsTests();
+            break;
+        }
+    }
 
     public static ArrayList<String> initArrayList(String query, String endpoint, String dataset) throws IOException {
         ArrayList<String> rawEntities = new SPARQLQuery().entityQuery(endpoint, query);
@@ -63,26 +104,24 @@ public class Statistics {
         return entities;
     }
 
-    public static void initSamples() throws IOException {
-        moviesSamples = initArrayList("select ?s from <http://dbpedia.org> where {?s a <http://schema.org/Movie>} ORDER BY RAND() LIMIT 250", dbpediaEndpoint, moviesFilepath);
-        System.out.println("Movies samples size: " + moviesSamples.size());
-
-        philosophersSamples = initArrayList("select ?s from <http://dbpedia.org> where {?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>} ORDER BY RAND() LIMIT 250", dbpediaEndpoint, philosophersFilepath);
-        System.out.println("Philosophers samples size: " + philosophersSamples.size());
-
-        videoGamesSamples = initArrayList("select ?s from <http://dbpedia.org> where {?s a <http://dbpedia.org/ontology/VideoGame>} ORDER BY RAND() LIMIT 250", dbpediaEndpoint, videoGamesFilepath);
-        System.out.println("Video Games samples size: " + videoGamesSamples.size());
-
-        programmingLangsSamples = initArrayList("select ?s from <http://dbpedia.org> where {?s a <http://dbpedia.org/ontology/ProgrammingLanguage> } ORDER BY RAND() LIMIT 350", dbpediaEndpoint, programmingLangsFilepath);
-        System.out.println("Programming Langs samples size: " + programmingLangsSamples.size());
-
+    public static String queryCreator(String dbClass, int limit, int countLB) {
+        String r1 = "select ?s count(?p) as ?count from <http://dbpedia.org> where {?s a <" + dbClass + "> . ?s ?p ?o} group by(?s) having(count(?p)>10)  order by rand() limit " + limit + "";
+        String r2 = "select ?s from <http://dbpedia.org> where {?s a <" + dbClass + ">} ORDER BY RAND() LIMIT " + limit + "";
+        return r1;
     }
 
-    public static void main(String[] args) throws ProtocolException, IOException {
-        initSamples();
-        //indexingTimeTests();
-        embeddingStatisticsTests();
+    public static void initSamples() throws IOException {
+        moviesSamples = initArrayList(queryCreator(moviesClass, 250, 100), dbpediaEndpoint, moviesFilepath);
+        System.out.println("Movies samples size: " + moviesSamples.size());
 
+        philosophersSamples = initArrayList(queryCreator(philosophersClass, 250, 150), dbpediaEndpoint, philosophersFilepath);
+        System.out.println("Philosophers samples size: " + philosophersSamples.size());
+
+        videoGamesSamples = initArrayList(queryCreator(videoGamesClass, 250, 20), dbpediaEndpoint, videoGamesFilepath);
+        System.out.println("Video Games samples size: " + videoGamesSamples.size());
+
+        programmingLangsSamples = initArrayList(queryCreator(programmingClass, 350, 10), dbpediaEndpoint, programmingLangsFilepath);
+        System.out.println("Programming Langs samples size: " + programmingLangsSamples.size());
     }
 
     /* ========================== Indexing ========================== */
@@ -160,17 +199,18 @@ public class Statistics {
 
     /* ========================== Embeddings ========================== */
     public static void embeddingStatisticsTests() throws IOException {
+
         System.out.println("========================== Testing Programming Languages Embeddings ==========================");
-        embeddingTests(programmingLangsFilepath, programmingLangsSamples, 10, "C:\\tmp\\programmingLangsTOPK");
+        //embeddingTests(programmingLangsFilepath, programmingLangsSamples, 10, "C:\\tmp\\programmingLangsTOPK");
 
         System.out.println("========================== Testing Philosophers Embeddings ==========================");
         embeddingTests(philosophersFilepath, philosophersSamples, 10, "C:\\tmp\\philosophersTOPK");
 
         System.out.println("========================== Testing Video Games Embeddings ==========================");
-        embeddingTests(videoGamesFilepath, videoGamesSamples, 10, "C:\\tmp\\videoGamesTOPK");
+        //embeddingTests(videoGamesFilepath, videoGamesSamples, 10, "C:\\tmp\\videoGamesTOPK");
 
         System.out.println("========================== Testing Movies Embeddings ==========================");
-        embeddingTests(moviesFilepath, moviesSamples, 10, "C:\\tmp\\moviesTOPK");
+        //embeddingTests(moviesFilepath, moviesSamples, 10, "C:\\tmp\\moviesTOPK");
     }
 
     public static void embeddingTests(String rafFilePath, ArrayList<String> entities2test, int count, String filename) throws IOException {
@@ -210,5 +250,75 @@ public class Statistics {
         }
 
         return CommonUtils.getCSVtext(results, header) + "\n";
+    }
+
+    /* ========================== Graphs ========================== */
+    public static void graphCreationTimeTests() throws IOException {
+        int[] count2test = {1, 5, 10, 15};
+        int[] depth2test = {1, 2, 3};
+
+        CalculationUnit cu = CalculationUnit.MS;
+
+        System.out.println("========================== Testing Movies Graphs ==========================");
+        graphCreationTime(moviesFilepath, count2test, depth2test, moviesSamples.subList(0, 2), cu, "C:\\tmp\\moviesGRAPHS");
+    }
+
+    public static void graphCreationTime(String dataset, int[] count2test, int[] depth2test, Collection<String> entities2test, CalculationUnit cu, String filename) throws IOException {
+        String dataCSV = "";
+
+        for (String en : entities2test) {
+            dataCSV += graphCreationTimeForEntity(dataset, en, count2test, depth2test, cu);
+        }
+
+        CommonUtils.writeStringToFile(dataCSV, filename + ".txt");
+    }
+
+    public static String graphCreationTimeForEntity(String dataset, String entity, int[] count2test, int[] depth2test, CalculationUnit cu) throws IOException {
+        String[] header = new String[depth2test.length + 1];
+        String[][] results = new String[count2test.length][header.length];
+        DecimalFormat df = new DecimalFormat(".##");
+        header[0] = entity;
+        for (int i = 0; i < depth2test.length; i++) {
+            header[i + 1] = depth2test[i] + "";
+        }
+
+        for (int i = 0; i < count2test.length; i++) {
+            results[i][0] = count2test[i] + "";
+        }
+
+        for (int i = 0; i < count2test.length; i++) {
+
+            for (int k = 0; k < depth2test.length; k++) {
+
+                String elapsedTime = df.format(calculateGraphCreationTime(dataset, entity, count2test[i], depth2test[k], cu));
+                System.out.println(entity + ": [C,D,T] = [" + count2test[i] + "," + depth2test[k] + "," + elapsedTime + "]");
+
+                results[i][k + 1] = elapsedTime;
+            }
+        }
+
+        return CommonUtils.getCSVtext(results, header) + "\n";
+    }
+
+    public static double calculateGraphCreationTime(String dataset, String entity, int count, int depth, CalculationUnit cu) throws IOException {
+        RafApi raf = new RafApi(dataset);
+
+        long start;
+        long end;
+        double elapsedTime;
+
+        SimilarityGraph g = new SimilarityGraph(raf);
+        String entityURI = raf.getEntityURI(entity);
+
+        start = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
+        g.createGraphRaf(entityURI, depth, count);
+        end = (cu == CalculationUnit.MS) ? System.currentTimeMillis() : System.nanoTime();
+        elapsedTime = end - start;
+
+        if (cu == CalculationUnit.MS) {
+            return elapsedTime * 1.0 / 1000.0;
+        }
+
+        return elapsedTime * 1.0 / 1000000000;
     }
 }
