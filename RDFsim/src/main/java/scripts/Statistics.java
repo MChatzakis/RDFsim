@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class Statistics {
 
     public static final int SAMPLE_LIMIT = 100;
     public static final TestTypes TEST_TYPE = TestTypes.GRAPHS;
+    public static final boolean USING_SELECTED_SAMPLES = false;
 
     public static String dbpediaEndpoint = "https://dbpedia.org/sparql";
     public static String philosophersFilepath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
@@ -59,11 +61,11 @@ public class Statistics {
     public static ArrayList<String> videoGamesSamples;
     public static ArrayList<String> programmingLangsSamples;
 
-    public static String [] selectedMovieSamples = {};
-    public static String [] selectedPhilosophersSamples = {};
-    public static String [] selectedVideoGamesSamples = {};
-    public static String [] selectedProgrammingLangsSamples = {};
-    
+    public static String[] selectedMoviesSamples = {"Avengers:_Endgame", "Spider-Man:_No_Way_Home", "Batman:_The_Dark_Knight_Returns_(film)"};
+    public static String[] selectedPhilosophersSamples = {"Aristotle", "Plato", "Socrates", "Homer", "Pythagoras"};
+    public static String[] selectedVideoGamesSamples = {"The_Last_of_Us", "Tetris", "Pac-Man", "Uncharted_4:_A_Thief's_End", "Shadow_of_the_Colossus_(2018_video_game)", "Journey_(2012_video_game)"};
+    public static String[] selectedProgrammingLangsSamples = {"Java_(programming_language)", "JavaScript", "C++", "Python_(programming_language)", "Scala_(programming_language)"};
+
     public static void main(String[] args) throws ProtocolException, IOException {
         initSamples();
 
@@ -143,7 +145,7 @@ public class Statistics {
         indexingTests(programmingLangsFilepath, programmingLangsSamples, header, count, cu, "C:\\tmp\\programmingLangsIndexing");
     }
 
-    public static void indexingTests(String rafTargetPath, ArrayList<String> entities2test, String[] header, int count, CalculationUnit cu, String fileName) throws IOException {
+    private static void indexingTests(String rafTargetPath, ArrayList<String> entities2test, String[] header, int count, CalculationUnit cu, String fileName) throws IOException {
         DecimalFormat df = new DecimalFormat(".##");
 
         String[][] results = new String[entities2test.size()][3];
@@ -167,7 +169,7 @@ public class Statistics {
         CommonUtils.generateCSV(results, header, fileName + ".txt");
     }
 
-    public static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
+    private static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
         RafApi raf = new RafApi(dataset);
         //raf.printVocabInfo();
 
@@ -200,33 +202,38 @@ public class Statistics {
     /* ========================== Embeddings ========================== */
     public static void embeddingStatisticsTests() throws IOException {
 
+        String dataCSV = "";
+
         System.out.println("========================== Testing Programming Languages Embeddings ==========================");
-        //embeddingTests(programmingLangsFilepath, programmingLangsSamples, 10, "C:\\tmp\\programmingLangsTOPK");
+        dataCSV += "PROGRAMMING LANGUAGES\n" + embeddingTests(programmingLangsFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedProgrammingLangsSamples) : programmingLangsSamples, 10) + "\n\n";
 
         System.out.println("========================== Testing Philosophers Embeddings ==========================");
-        embeddingTests(philosophersFilepath, philosophersSamples, 10, "C:\\tmp\\philosophersTOPK");
+        dataCSV += "PHILOSOPHERS\n" + embeddingTests(philosophersFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedPhilosophersSamples) : philosophersSamples, 10) + "\n\n";
 
         System.out.println("========================== Testing Video Games Embeddings ==========================");
-        //embeddingTests(videoGamesFilepath, videoGamesSamples, 10, "C:\\tmp\\videoGamesTOPK");
+        dataCSV += "VIDEO GAMES\n" + embeddingTests(videoGamesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedVideoGamesSamples) : videoGamesSamples, 10) + "\n\n";
 
         System.out.println("========================== Testing Movies Embeddings ==========================");
-        //embeddingTests(moviesFilepath, moviesSamples, 10, "C:\\tmp\\moviesTOPK");
+        dataCSV += "MOVIES\n" + embeddingTests(moviesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedMoviesSamples) : moviesSamples, 10) + "\n\n";
+
+        CommonUtils.writeStringToFile(dataCSV, "C:\\tmp\\embeddingMeasurements.txt");
     }
 
-    public static void embeddingTests(String rafFilePath, ArrayList<String> entities2test, int count, String filename) throws IOException {
+    public static String embeddingTests(String rafFilePath, Collection<String> entities2test, int count) throws IOException {
         RafApi raf = new RafApi(rafFilePath);
         String data = "";
         for (String en : entities2test) {
             data += createEmbeddingData(en, raf, count);
         }
 
-        CommonUtils.writeStringToFile(data, filename + ".txt");
+        //CommonUtils.writeStringToFile(data, filename + ".txt");
+        return data;
     }
 
     public static String createEmbeddingData(String entity, RafApi raf, int count) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
         DecimalFormat df = new DecimalFormat(".##");
-        String[] header = {entity, "hasLink", "similars", "score"};
+        String[] header = {raf.getEntityURI(entity), "hasLink", "similars", "score"};
         String[][] results = new String[count][header.length];
         int index = 0;
         HashMap<String, Double> similars = raf.getSimilarEntitiesOfEntity(entity, count);
@@ -242,7 +249,7 @@ public class Statistics {
             String countQuery = "select count(*) as ?count from <http://dbpedia.org> where {?s ?p <" + entityURI + "> . ?s ?p <" + simEntityURI + ">}";
             String countQueryRR = "select count(*) as ?count from <http://dbpedia.org> where {?s ?p <" + simEntityURI + "> . ?s ?p <" + entityURI + ">}";
 
-            results[index][0] = entry.getKey();
+            results[index][0] = raf.getEntityURI(entry.getKey());//entry.getKey();
             results[index][1] = (sq.askQuery(dbpediaEndpoint, askQuery) || sq.askQuery(dbpediaEndpoint, askQueryRR)) ? "yes" : "no";
             results[index][2] = (sq.countQuery(dbpediaEndpoint, countQuery) + sq.countQuery(dbpediaEndpoint, countQueryRR)) + "";
             results[index][3] = df.format(entry.getValue()) + "";
@@ -255,25 +262,40 @@ public class Statistics {
     /* ========================== Graphs ========================== */
     public static void graphCreationTimeTests() throws IOException {
         int[] count2test = {1, 5, 10, 15};
-        int[] depth2test = {1, 2, 3};
+        int[] depth2test = {1, 2, 3, 4};
+
+        int subListEndIndex = 10;
 
         CalculationUnit cu = CalculationUnit.MS;
+        String dataCSV = "";
 
         System.out.println("========================== Testing Movies Graphs ==========================");
-        graphCreationTime(moviesFilepath, count2test, depth2test, moviesSamples.subList(0, 2), cu, "C:\\tmp\\moviesGRAPHS");
+        dataCSV += "MOVIES GRAPHS\n" + graphCreationTime(moviesFilepath, count2test, depth2test, ((USING_SELECTED_SAMPLES) ? Arrays.asList(selectedMoviesSamples) : moviesSamples).subList(0, subListEndIndex), cu) + "\n\n";
+
+        System.out.println("========================== Testing Philosophers Graphs ==========================");
+        dataCSV += "PHILOSOPHERS GRAPHS\n" + graphCreationTime(philosophersFilepath, count2test, depth2test, ((USING_SELECTED_SAMPLES) ? Arrays.asList(selectedPhilosophersSamples) : philosophersSamples).subList(0, subListEndIndex), cu) + "\n\n";
+
+        System.out.println("========================== Testing Video Games Graphs ==========================");
+        dataCSV += "VIDEO GAMES GRAPHS\n" + graphCreationTime(videoGamesFilepath, count2test, depth2test, ((USING_SELECTED_SAMPLES) ? Arrays.asList(selectedVideoGamesSamples) : videoGamesSamples).subList(0, subListEndIndex), cu) + "\n\n";
+
+        System.out.println("========================== Testing Programming Languages Graphs ==========================");
+        dataCSV += "PROGRAMMING LANGS" + graphCreationTime(programmingLangsFilepath, count2test, depth2test, ((USING_SELECTED_SAMPLES) ? Arrays.asList(selectedProgrammingLangsSamples) : programmingLangsSamples).subList(0, subListEndIndex), cu) + "\n\n";
+
+        CommonUtils.writeStringToFile(dataCSV, "C:\\tmp\\graphMeasurements.txt");
     }
 
-    public static void graphCreationTime(String dataset, int[] count2test, int[] depth2test, Collection<String> entities2test, CalculationUnit cu, String filename) throws IOException {
+    private static String graphCreationTime(String dataset, int[] count2test, int[] depth2test, Collection<String> entities2test, CalculationUnit cu) throws IOException {
         String dataCSV = "";
 
         for (String en : entities2test) {
             dataCSV += graphCreationTimeForEntity(dataset, en, count2test, depth2test, cu);
         }
 
-        CommonUtils.writeStringToFile(dataCSV, filename + ".txt");
+        //CommonUtils.writeStringToFile(dataCSV, filename + ".txt");
+        return dataCSV;
     }
 
-    public static String graphCreationTimeForEntity(String dataset, String entity, int[] count2test, int[] depth2test, CalculationUnit cu) throws IOException {
+    private static String graphCreationTimeForEntity(String dataset, String entity, int[] count2test, int[] depth2test, CalculationUnit cu) throws IOException {
         String[] header = new String[depth2test.length + 1];
         String[][] results = new String[count2test.length][header.length];
         DecimalFormat df = new DecimalFormat(".##");
@@ -300,7 +322,7 @@ public class Statistics {
         return CommonUtils.getCSVtext(results, header) + "\n";
     }
 
-    public static double calculateGraphCreationTime(String dataset, String entity, int count, int depth, CalculationUnit cu) throws IOException {
+    private static double calculateGraphCreationTime(String dataset, String entity, int count, int depth, CalculationUnit cu) throws IOException {
         RafApi raf = new RafApi(dataset);
 
         long start;
