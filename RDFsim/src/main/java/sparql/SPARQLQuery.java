@@ -1,7 +1,6 @@
 package sparql;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,18 +12,14 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.nd4j.shade.guava.io.CharSink;
 
 /**
  * Class providing methods to retrieve data from REST and Virtuoso endpoints.
  *
- * @author Manos Chatzakis
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 public class SPARQLQuery {
     

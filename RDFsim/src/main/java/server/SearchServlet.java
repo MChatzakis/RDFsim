@@ -1,8 +1,6 @@
 package server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -15,13 +13,13 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import raf.RafApi;
-import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
+ * Basic RDFsim servlet, able to send visualization and information data.
  *
- * @author Manos Chatzakis
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServet"})
 public class SearchServlet extends HttpServlet {

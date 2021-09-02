@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package scripts;
 
 import java.io.IOException;
@@ -19,28 +14,20 @@ import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
 /**
+ * This class automatically does the tests and running times of the algorithmic
+ * features of RDFsim. To reproduce these tests as CSV files (able to be imported
+ * to spreadsheet software) configure the selection variables and run.
  *
- * @author manos
+ * The test offered from this class are:
+ *          a) Indexing running times, by comparing sequential and random file access
+ *          b) Embedding accuracy, by checking the scores, link existence and common entities         
+ *          c) Graph time creation with configurable depth and count parameters
+ * 
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
-enum IndexingMode {
-    POINTER,
-    SEQUENTIAL
-}
-
-enum CalculationUnit {
-    MS,
-    NS
-}
-
-enum TestTypes {
-    INDEXING,
-    EMBEDDINGS,
-    GRAPHS,
-    ALL
-}
-
 public class Statistics {
 
+    /* ========================== Data And Configuration ========================== */
     public static final int SAMPLE_LIMIT = 100;
     public static final TestTypes TEST_TYPE = TestTypes.EMBEDDINGS;
     public static final boolean USING_SELECTED_SAMPLES = false;
@@ -66,6 +53,7 @@ public class Statistics {
     public static String[] selectedVideoGamesSamples = {"The_Last_of_Us", "Tetris", "Pac-Man", "Uncharted_4:_A_Thief's_End", "Shadow_of_the_Colossus_(2018_video_game)", "Journey_(2012_video_game)"};
     public static String[] selectedProgrammingLangsSamples = {"Java_(programming_language)", "JavaScript", "C++", "Python_(programming_language)", "Scala_(programming_language)"};
 
+    /* ========================== Begin Testing! :)  ========================== */
     public static void main(String[] args) throws ProtocolException, IOException {
         initSamples();
 
@@ -87,7 +75,8 @@ public class Statistics {
         }
     }
 
-    public static ArrayList<String> initArrayList(String query, String endpoint, String dataset) throws IOException {
+    /* ========================== Sample Downloading ========================== */
+    private static ArrayList<String> initArrayList(String query, String endpoint, String dataset) throws IOException {
         ArrayList<String> rawEntities = new SPARQLQuery().entityQuery(endpoint, query);
         ArrayList<String> entities = new ArrayList<>();
         RafApi raf = new RafApi(dataset);
@@ -106,7 +95,7 @@ public class Statistics {
         return entities;
     }
 
-    public static String queryCreator(String dbClass, int limit, int countLB) {
+    private static String queryCreator(String dbClass, int limit, int countLB) {
         String r1 = "select ?s count(?p) as ?count from <http://dbpedia.org> where {?s a <" + dbClass + "> . ?s ?p ?o} group by(?s) having(count(?p)>" + countLB + ")  order by rand() limit " + limit + "";
         String r2 = "select ?s from <http://dbpedia.org> where {?s a <" + dbClass + ">} ORDER BY RAND() LIMIT " + limit + "";
         return r1;
@@ -159,7 +148,7 @@ public class Statistics {
 
             System.out.println(entity + ": [" + pointerTime + "s," + sequentialTime + "s," + speedup + "]");
 
-            results[i][0] = entity;//entity.replace("_", " ");
+            results[i][0] = entity;
             results[i][1] = pointerTime + "";
             results[i][2] = sequentialTime + "";
             //results[i][3] = Math.round(speedup) + "x";
@@ -343,4 +332,21 @@ public class Statistics {
 
         return elapsedTime * 1.0 / 1000000000;
     }
+}
+
+enum IndexingMode {
+    POINTER,
+    SEQUENTIAL
+}
+
+enum CalculationUnit {
+    MS,
+    NS
+}
+
+enum TestTypes {
+    INDEXING,
+    EMBEDDINGS,
+    GRAPHS,
+    ALL
 }

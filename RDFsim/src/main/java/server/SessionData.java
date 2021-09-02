@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.io.IOException;
@@ -12,8 +7,9 @@ import raf.RafApi;
 import simgraph.SimilarityGraph;
 
 /**
- *
- * @author manos
+ * Session configuration data class.
+ * 
+ * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
 public class SessionData {
