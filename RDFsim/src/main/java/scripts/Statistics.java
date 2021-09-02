@@ -42,7 +42,7 @@ enum TestTypes {
 public class Statistics {
 
     public static final int SAMPLE_LIMIT = 100;
-    public static final TestTypes TEST_TYPE = TestTypes.GRAPHS;
+    public static final TestTypes TEST_TYPE = TestTypes.EMBEDDINGS;
     public static final boolean USING_SELECTED_SAMPLES = false;
 
     public static String dbpediaEndpoint = "https://dbpedia.org/sparql";
@@ -107,22 +107,22 @@ public class Statistics {
     }
 
     public static String queryCreator(String dbClass, int limit, int countLB) {
-        String r1 = "select ?s count(?p) as ?count from <http://dbpedia.org> where {?s a <" + dbClass + "> . ?s ?p ?o} group by(?s) having(count(?p)>10)  order by rand() limit " + limit + "";
+        String r1 = "select ?s count(?p) as ?count from <http://dbpedia.org> where {?s a <" + dbClass + "> . ?s ?p ?o} group by(?s) having(count(?p)>" + countLB + ")  order by rand() limit " + limit + "";
         String r2 = "select ?s from <http://dbpedia.org> where {?s a <" + dbClass + ">} ORDER BY RAND() LIMIT " + limit + "";
         return r1;
     }
 
     public static void initSamples() throws IOException {
-        moviesSamples = initArrayList(queryCreator(moviesClass, 250, 100), dbpediaEndpoint, moviesFilepath);
+        moviesSamples = initArrayList(queryCreator(moviesClass, 250, 500), dbpediaEndpoint, moviesFilepath);
         System.out.println("Movies samples size: " + moviesSamples.size());
 
-        philosophersSamples = initArrayList(queryCreator(philosophersClass, 250, 150), dbpediaEndpoint, philosophersFilepath);
+        philosophersSamples = initArrayList(queryCreator(philosophersClass, 250, 500), dbpediaEndpoint, philosophersFilepath);
         System.out.println("Philosophers samples size: " + philosophersSamples.size());
 
-        videoGamesSamples = initArrayList(queryCreator(videoGamesClass, 250, 20), dbpediaEndpoint, videoGamesFilepath);
+        videoGamesSamples = initArrayList(queryCreator(videoGamesClass, 250, 500), dbpediaEndpoint, videoGamesFilepath);
         System.out.println("Video Games samples size: " + videoGamesSamples.size());
 
-        programmingLangsSamples = initArrayList(queryCreator(programmingClass, 350, 10), dbpediaEndpoint, programmingLangsFilepath);
+        programmingLangsSamples = initArrayList(queryCreator(programmingClass, 350, 500), dbpediaEndpoint, programmingLangsFilepath);
         System.out.println("Programming Langs samples size: " + programmingLangsSamples.size());
     }
 
