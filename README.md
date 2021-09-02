@@ -1,6 +1,8 @@
 # RDFsim
 <img src="https://github.com/MChatzakis/RDFsim/blob/main/RDFsim/src/main/webapp/icons/rdfsim-logo4.png" alt="RDFsim Logo" height="200"> 
 
+This is the official repository of the paper "RDFsim: Similarity-Based Browsing over DBpedia usingEmbeddings", by Yannis Tzitzikas, Manos Chatzakis and Mike Mountantonakis.
+
 ## What is RDFsim?
 RDFsim is a similarity browsing tool to browse over RDF databases. 
 
