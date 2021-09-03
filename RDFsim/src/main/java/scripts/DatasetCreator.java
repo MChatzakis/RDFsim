@@ -20,7 +20,7 @@ import utils.CommonUtils;
  */
 public class DatasetCreator {
 
-    public static W2VApi trainModel(String vecTargetPath, String rdfSourcePath, boolean usePretrainedFile, int minFreq, int layerSize, int seed, int winSize, int iters) {
+    public static W2VApi trainModel(String vecTargetPath, String rdfSourcePath, boolean usePretrainedFile) {
         W2VApi vec = null;
         if (usePretrainedFile) {
             vec = new W2VApi(vecTargetPath);
