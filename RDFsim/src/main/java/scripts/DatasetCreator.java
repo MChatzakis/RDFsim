@@ -57,7 +57,7 @@ public class DatasetCreator {
 
         System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
+        String rafTargetPath = "C:\\temp\\dbpedia_philosophers.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\philosophers.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\philosophers.vec";
 
@@ -70,7 +70,7 @@ public class DatasetCreator {
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
 
-        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+        /*RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
         raf.print();
@@ -86,14 +86,13 @@ public class DatasetCreator {
 
         similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
         System.out.println("Similars of Aristotle [VEC]:");
-        CommonUtils.printEntityMap(similars);
-
+        CommonUtils.printEntityMap(similars);*/
     }
 
     public static void createProgrammingLanguagesDataset() throws IOException {
         System.out.println(" \n================ Creating Philosophers Dataset ================\n ");
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_programming_langs.txt";
+        String rafTargetPath = "C:\\temp\\dbpedia_programming_langs.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\programming_langs.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\programming_langs.vec";
 
@@ -106,7 +105,7 @@ public class DatasetCreator {
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
 
-        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+        /*RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
         raf.print();
@@ -122,13 +121,13 @@ public class DatasetCreator {
 
         similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
         System.out.println("Similars of " + entity + " [VEC]:");
-        CommonUtils.printEntityMap(similars);
+        CommonUtils.printEntityMap(similars);*/
     }
 
     public static void createMoviesDataset() throws IOException {
         System.out.println(" \n================ Creating Movies Dataset ================\n ");
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_movies.txt";
+        String rafTargetPath = "C:\\temp\\dbpedia_movies.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\movies.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\movies.vec";
 
@@ -141,7 +140,7 @@ public class DatasetCreator {
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
 
-        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+        /*RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
         raf.print();
@@ -157,13 +156,13 @@ public class DatasetCreator {
 
         similars = vec.getSimilarEntitiesWithValues("http://dbpedia.org/resource/" + entity, 4);
         System.out.println("Similars of " + entity + " [VEC]:");
-        CommonUtils.printEntityMap(similars);
+        CommonUtils.printEntityMap(similars);*/
     }
 
     public static void createVideoGamesDataset() throws IOException {
         System.out.println(" \n================ Creating Video Games Dataset ================\n ");
 
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_video_games.txt";
+        String rafTargetPath = "C:\\temp\\dbpedia_video_games.txt";
         String rdfSourcePath = "C:\\tmp\\rdfsim\\video_games.rdf";
         String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\video_games.vec";
 
@@ -176,46 +175,43 @@ public class DatasetCreator {
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);
 
-        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
+        /*RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
 
         System.out.println(" \n================ Raf file contents ================\n ");
         raf.print();
 
         System.out.println(" \n================ Available Video Games ================\n ");
-        raf.printVocabInfo();
-    }
-
-    public static void createCompleteDataset() throws IOException {
-        System.out.println(" \n================ Creating Complete Dataset ================\n ");
-
-        String rafTargetPath = "C:\\tmp\\rdfsim\\rafs\\all_triples_0_38.txt";
-        String rdfSourcePath = "C:\\tmp\\rdfsim\\all_triples_0_38.rdf";
-        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\all_triples_0_38.vec";
-
-        int count = 30;
-
-        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
-
-        defaultDatasetCleanUp(vec);
-
-        String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
-        vec.createRAF(rafTargetPath, ptrTargetPath, count);
-
-        RafApi raf = new RafApi(rafTargetPath, ptrTargetPath);
-
-        System.out.println(" \n================ Raf file contents ================\n ");
-        raf.print();
-
-        System.out.println(" \n================ Available Entities ================\n ");
-        raf.printVocabInfo();
+        raf.printVocabInfo();*/
     }
 
     public static void main(String[] args) throws IOException {
-        //createPhilosophersDataset();
-        //createProgrammingLanguagesDataset();
+        long start;
+        long end;
+
+        start = System.currentTimeMillis();
+        createPhilosophersDataset();
+        end = System.currentTimeMillis();
+        double philosophersTime = (end - start) * 1.0 / 1000.0;
+
+        start = System.currentTimeMillis();
+        createProgrammingLanguagesDataset();
+        end = System.currentTimeMillis();
+        double programmingTime = (end - start) * 1.0 / 1000.0;
+
+        start = System.currentTimeMillis();
         createMoviesDataset();
-        //createVideoGamesDataset();
-        //createCompleteDataset();
+        end = System.currentTimeMillis();
+        double moviesTime = (end - start) * 1.0 / 1000.0;
+
+        start = System.currentTimeMillis();
+        createVideoGamesDataset();
+        end = System.currentTimeMillis();
+        double videoGames = (end - start) * 1.0 / 1000.0;
+
+        System.out.println("Philosophers: " + philosophersTime);
+        System.out.println("Programming: " + programmingTime);
+        System.out.println("Movies: " + moviesTime);
+        System.out.println("VideoGames: " + videoGames);
     }
 
 }
