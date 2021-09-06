@@ -188,10 +188,10 @@ public class DatasetCreator {
 
     public static void main(String[] args) throws IOException {
 
-        createPhilosophersDataset();
+        //createPhilosophersDataset();
 
         //createProgrammingLanguagesDataset();
-        //createMoviesDataset();
+        createMoviesDataset();
         //createVideoGamesDataset();
     }
 

@@ -194,7 +194,7 @@ public class W2VApi {
 
             if (rem) {
                 vec.vocab().removeElement(s);
-                System.out.println("1. Removing " + s);
+                //System.out.println("1. Removing " + s);
             }
         }
 
@@ -203,7 +203,7 @@ public class W2VApi {
             for (String c : toNotStartWith) {
                 if (s.startsWith(c)) {
                     vec.vocab().removeElement(s);
-                    System.out.println("2. Removing " + s);
+                    //System.out.println("2. Removing " + s);
                     break;
                 }
             }
@@ -214,7 +214,7 @@ public class W2VApi {
             for (String c : toNotContain) {
                 if (s.contains(c)) {
                     vec.vocab().removeElement(s);
-                    System.out.println("3. Removing " + s);
+                    //System.out.println("3. Removing " + s);
                     break;
                 }
             }
