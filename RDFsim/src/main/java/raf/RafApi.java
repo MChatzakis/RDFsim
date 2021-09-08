@@ -134,7 +134,8 @@ public class RafApi {
         raf.seek(startingIndex);
         String line = "";
         while ((line = raf.readUTF()) != null) {
-
+            //raf.readLine();
+            
             if (line.equals("#end") || line.charAt(0) != startingChar) {
                 break;
             }
