@@ -20,7 +20,7 @@ Semantically similar entities means that we are trying to match entities which h
 For now, RDFsim works on datasets created by DBpedia, using SPARQL queries. However, it can be easily extended to support other (RDF) databases.
 
 ## How to use RDFsim?
-RDFsim stable web application is available at 62.217.127.128:8080/RDFsim/ and at this dedicated [repository](https://github.com/MChatzakis/RDFsim-PublicVersion)
+RDFsim stable web application is available at https://demos.isl.ics.forth.gr/RDFsim/ and at this dedicated [repository](https://github.com/MChatzakis/RDFsim-PublicVersion)
 
 ## Licence
 This project is licenced under the regulation of software of Information Systems Laboratory, of Institute of Computer Science, FORTH.
