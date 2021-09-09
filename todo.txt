@@ -1,5 +1,0 @@
-RDFsim TODO
-
-1) Fix simgraph bugs 
-
-2) Better methods for indexing (trie based?..)
