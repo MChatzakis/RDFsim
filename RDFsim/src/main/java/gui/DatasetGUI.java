@@ -29,7 +29,7 @@ import sparql.SPARQLQuery;
  *
  * @author manos
  */
-public class CompleteDatasetCreatorGUI extends JFrame {
+public class DatasetGUI extends JFrame {
 
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 900;
@@ -68,7 +68,7 @@ public class CompleteDatasetCreatorGUI extends JFrame {
 
     private JButton submitButton = new JButton("Submit");
 
-    public CompleteDatasetCreatorGUI() {
+    public DatasetGUI() {
         setTitle("RDFsim Dataset Creator");
         setBounds(300, 90, WIDTH, HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -132,7 +132,7 @@ public class CompleteDatasetCreatorGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new CompleteDatasetCreatorGUI();
+        new DatasetGUI();
     }
 
     public static void addFunctionalityToButton(JButton button) {
@@ -142,27 +142,31 @@ public class CompleteDatasetCreatorGUI extends JFrame {
                 String query = queryText.getText();
                 int limit = Integer.parseInt(queryLimitText.getText());
                 int offset = Integer.parseInt(queryOffsetText.getText());
-                
+
                 String vocabFilePath = vocabFilePathText.getText();
-                String vectorFilePath =vocabFilePathText.getText();
-                String rafFilePath = vocabFilePathText.getText();
-                String rafFilePathPTR = vocabFilePathText.getText();
+                String vectorFilePath = vectorsFilePathText.getText();
+                String rafFilePath = rafFilePathText.getText();
+                String rafFilePathPTR = rafFilePath.replace(".txt", "PTR.txt");
+                
                 int iterations = 0;
                 int layerSize = 0;
                 int windowSize = 0;
                 int minWordFreq = 0;
                 int seed = 0;
+                
                 Collection<String> stopWords = null;
                 boolean formatURI = false;
+                
                 Collection< String> keepWordsStartingWith = null;
                 Collection<String> keepWordsNotStartingWith = null;
                 Collection<String> removeWordsContaining = null;
+                
                 int count = 30;
 
                 try {
                     createDataset(endpoint, query, limit, offset, vocabFilePath, vectorFilePath, rafFilePath, rafFilePathPTR, iterations, layerSize, windowSize, minWordFreq, seed, stopWords, formatURI, keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining, count);
                 } catch (IOException ex) {
-                    Logger.getLogger(CompleteDatasetCreatorGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(DatasetGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
