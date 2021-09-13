@@ -10,9 +10,13 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,32 +39,32 @@ public class CompleteDatasetCreatorGUI extends JFrame {
     private JLabel title;
 
     private JLabel endpointLabel = new JLabel("Endpoint:");
-    private JTextField endpointText = new JTextField("https://dbpedia.org/sparql");
+    private static JTextField endpointText = new JTextField("https://dbpedia.org/sparql");
 
     private JLabel queryLabel = new JLabel("Query:");
-    private JTextField queryText = new JTextField("select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}");
+    private static JTextField queryText = new JTextField("select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}");
     private JLabel queryLimitLabel = new JLabel("Limit:");
-    private JTextField queryLimitText = new JTextField("1000");
+    private static JTextField queryLimitText = new JTextField("1000");
     private JLabel queryOffsetLabel = new JLabel("Offset:");
-    private JTextField queryOffsetText = new JTextField("0");
+    private static JTextField queryOffsetText = new JTextField("0");
 
     private JLabel layersLabel = new JLabel("Layers");
-    private JTextField layersText = new JTextField("200");
+    private static JTextField layersText = new JTextField("200");
     private JLabel iterationsLabel = new JLabel("Iterations");
-    private JTextField iterationsText = new JTextField("10");
+    private static JTextField iterationsText = new JTextField("10");
     private JLabel windowSizeLabel = new JLabel("Layers");
-    private JTextField windowSizeText = new JTextField("200");
+    private static JTextField windowSizeText = new JTextField("200");
     private JLabel seedLabel = new JLabel("Layers");
-    private JTextField seedText = new JTextField("200");
+    private static JTextField seedText = new JTextField("200");
     private JLabel minWordFreqLabel = new JLabel("Layers");
-    private JTextField minWordFreqText = new JTextField("200");
+    private static JTextField minWordFreqText = new JTextField("200");
 
     private JLabel vocabFilePathLabel = new JLabel("Vocabulary file savepath");
-    private JTextField vocabFilePathText = new JTextField("C:\\Users\\vocab.rdf");
+    private static JTextField vocabFilePathText = new JTextField("C:\\Users\\vocab.rdf");
     private JLabel vectorsFilePathLabel = new JLabel("Vectors file savepath");
-    private JTextField vectorsFilePathText = new JTextField("C:\\Users\\vectors.vec");
+    private static JTextField vectorsFilePathText = new JTextField("C:\\Users\\vectors.vec");
     private JLabel rafFilePathLabel = new JLabel("Rad file savepath");
-    private JTextField rafFilePathText = new JTextField("C:\\Users\\raf.txt");
+    private static JTextField rafFilePathText = new JTextField("C:\\Users\\raf.txt");
 
     private JButton submitButton = new JButton("Submit");
 
@@ -131,7 +135,41 @@ public class CompleteDatasetCreatorGUI extends JFrame {
         new CompleteDatasetCreatorGUI();
     }
 
-    public static void createDatasets(String endpoint, String query, int limit, int offset,
+    public static void addFunctionalityToButton(JButton button) {
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String endpoint = endpointText.getText();
+                String query = queryText.getText();
+                int limit = Integer.parseInt(queryLimitText.getText());
+                int offset = Integer.parseInt(queryOffsetText.getText());
+                
+                String vocabFilePath = vocabFilePathText.getText();
+                String vectorFilePath =vocabFilePathText.getText();
+                String rafFilePath = vocabFilePathText.getText();
+                String rafFilePathPTR = vocabFilePathText.getText();
+                int iterations = 0;
+                int layerSize = 0;
+                int windowSize = 0;
+                int minWordFreq = 0;
+                int seed = 0;
+                Collection<String> stopWords = null;
+                boolean formatURI = false;
+                Collection< String> keepWordsStartingWith = null;
+                Collection<String> keepWordsNotStartingWith = null;
+                Collection<String> removeWordsContaining = null;
+                int count = 30;
+
+                try {
+                    createDataset(endpoint, query, limit, offset, vocabFilePath, vectorFilePath, rafFilePath, rafFilePathPTR, iterations, layerSize, windowSize, minWordFreq, seed, stopWords, formatURI, keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining, count);
+                } catch (IOException ex) {
+                    Logger.getLogger(CompleteDatasetCreatorGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+    }
+
+    public static void createDataset(String endpoint, String query, int limit, int offset,
             String vocabFilePath, String vectorFilePath, String rafFilePath, String rafFilePathPTR,
             int iterations, int layerSize, int windowSize, int minWordFreq, int seed, Collection<String> stopWords, boolean formatURI,
             Collection< String> keepWordsStartingWith, Collection<String> keepWordsNotStartingWith, Collection<String> removeWordsContaining,
