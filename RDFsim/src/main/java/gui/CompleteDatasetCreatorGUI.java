@@ -58,9 +58,7 @@ public class CompleteDatasetCreatorGUI extends JFrame {
     private JLabel rafFilePathLabel = new JLabel("Rad file savepath");
     private JTextField rafFilePathText = new JTextField("C:\\Users\\raf.txt");
     
-    private JButton submitButton = new JButton("Submit");
-    //private JButton resetButton = new JButton("Submit");
-    
+    private JButton submitButton = new JButton("Submit");    
 
     public CompleteDatasetCreatorGUI() {
         setTitle("RDFsim Dataset Creator");
