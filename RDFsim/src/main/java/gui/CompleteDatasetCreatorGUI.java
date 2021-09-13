@@ -5,16 +5,21 @@
  */
 package gui;
 
+import embeddings.W2VApi;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import sparql.SPARQLQuery;
 
 /**
  *
@@ -49,16 +54,15 @@ public class CompleteDatasetCreatorGUI extends JFrame {
     private JTextField seedText = new JTextField("200");
     private JLabel minWordFreqLabel = new JLabel("Layers");
     private JTextField minWordFreqText = new JTextField("200");
-   
-    
+
     private JLabel vocabFilePathLabel = new JLabel("Vocabulary file savepath");
     private JTextField vocabFilePathText = new JTextField("C:\\Users\\vocab.rdf");
     private JLabel vectorsFilePathLabel = new JLabel("Vectors file savepath");
     private JTextField vectorsFilePathText = new JTextField("C:\\Users\\vectors.vec");
     private JLabel rafFilePathLabel = new JLabel("Rad file savepath");
     private JTextField rafFilePathText = new JTextField("C:\\Users\\raf.txt");
-    
-    private JButton submitButton = new JButton("Submit");    
+
+    private JButton submitButton = new JButton("Submit");
 
     public CompleteDatasetCreatorGUI() {
         setTitle("RDFsim Dataset Creator");
@@ -102,9 +106,9 @@ public class CompleteDatasetCreatorGUI extends JFrame {
         w2vCont.add(iterationsText);
         w2vCont.add(minWordFreqLabel);
         w2vCont.add(minWordFreqText);
-        
+
         parametersPanel.add(w2vCont);
-        
+
         /* Adding files form */
         parametersPanel.add(new JLabel("File Settings"));
         Container filepathsCont = new Container();
@@ -117,7 +121,7 @@ public class CompleteDatasetCreatorGUI extends JFrame {
         filepathsCont.add(rafFilePathText);
         parametersPanel.add(filepathsCont);
         parametersPanel.add(submitButton);
-        
+
         generalPanel.add(parametersPanel);
 
         setVisible(true);
@@ -125,6 +129,22 @@ public class CompleteDatasetCreatorGUI extends JFrame {
 
     public static void main(String[] args) {
         new CompleteDatasetCreatorGUI();
+    }
+
+    public static void createDatasets(String endpoint, String query, int limit, int offset,
+            String vocabFilePath, String vectorFilePath, String rafFilePath, String rafFilePathPTR,
+            int iterations, int layerSize, int windowSize, int minWordFreq, int seed, Collection<String> stopWords, boolean formatURI,
+            Collection< String> keepWordsStartingWith, Collection<String> keepWordsNotStartingWith, Collection<String> removeWordsContaining,
+            int count) throws IOException {
+
+        SPARQLQuery sq = new SPARQLQuery();
+        sq.writeDataToFile(endpoint, query, limit, offset, vocabFilePath, formatURI);
+
+        W2VApi vec = new W2VApi(minWordFreq, layerSize, seed, windowSize, iterations, null, vocabFilePath);
+        vec.train();
+        vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
+        vec.saveVectorSpace(vectorFilePath);
+        vec.createRAF(rafFilePath, rafFilePathPTR, count);
     }
 
 }
