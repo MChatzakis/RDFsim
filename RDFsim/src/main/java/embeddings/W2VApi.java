@@ -183,39 +183,45 @@ public class W2VApi {
     public void filterVocab(Collection<String> toStartWith, Collection<String> toNotStartWith, Collection<String> toNotContain) {
         Collection<String> startingVocab = new ArrayList<>(getVocab());
 
-        for (String s : startingVocab) {
-            boolean rem = true;
-            for (String c : toStartWith) {
-                if (s.startsWith(c)) {
-                    rem = false;
-                    break;
+        if (toStartWith != null) {
+            for (String s : startingVocab) {
+                boolean rem = true;
+                for (String c : toStartWith) {
+                    if (s.startsWith(c)) {
+                        rem = false;
+                        break;
+                    }
                 }
-            }
 
-            if (rem) {
-                vec.vocab().removeElement(s);
-                //System.out.println("1. Removing " + s);
-            }
-        }
-
-        startingVocab = new ArrayList<>(getVocab());
-        for (String s : startingVocab) {
-            for (String c : toNotStartWith) {
-                if (s.startsWith(c)) {
+                if (rem) {
                     vec.vocab().removeElement(s);
-                    //System.out.println("2. Removing " + s);
-                    break;
+                    //System.out.println("1. Removing " + s);
                 }
             }
         }
 
         startingVocab = new ArrayList<>(getVocab());
-        for (String s : startingVocab) {
-            for (String c : toNotContain) {
-                if (s.contains(c)) {
-                    vec.vocab().removeElement(s);
-                    //System.out.println("3. Removing " + s);
-                    break;
+        if (toNotStartWith != null) {
+            for (String s : startingVocab) {
+                for (String c : toNotStartWith) {
+                    if (s.startsWith(c)) {
+                        vec.vocab().removeElement(s);
+                        //System.out.println("2. Removing " + s);
+                        break;
+                    }
+                }
+            }
+        }
+
+        startingVocab = new ArrayList<>(getVocab());
+        if (toNotContain != null) {
+            for (String s : startingVocab) {
+                for (String c : toNotContain) {
+                    if (s.contains(c)) {
+                        vec.vocab().removeElement(s);
+                        //System.out.println("3. Removing " + s);
+                        break;
+                    }
                 }
             }
         }

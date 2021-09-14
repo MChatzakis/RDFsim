@@ -6,9 +6,11 @@
 package raf;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -135,7 +137,7 @@ public class RafApi {
         String line = "";
         while ((line = raf.readUTF()) != null) {
             //raf.readLine();
-            
+
             if (line.equals("#end") || line.charAt(0) != startingChar) {
                 break;
             }
@@ -255,6 +257,33 @@ public class RafApi {
             count++;
         }
 
+        resetPtr();
+    }
+
+    public void vocabInfoToFile(String path) throws IOException {
+        resetPtr();
+        BufferedWriter targetWriter = new BufferedWriter(new FileWriter(path));
+
+        int count = 0;
+        String res = "";
+        String line = "";
+        while ((line = raf.readUTF()) != null) {
+
+            if (line.equals("#end")) {
+                break;
+            }
+
+            String[] contents = line.split(" ");
+            String curEn = contents[0];
+            String currEnURI = contents[1];
+
+            res = "[" + count + "] " + curEn + ",(" + currEnURI + ")\n";
+            //System.out.println(res);
+            targetWriter.write(res);
+            count++;
+        }
+        
+        targetWriter.close();
         resetPtr();
     }
 
