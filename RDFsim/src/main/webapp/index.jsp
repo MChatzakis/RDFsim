@@ -40,7 +40,7 @@
                     <input type="text" class="search-input" id="search-input-id" name="entity" placeholder="Search..." size="60" list="autoCompleteList-id" onkeyup="autoCompleteIndex(this.value);" autocomplete="off">
                     <img class = "search-img" id = "search-img-id" src = "./icons/search-icon-3.png">
                     <datalist id="autoCompleteList-id">
-                        
+
                     </datalist>
                 </div>
                 <span class="home-description">Similarity browsing tool for RDF Databases</span>
@@ -48,10 +48,10 @@
                 <br>
                 <label for="dataset-conf">Dataset:</label>
                 <select name="dataset" id="dataset-selection-id">
-                    <option value="dbpedia_philosophers">DBpedia Philosophers</option>
+                    <!--<option value="dbpedia_philosophers">DBpedia Philosophers</option>
                     <option value="dbpedia_movies">DBpedia Movies</option>
                     <option value="dbpedia_video_games">DBpedia Video Games</option>
-                    <option value="dbpedia_programming_langs">DBpedia Programming Languages</option>
+                    <option value="dbpedia_programming_langs">DBpedia Programming Languages</option>-->
                 </select>
             </form>
         </div>

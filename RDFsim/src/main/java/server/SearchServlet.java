@@ -32,10 +32,14 @@ public class SearchServlet extends HttpServlet {
     private final int SIMCLOUD_INDEX = 1;
     private final int TRIPLEGRAPH_INDEX = 2;
 
+    private final String LINUX_PREFIX = "/var/lib/tomcat9/work/rdfsim/rafs/";
+    /*change accordingly*/
+    private final String WINDOWS_PREFIX = "C:\\tmp\\rdfsim\\rafs\\";
+
     private RafApi initRaf(String name) throws IOException {
 
-        String linuxPath = "/var/lib/tomcat9/work/rdfsim/rafs/" + name + ".txt";
-        String windowsPath = "C:\\tmp\\rdfsim\\rafs\\" + name + ".txt";
+        String linuxPath = LINUX_PREFIX + name + ".txt";
+        String windowsPath = WINDOWS_PREFIX + name + ".txt";
 
         File lin = new File(linuxPath);
         File win = new File(windowsPath);
@@ -164,6 +168,27 @@ public class SearchServlet extends HttpServlet {
                 data2sent = initRaf(dataset).getWordRecomendations(prefix);
             }
 
+            break;
+        case 1:
+            File windows = new File(WINDOWS_PREFIX);
+            File linux = new File(LINUX_PREFIX);
+            File listing;
+            
+            data2sent = new JSONArray();
+
+            if (windows.exists()) {
+                listing = windows;
+            } else {
+                listing = linux;
+            }
+
+            String[] datasets = listing.list();
+
+            for (String file : datasets) {
+                if (!file.endsWith("PTR.txt")) {
+                    data2sent.put(file.replace(".txt", ""));
+                }
+            }
             break;
         }
 

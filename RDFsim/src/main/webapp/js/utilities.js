@@ -94,6 +94,8 @@ function sendAjax(jsonData, URL) {
 
 /* ---------------------------------- AutoComplete ---------------------------------- */
 var AUTOCOMPLETE_CODE = 0;
+var DATASETS_CODE = 1;
+
 
 function autoComplete(prefix, listID, URL, dataset = "empty") {
 

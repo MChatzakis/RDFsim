@@ -8,3 +8,29 @@ function autoCompleteIndex(prefix) {
     autoComplete(prefix, dataListID, URL, dataset);
 }
 
+/* ---------------------------------- Available Datasets ---------------------------------- */
+function fillAvailableDatasets() {
+    var item_id = "dataset-selection-id";
+    var URL = "SearchServlet";
+
+    var options = "";
+    var data2sent = {
+        type: DATASETS_CODE,
+    };
+
+    sendAjax(data2sent, URL).then(function (data) {
+
+        for (var i = 0; i < data.length; i++) {
+            var dataset = data[i];
+            options += '<option value="' + dataset + '" >' + dataset + '</option>';
+        }
+
+        console.log("Options set: " + options);
+        setInnerHTML(item_id, options);
+    });
+}
+
+/* ---------------------------------- On ready ---------------------------------- */
+$(document).ready(function () {
+    fillAvailableDatasets();
+});
