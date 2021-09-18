@@ -26,19 +26,19 @@ import utils.CommonUtils;
  * @author manos
  */
 @Data
-public class RafApi {
+public class RafAPI {
 
     private String path;
     private RandomAccessFile raf;
     private HashMap<String, Long> pointerMappings;
 
-    public RafApi(String rafPath, String ptrPath) throws FileNotFoundException, IOException {
+    public RafAPI(String rafPath, String ptrPath) throws FileNotFoundException, IOException {
         path = rafPath;
         raf = new RandomAccessFile(rafPath, "rw");
         processPrtFile(ptrPath);
     }
 
-    public RafApi(String rafPath) throws FileNotFoundException, IOException {
+    public RafAPI(String rafPath) throws FileNotFoundException, IOException {
         path = rafPath;
         raf = new RandomAccessFile(rafPath, "rw");
         String ptrPath = rafPath.replace(".txt", "PTR.txt");

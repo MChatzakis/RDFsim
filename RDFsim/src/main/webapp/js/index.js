@@ -24,7 +24,11 @@ function fillAvailableDatasets() {
             var dataset = data[i];
             options += '<option value="' + dataset + '" >' + dataset + '</option>';
         }
-
+        
+        //options += '<option value="KGVec2Go_dbpedia">' + dataset + '</option>';
+        var name = "KGVec2Go_dbpedia";
+        options += '<option value="' + name + '" >' + name + '</option>';
+        
         console.log("Options set: " + options);
         setInnerHTML(item_id, options);
     });

@@ -5,13 +5,13 @@
  */
 package scripts;
 
-import embeddings.W2VApi;
+import embeddings.Word2vecAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import raf.RafApi;
+import raf.RafAPI;
 import utils.CommonUtils;
 
 /**
@@ -20,20 +20,20 @@ import utils.CommonUtils;
  */
 public class DatasetCreator {
 
-    public static W2VApi trainModel(String vecTargetPath, String rdfSourcePath, boolean usePretrainedFile) {
-        W2VApi vec = null;
+    public static Word2vecAPI trainModel(String vecTargetPath, String rdfSourcePath, boolean usePretrainedFile) {
+        Word2vecAPI vec = null;
         if (usePretrainedFile) {
-            vec = new W2VApi(vecTargetPath);
+            vec = new Word2vecAPI(vecTargetPath);
         } else {
             List<String> stopWords = new ArrayList<>();
             stopWords.add(".");
-            vec = new W2VApi(5, 200, 42, 3, 10, stopWords, rdfSourcePath);
+            vec = new Word2vecAPI(5, 200, 42, 3, 10, stopWords, rdfSourcePath);
             vec.train();
         }
         return vec;
     }
 
-    public static void defaultDatasetCleanUp(W2VApi vec) {
+    public static void defaultDatasetCleanUp(Word2vecAPI vec) {
         Collection< String> keepWordsStartingWith = new ArrayList<>();
         keepWordsStartingWith.add("http://dbpedia.org/resource/");
 
@@ -67,7 +67,7 @@ public class DatasetCreator {
         int count = 30;
 
         start = System.currentTimeMillis();
-        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
         end = System.currentTimeMillis();
         double elapsedTimeTrain = (end - start) * 1.0 / 1000.0;
 
@@ -96,14 +96,14 @@ public class DatasetCreator {
 
         int count = 30;
 
-        /*W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        /*Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
     
         defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);*/
         start = System.currentTimeMillis();
-        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
         end = System.currentTimeMillis();
         double elapsedTimeTrain = (end - start) * 1.0 / 1000.0;
 
@@ -133,14 +133,14 @@ public class DatasetCreator {
 
         int count = 30;
 
-        /*W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        /*Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
 
         defaultDatasetCleanUp(vec);
 
         String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
         vec.createRAF(rafTargetPath, ptrTargetPath, count);*/
         start = System.currentTimeMillis();
-        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
         end = System.currentTimeMillis();
         double elapsedTimeTrain = (end - start) * 1.0 / 1000.0;
 
@@ -170,7 +170,7 @@ public class DatasetCreator {
         int count = 30;
 
         start = System.currentTimeMillis();
-        W2VApi vec = trainModel(vecTargetPath, rdfSourcePath, false);
+        Word2vecAPI vec = trainModel(vecTargetPath, rdfSourcePath, false);
         end = System.currentTimeMillis();
         double elapsedTimeTrain = (end - start) * 1.0 / 1000.0;
 

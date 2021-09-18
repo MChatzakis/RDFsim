@@ -5,7 +5,7 @@
  */
 package gui;
 
-import embeddings.W2VApi;
+import embeddings.Word2vecAPI;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -25,7 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import raf.RafApi;
+import raf.RafAPI;
 import sparql.SPARQLQuery;
 
 /**
@@ -41,25 +41,25 @@ public class DatasetGUI extends JFrame {
     private static Container parametersPanel;
 
     private static JLabel endpointLabel = new JLabel("Endpoint:");
-    private static JTextField endpointText = new JTextField("https://dbpedia.org/sparql");
+    private static JTextField endpointText = new JTextField("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01");
 
     private static JLabel queryLabel = new JLabel("Query:");
-    private static JTextField queryText = new JTextField("select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}");
+    private static JTextField queryText = new JTextField("select * where {?s ?p ?o . }");
     private static JLabel queryLimitLabel = new JLabel("Limit:");
-    private static JTextField queryLimitText = new JTextField("40");
+    private static JTextField queryLimitText = new JTextField("1000");
     private static JLabel queryOffsetLabel = new JLabel("Offset:");
     private static JTextField queryOffsetText = new JTextField("0");
 
     private static JLabel layersLabel = new JLabel("Layers");
     private static JTextField layersText = new JTextField("200");
     private static JLabel iterationsLabel = new JLabel("Iterations");
-    private static JTextField iterationsText = new JTextField("10");
+    private static JTextField iterationsText = new JTextField("1");
     private static JLabel windowSizeLabel = new JLabel("WindowSize");
     private static JTextField windowSizeText = new JTextField("3");
     private static JLabel seedLabel = new JLabel("Seed");
     private static JTextField seedText = new JTextField("42");
     private static JLabel minWordFreqLabel = new JLabel("MinWordFreq");
-    private static JTextField minWordFreqText = new JTextField("10");
+    private static JTextField minWordFreqText = new JTextField("2");
 
     private static JLabel stopWordsLabel = new JLabel("Stop Words");
     private static JTextField stopWordsText = new JTextField(".");
@@ -67,9 +67,9 @@ public class DatasetGUI extends JFrame {
     private static JLabel countLabel = new JLabel("Count");
     private static JTextField countText = new JTextField("20");
     private static JLabel keepWordsStartingWithLabel = new JLabel("Keep Words Starting With");
-    private static JTextField keepWordsStartingWithText = new JTextField("http://dbpedia.org/resource/");
+    private static JTextField keepWordsStartingWithText = new JTextField("");
     private static JLabel keepWordsNotStartingWithLabel = new JLabel("Keep Words Not Starting With");
-    private static JTextField keepWordsNotStartingWithText = new JTextField("http://dbpedia.org/resource/Template,http://dbpedia.org/resource/Category,http://dbpedia.org/resource/?,http://dbpedia.org/resource/*,http://dbpedia.org/resource/-,http://dbpedia.org/resource/:,http://dbpedia.org/resource/%,http://dbpedia.org/resource/.");
+    private static JTextField keepWordsNotStartingWithText = new JTextField(""); //http://dbpedia.org/resource/Template,http://dbpedia.org/resource/Category,http://dbpedia.org/resource/?,http://dbpedia.org/resource/*,http://dbpedia.org/resource/-,http://dbpedia.org/resource/:,http://dbpedia.org/resource/%,http://dbpedia.org/resource/.
     private static JLabel removeWordsContainingLabel = new JLabel("Remove Words Containing");
     private static JTextField removeWordsContainingText = new JTextField("?");
 
@@ -242,7 +242,7 @@ public class DatasetGUI extends JFrame {
         updateConsole(" === Vocabulary File Created: " + vocabFilePath);
 
         updateConsole("=========== Model Training Starting ===========");
-        W2VApi vec = new W2VApi(minWordFreq, layerSize, seed, windowSize, iterations, new ArrayList<>(stopWords), vocabFilePath);
+        Word2vecAPI vec = new Word2vecAPI(minWordFreq, layerSize, seed, windowSize, iterations, new ArrayList<>(stopWords), vocabFilePath);
         vec.train();
         updateConsole(" === Model Trained");
 
@@ -256,7 +256,7 @@ public class DatasetGUI extends JFrame {
         updateConsole(" === RAF File Created: " + rafFilePath);
 
         updateConsole("=========== Creating a file with RAF contents as txt in the given directory ===========");
-        RafApi raf = new RafApi(rafFilePath);
+        RafAPI raf = new RafAPI(rafFilePath);
         String rafContPath = rafFilePath.replace(".txt", "CONTENTS.txt");
         raf.vocabInfoToFile(rafContPath);
         updateConsole(" === RAF Contents File Created: " + rafContPath);

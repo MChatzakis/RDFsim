@@ -351,6 +351,12 @@ function drawTripleGraph(fromData, toData, selfEntity) {
 
 /* ---------------------------------- Utilities ---------------------------------- */
 function loadFrameResource(url, mode) {
+    if (url.startsWith('dbr:')) {
+        url = url.replaceAll("dbr:", "http://dbpedia.org/resource/");
+    }
+
+    console.log(url);
+
     var wikiLink = "https://en.wikipedia.org/wiki/" + formatDBpediaURI(url);
     var dbpLink = url;
 

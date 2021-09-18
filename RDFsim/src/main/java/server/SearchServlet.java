@@ -1,5 +1,6 @@
 package server;
 
+import embeddings.Kgvec2goAPI;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import raf.RafApi;
+import raf.RafAPI;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -31,11 +32,13 @@ public class SearchServlet extends HttpServlet {
     private final int SIMGRAPH_INDEX = 0;
     private final int SIMCLOUD_INDEX = 1;
     private final int TRIPLEGRAPH_INDEX = 2;
-    
+
     private final String LINUX_PREFIX = "/var/lib/tomcat9/work/rdfsim/rafs/";   //change accordingly
     private final String WINDOWS_PREFIX = "C:\\tmp\\rdfsim\\rafs\\";
 
-    private RafApi initRaf(String name) throws IOException {
+    private final String KGVEC2GO_REST = "http://kgvec2go.org//rest/closest-concepts";
+
+    private RafAPI initRaf(String name) throws IOException {
 
         String linuxPath = LINUX_PREFIX + name + ".txt";
         String windowsPath = WINDOWS_PREFIX + name + ".txt";
@@ -44,9 +47,9 @@ public class SearchServlet extends HttpServlet {
         File win = new File(windowsPath);
 
         if (lin.exists()) {
-            return new RafApi(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
+            return new RafAPI(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
         } else if (win.exists()) {
-            return new RafApi(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
+            return new RafAPI(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
         }
 
         return null;
@@ -69,25 +72,34 @@ public class SearchServlet extends HttpServlet {
 
         /*Crucial Thing: Check current raf*/
         if (dataset != null) {
-            currentData.processDatasetName(dataset);
-            currentData.setRaf(initRaf(dataset));
+            if (dataset.equals("KGVec2Go_dbpedia")) {
+                currentData.processDatasetName("dbpedia");
+                currentData.setKgv2g(new Kgvec2goAPI("http://kgvec2go.org//rest/closest-concepts", "dbpedia"));
+            } else {
+                currentData.processDatasetName(dataset);
+                currentData.setRaf(initRaf(dataset));
+            }
+
         }
 
-        if (currentData.getRaf() == null) {
+        /*if (currentData.getRaf() == null) {
             redirectToPage(request, response, "/error.jsp");
             return;
-        }
-
+        }*/
+        
         if (entity != null) {
-            String[] conts = (currentData.getRaf().getEntityContents(entity));
-            currentData.setEntityURI(conts[1]);
+            if (currentData.getRaf() != null) {
+                String[] conts = (currentData.getRaf().getEntityContents(entity));
+                currentData.setEntityURI(conts[1]);
+            } else if (currentData.getKgv2g() != null) {
+                currentData.setEntityURI(currentData.getKgv2g().getResouceURI(entity));
+            }
         }
 
-        if (currentData.getEntityURI() == null) {
+        /*if (currentData.getEntityURI() == null) {
             redirectToPage(request, response, "/error.jsp");
             return;
-        }
-
+        }*/
         if (count != null) {
             if (CommonUtils.isNumeric(count)) {
                 currentData.setCount(Integer.parseInt(count));
@@ -113,7 +125,7 @@ public class SearchServlet extends HttpServlet {
         }
 
         JSONObject requestAttributes = new JSONObject();
-        requestAttributes.put("graph", currentData.getJSONGraph());
+        requestAttributes.put("graph", currentData.getJSONGraph()); //important!
         requestAttributes.put("self", currentData.getEntityURI());
         requestAttributes.put("count", currentData.getCount());
         requestAttributes.put("depth", currentData.getDepth());
@@ -122,7 +134,7 @@ public class SearchServlet extends HttpServlet {
 
         if (currentData.getInfoService() == TRIPLE_ARRAY_INDEX || currentData.getVisMode() == TRIPLEGRAPH_INDEX) {
             if (currentData.getTriples() == null) {
-                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), currentData.getEndpoint()));
+                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), currentData.getEndpoint(),"http://dbpedia.org"));
             }
             requestAttributes.put("triples", currentData.getTriples());
         } else {

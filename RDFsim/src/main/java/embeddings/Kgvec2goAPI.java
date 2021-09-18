@@ -67,7 +67,7 @@ public class Kgvec2goAPI {
         //System.out.println(kgv2g.getSimilarEntitiesWithValues("dbr:Aristotle",10));
         SimilarityGraph g = new SimilarityGraph(kgv2g);
 
-        g.createGraphKGVec2go("dbr:Aristotle", 1, 10);
+        g.createGraphKGVec2go("dbr:Aristotle", 1, 1);
 
         System.out.println(g.toJSON().toString(2));
     }

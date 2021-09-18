@@ -34,7 +34,7 @@ import utils.CommonUtils;
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
-public class W2VApi {
+public class Word2vecAPI {
 
     Word2Vec vec;
     SentenceIterator iter;
@@ -48,11 +48,11 @@ public class W2VApi {
     int windowSize;
     int iterations;
 
-    public W2VApi(String path) {
+    public Word2vecAPI(String path) {
         this.loadVectorFile(path);
     }
 
-    public W2VApi(int minWordFrequency, int layerSize, int seed, int windowSize, int iterations, List<String> stopWords, String filepath) {
+    public Word2vecAPI(int minWordFrequency, int layerSize, int seed, int windowSize, int iterations, List<String> stopWords, String filepath) {
         this.minWordFrequency = minWordFrequency;
         this.layerSize = layerSize;
         this.seed = seed;
@@ -82,7 +82,7 @@ public class W2VApi {
         try {
             WordVectorSerializer.writeWord2VecModel(vec, filepath);
         } catch (Exception ex) {
-            Logger.getLogger(W2VApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Word2vecAPI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

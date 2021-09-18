@@ -4,7 +4,7 @@ import embeddings.Kgvec2goAPI;
 import java.io.IOException;
 import lombok.Data;
 import org.json.JSONObject;
-import raf.RafApi;
+import raf.RafAPI;
 import simgraph.SimilarityGraph;
 
 /**
@@ -32,7 +32,7 @@ public class SessionData {
     private String prefix = null;
     private String endpoint = null;
 
-    private RafApi raf = null;
+    private RafAPI raf = null;
     private Kgvec2goAPI kgv2g;
 
     private SimilarityGraph simGraph = null;
@@ -53,8 +53,17 @@ public class SessionData {
         }
     }
 
-    public void setRaf(RafApi raf) {
+    public void setKgv2g(Kgvec2goAPI kgv2g) {
+        this.kgv2g = kgv2g;
+
+        this.raf = null;//check this again!
+        resetEntityData();
+    }
+
+    public void setRaf(RafAPI raf) {
         this.raf = raf;
+
+        this.kgv2g = null; //check this again!
         resetEntityData();
     }
 
@@ -70,8 +79,13 @@ public class SessionData {
 
     public JSONObject getJSONGraph() throws IOException {
         if (this.simGraph == null) {
-            this.simGraph = new SimilarityGraph(raf);
-            this.simGraph.createGraphRaf(entityURI, depth, count);
+            if (this.raf != null) {
+                this.simGraph = new SimilarityGraph(raf);
+                this.simGraph.createGraphRaf(entityURI, depth, count);
+            } else if (this.kgv2g != null) {
+                this.simGraph = new SimilarityGraph(kgv2g);
+                this.simGraph.createGraphKGVec2go(entityURI, depth, count);
+            }
         }
 
         return this.simGraph.toJSON();
@@ -93,7 +107,9 @@ public class SessionData {
         obj.put("visMode", this.getVisMode());
         obj.put("graph", this.getSimGraph().toJSON());
         obj.put("triples", this.getTriples());
-        obj.put("raf", this.getRaf().getPath());
+        if (raf != null) {
+            obj.put("raf", this.getRaf().getPath());
+        }
 
         return obj;
     }

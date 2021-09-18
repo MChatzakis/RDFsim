@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import raf.RafApi;
+import raf.RafAPI;
 import simgraph.SimilarityGraph;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
@@ -79,7 +79,7 @@ public class Statistics {
     private static ArrayList<String> initArrayList(String query, String endpoint, String dataset) throws IOException {
         ArrayList<String> rawEntities = new SPARQLQuery().entityQuery(endpoint, query);
         ArrayList<String> entities = new ArrayList<>();
-        RafApi raf = new RafApi(dataset);
+        RafAPI raf = new RafAPI(dataset);
 
         for (String rawEn : rawEntities) {
             if (raf.exists(rawEn)) {
@@ -159,7 +159,7 @@ public class Statistics {
     }
 
     private static double calculateIndexingTime(String dataset, String entity, int count, IndexingMode mode, CalculationUnit cu) throws IOException {
-        RafApi raf = new RafApi(dataset);
+        RafAPI raf = new RafAPI(dataset);
         //raf.printVocabInfo();
 
         long start;
@@ -209,7 +209,7 @@ public class Statistics {
     }
 
     public static String embeddingTests(String rafFilePath, Collection<String> entities2test, int count) throws IOException {
-        RafApi raf = new RafApi(rafFilePath);
+        RafAPI raf = new RafAPI(rafFilePath);
         String data = "";
         for (String en : entities2test) {
             data += createEmbeddingData(en, raf, count);
@@ -219,7 +219,7 @@ public class Statistics {
         return data;
     }
 
-    public static String createEmbeddingData(String entity, RafApi raf, int count) throws IOException {
+    public static String createEmbeddingData(String entity, RafAPI raf, int count) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
         DecimalFormat df = new DecimalFormat(".##");
         String[] header = {raf.getEntityURI(entity), "hasLink", "similars", "score"};
@@ -312,7 +312,7 @@ public class Statistics {
     }
 
     private static double calculateGraphCreationTime(String dataset, String entity, int count, int depth, CalculationUnit cu) throws IOException {
-        RafApi raf = new RafApi(dataset);
+        RafAPI raf = new RafAPI(dataset);
 
         long start;
         long end;

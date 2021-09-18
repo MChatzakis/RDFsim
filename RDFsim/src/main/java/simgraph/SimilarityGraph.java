@@ -1,7 +1,7 @@
 package simgraph;
 
 import embeddings.Kgvec2goAPI;
-import embeddings.W2VApi;
+import embeddings.Word2vecAPI;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Queue;
 import lombok.Data;
 import org.json.JSONObject;
-import raf.RafApi;
+import raf.RafAPI;
 
 /**
  *
@@ -21,17 +21,17 @@ import raf.RafApi;
 @Data
 public class SimilarityGraph {
 
-    private W2VApi vec;
-    private RafApi raf;
+    private Word2vecAPI vec;
+    private RafAPI raf;
     private Kgvec2goAPI kgv2g;
 
     private HashMap<String, SimilarityNode> nodes;
 
-    public SimilarityGraph(W2VApi vec) {
+    public SimilarityGraph(Word2vecAPI vec) {
         this.vec = vec;
     }
 
-    public SimilarityGraph(RafApi raf) {
+    public SimilarityGraph(RafAPI raf) {
         this.raf = raf;
     }
 
