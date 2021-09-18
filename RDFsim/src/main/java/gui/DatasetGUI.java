@@ -25,7 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import raf.RafAPI;
+import raf.RandAccessFileAPI;
 import sparql.SPARQLQuery;
 
 /**
@@ -256,7 +256,7 @@ public class DatasetGUI extends JFrame {
         updateConsole(" === RAF File Created: " + rafFilePath);
 
         updateConsole("=========== Creating a file with RAF contents as txt in the given directory ===========");
-        RafAPI raf = new RafAPI(rafFilePath);
+        RandAccessFileAPI raf = new RandAccessFileAPI(rafFilePath);
         String rafContPath = rafFilePath.replace(".txt", "CONTENTS.txt");
         raf.vocabInfoToFile(rafContPath);
         updateConsole(" === RAF Contents File Created: " + rafContPath);

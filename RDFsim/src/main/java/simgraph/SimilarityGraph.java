@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Queue;
 import lombok.Data;
 import org.json.JSONObject;
-import raf.RafAPI;
+import raf.RandAccessFileAPI;
 
 /**
  *
@@ -22,7 +22,7 @@ import raf.RafAPI;
 public class SimilarityGraph {
 
     private Word2vecAPI vec;
-    private RafAPI raf;
+    private RandAccessFileAPI raf;
     private Kgvec2goAPI kgv2g;
 
     private HashMap<String, SimilarityNode> nodes;
@@ -31,7 +31,7 @@ public class SimilarityGraph {
         this.vec = vec;
     }
 
-    public SimilarityGraph(RafAPI raf) {
+    public SimilarityGraph(RandAccessFileAPI raf) {
         this.raf = raf;
     }
 

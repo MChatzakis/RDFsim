@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import raf.RafAPI;
+import raf.RandAccessFileAPI;
 import utils.CommonUtils;
 
 /**

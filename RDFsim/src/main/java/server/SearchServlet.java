@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import raf.RafAPI;
+import raf.RandAccessFileAPI;
 import sparql.SPARQLQuery;
 import utils.CommonUtils;
 
@@ -38,7 +38,7 @@ public class SearchServlet extends HttpServlet {
 
     private final String KGVEC2GO_REST = "http://kgvec2go.org//rest/closest-concepts";
 
-    private RafAPI initRaf(String name) throws IOException {
+    private RandAccessFileAPI initRaf(String name) throws IOException {
 
         String linuxPath = LINUX_PREFIX + name + ".txt";
         String windowsPath = WINDOWS_PREFIX + name + ".txt";
@@ -47,9 +47,9 @@ public class SearchServlet extends HttpServlet {
         File win = new File(windowsPath);
 
         if (lin.exists()) {
-            return new RafAPI(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
+            return new RandAccessFileAPI(linuxPath, linuxPath.replace(".txt", "PTR.txt"));
         } else if (win.exists()) {
-            return new RafAPI(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
+            return new RandAccessFileAPI(windowsPath, windowsPath.replace(".txt", "PTR.txt"));
         }
 
         return null;

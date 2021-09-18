@@ -4,7 +4,7 @@ import embeddings.Kgvec2goAPI;
 import java.io.IOException;
 import lombok.Data;
 import org.json.JSONObject;
-import raf.RafAPI;
+import raf.RandAccessFileAPI;
 import simgraph.SimilarityGraph;
 
 /**
@@ -32,7 +32,7 @@ public class SessionData {
     private String prefix = null;
     private String endpoint = null;
 
-    private RafAPI raf = null;
+    private RandAccessFileAPI raf = null;
     private Kgvec2goAPI kgv2g;
 
     private SimilarityGraph simGraph = null;
@@ -60,7 +60,7 @@ public class SessionData {
         resetEntityData();
     }
 
-    public void setRaf(RafAPI raf) {
+    public void setRaf(RandAccessFileAPI raf) {
         this.raf = raf;
 
         this.kgv2g = null; //check this again!
