@@ -8,6 +8,14 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -244,5 +252,36 @@ public class CommonUtils {
             }
         }
         return dataCSV;
+    }
+    
+    
+    public static JSONObject retrieveData(String urlData) throws UnsupportedEncodingException, MalformedURLException, ProtocolException, IOException {
+
+        //System.out.println("Query: " + query);
+
+        //String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
+        URL url = new URL(urlData);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestProperty("ACCEPT", "application/sparql-results+json");
+        conn.setRequestMethod("GET");
+        conn.connect();
+
+        InputStream is = conn.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is, "utf8");
+        BufferedReader in = new BufferedReader(isr);
+
+        String input;
+        String resultsString = "";
+        while ((input = in.readLine()) != null) {
+            resultsString += input;
+        }
+
+        in.close();
+        isr.close();
+        is.close();
+
+        return new JSONObject(resultsString);
     }
 }

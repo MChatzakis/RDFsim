@@ -31,9 +31,8 @@ public class SearchServlet extends HttpServlet {
     private final int SIMGRAPH_INDEX = 0;
     private final int SIMCLOUD_INDEX = 1;
     private final int TRIPLEGRAPH_INDEX = 2;
-
-    private final String LINUX_PREFIX = "/var/lib/tomcat9/work/rdfsim/rafs/";
-    /*change accordingly*/
+    
+    private final String LINUX_PREFIX = "/var/lib/tomcat9/work/rdfsim/rafs/";   //change accordingly
     private final String WINDOWS_PREFIX = "C:\\tmp\\rdfsim\\rafs\\";
 
     private RafApi initRaf(String name) throws IOException {
@@ -173,7 +172,7 @@ public class SearchServlet extends HttpServlet {
             File windows = new File(WINDOWS_PREFIX);
             File linux = new File(LINUX_PREFIX);
             File listing;
-            
+
             data2sent = new JSONArray();
 
             if (windows.exists()) {
