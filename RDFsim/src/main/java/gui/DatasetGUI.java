@@ -87,7 +87,7 @@ public class DatasetGUI extends JFrame {
     
     public DatasetGUI() {
         setTitle("RDFsim Dataset Creator");
-        setBounds(300, 90, WIDTH, HEIGHT);
+        //setBounds(300, 90, WIDTH, HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         generalPanel = getContentPane();
@@ -97,7 +97,7 @@ public class DatasetGUI extends JFrame {
         parametersPanel.setLayout(new GridLayout(0, 1));
 
         /* Adding endpoint form */
-        parametersPanel.add(new JLabel("Endpoint Settings"));
+        //parametersPanel.add(new JLabel("Endpoint Settings"));
         Container endpointCont = new Container();
         endpointCont.setLayout(new GridLayout(0, 2));
         endpointCont.add(endpointLabel);
@@ -105,7 +105,7 @@ public class DatasetGUI extends JFrame {
         parametersPanel.add(endpointCont);
 
         /* Adding query form */
-        parametersPanel.add(new JLabel("Query Settings"));
+        //parametersPanel.add(new JLabel("Query Settings"));
         Container queryCont = new Container();
         queryCont.setLayout(new GridLayout(0, 6));
         queryCont.add(queryLabel);
@@ -117,7 +117,7 @@ public class DatasetGUI extends JFrame {
         parametersPanel.add(queryCont);
 
         /* Adding word2vec form */
-        parametersPanel.add(new JLabel("Embedding Settings"));
+        //parametersPanel.add(new JLabel("Embedding Settings"));
         Container w2vCont = new Container();
         w2vCont.setLayout(new GridLayout(0, 6));
         w2vCont.add(layersLabel);
@@ -143,7 +143,7 @@ public class DatasetGUI extends JFrame {
         parametersPanel.add(w2vCont);
 
         /* Adding files form */
-        parametersPanel.add(new JLabel("File Settings"));
+        //parametersPanel.add(new JLabel("File Settings"));
         Container filepathsCont = new Container();
         filepathsCont.setLayout(new GridLayout(0, 2));
         filepathsCont.add(vocabFilePathLabel);
@@ -160,8 +160,8 @@ public class DatasetGUI extends JFrame {
         
         addFunctionalityToButton(submitButton);
         
-        setResizable(false);
-        //pack();
+        setResizable(true);
+        pack();
         setVisible(true);
     }
     
