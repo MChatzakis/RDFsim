@@ -53,7 +53,9 @@ public class Kgvec2goAPI {
 
     public String getResouceURI(String entity) {
         if (dataset.equals("dbpedia")) {
-            return "dbr:" + entity;
+            if (!entity.startsWith("dbr:")) {
+                return "dbr:" + entity;
+            }
         }
 
         return entity;

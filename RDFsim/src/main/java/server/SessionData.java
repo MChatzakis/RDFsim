@@ -1,5 +1,6 @@
 package server;
 
+import embeddings.Kgvec2goAPI;
 import java.io.IOException;
 import lombok.Data;
 import org.json.JSONObject;
@@ -8,7 +9,7 @@ import simgraph.SimilarityGraph;
 
 /**
  * Session configuration data class.
- * 
+ *
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 @Data
@@ -32,6 +33,8 @@ public class SessionData {
     private String endpoint = null;
 
     private RafApi raf = null;
+    private Kgvec2goAPI kgv2g;
+
     private SimilarityGraph simGraph = null;
     private JSONObject triples = null;
 

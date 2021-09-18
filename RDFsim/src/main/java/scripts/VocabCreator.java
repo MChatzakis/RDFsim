@@ -31,7 +31,7 @@ public class VocabCreator {
 
     public static void createVocab(String rdfFilePath, String endpoint, String query, int total, int start, boolean formatURI) throws IOException {
         SPARQLQuery sq = new SPARQLQuery();
-        sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, formatURI);
+        sq.writeDataToFile(endpoint, query, total, start, rdfFilePath, formatURI,true);
     }
 
     public static void main(String[] args) throws IOException, Exception {

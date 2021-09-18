@@ -79,9 +79,9 @@ public class SPARQLQuery {
         return parseData(retrieveData(endpoint, query), formatURI);
     }
     
-    public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI) throws ProtocolException, IOException {
+    public String writeDataToFile(String endpoint, String baseQuery, int total, int startOffset, String filename, boolean formatURI, boolean append) throws ProtocolException, IOException {
         String currData = "";
-        FileWriter fw = new FileWriter(filename, true);
+        FileWriter fw = new FileWriter(filename, append);
         
         int dataRetrieved = 0;
         int offset = startOffset;

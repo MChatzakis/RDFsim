@@ -33,23 +33,23 @@ import sparql.SPARQLQuery;
  * @author manos
  */
 public class DatasetGUI extends JFrame {
-    
+
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 1000;
-    
+
     private static Container generalPanel;
     private static Container parametersPanel;
-    
+
     private static JLabel endpointLabel = new JLabel("Endpoint:");
     private static JTextField endpointText = new JTextField("https://dbpedia.org/sparql");
-    
+
     private static JLabel queryLabel = new JLabel("Query:");
     private static JTextField queryText = new JTextField("select * where {?s ?p ?o . ?s a <http://dbpedia.org/class/yago/WikicatAncientGreekPhilosophers>. filter(isURI(?o))}");
     private static JLabel queryLimitLabel = new JLabel("Limit:");
     private static JTextField queryLimitText = new JTextField("40");
     private static JLabel queryOffsetLabel = new JLabel("Offset:");
     private static JTextField queryOffsetText = new JTextField("0");
-    
+
     private static JLabel layersLabel = new JLabel("Layers");
     private static JTextField layersText = new JTextField("200");
     private static JLabel iterationsLabel = new JLabel("Iterations");
@@ -60,10 +60,10 @@ public class DatasetGUI extends JFrame {
     private static JTextField seedText = new JTextField("42");
     private static JLabel minWordFreqLabel = new JLabel("MinWordFreq");
     private static JTextField minWordFreqText = new JTextField("10");
-    
+
     private static JLabel stopWordsLabel = new JLabel("Stop Words");
     private static JTextField stopWordsText = new JTextField(".");
-    
+
     private static JLabel countLabel = new JLabel("Count");
     private static JTextField countText = new JTextField("20");
     private static JLabel keepWordsStartingWithLabel = new JLabel("Keep Words Starting With");
@@ -72,27 +72,27 @@ public class DatasetGUI extends JFrame {
     private static JTextField keepWordsNotStartingWithText = new JTextField("http://dbpedia.org/resource/Template,http://dbpedia.org/resource/Category,http://dbpedia.org/resource/?,http://dbpedia.org/resource/*,http://dbpedia.org/resource/-,http://dbpedia.org/resource/:,http://dbpedia.org/resource/%,http://dbpedia.org/resource/.");
     private static JLabel removeWordsContainingLabel = new JLabel("Remove Words Containing");
     private static JTextField removeWordsContainingText = new JTextField("?");
-    
+
     private static JLabel vocabFilePathLabel = new JLabel("Vocabulary file savepath");
     private static JTextField vocabFilePathText = new JTextField("C:\\tmp\\vocab.rdf");
     private static JLabel vectorsFilePathLabel = new JLabel("Vectors file savepath");
     private static JTextField vectorsFilePathText = new JTextField("C:\\tmp\\vectors.vec");
     private static JLabel rafFilePathLabel = new JLabel("Raf file savepath");
     private static JTextField rafFilePathText = new JTextField("C:\\tmp\\raf.txt");
-    
+
     private static JButton submitButton = new JButton("Submit");
-    
+
     private static JTextArea console = new JTextArea("Information About the Dataset Creation will be shown here.");
     JScrollPane scroll = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    
+
     public DatasetGUI() {
         setTitle("RDFsim Dataset Creator");
         //setBounds(300, 90, WIDTH, HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         generalPanel = getContentPane();
         generalPanel.setLayout(new GridLayout(0, 1));
-        
+
         parametersPanel = new Container();
         parametersPanel.setLayout(new GridLayout(0, 1));
 
@@ -154,38 +154,38 @@ public class DatasetGUI extends JFrame {
         filepathsCont.add(rafFilePathText);
         parametersPanel.add(filepathsCont);
         parametersPanel.add(submitButton);
-        
+
         generalPanel.add(parametersPanel);
         generalPanel.add(scroll);
-        
+
         addFunctionalityToButton(submitButton);
-        
+
         setResizable(true);
         pack();
         setVisible(true);
     }
-    
+
     public static void main(String[] args) {
         new DatasetGUI();
     }
-    
+
     public static void addFunctionalityToButton(JButton button) {
-        
+
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 console.setText("");
                 boolean formatURI = false;
-                
+
                 String endpoint = endpointText.getText();
                 String query = queryText.getText();
                 console.append("Endpoint:   " + endpoint + "\n");
                 console.append("Query:  " + query + "\n");
-                
+
                 int limit = Integer.parseInt(queryLimitText.getText());
                 int offset = Integer.parseInt(queryOffsetText.getText());
                 console.append("Limit:  " + limit + "\n");
                 console.append("Offset: " + offset + "\n");
-                
+
                 String vocabFilePath = vocabFilePathText.getText();
                 String vectorFilePath = vectorsFilePathText.getText();
                 String rafFilePath = rafFilePathText.getText();
@@ -194,7 +194,7 @@ public class DatasetGUI extends JFrame {
                 console.append("vectorFilePath: " + vectorFilePath + "\n");
                 console.append("rafFilePath:    " + rafFilePath + "\n");
                 console.append("rafFilePathPTR: " + rafFilePathPTR + "\n");
-                
+
                 int iterations = Integer.parseInt(iterationsText.getText());
                 int layerSize = Integer.parseInt(layersText.getText());
                 int windowSize = Integer.parseInt(windowSizeText.getText());
@@ -207,7 +207,7 @@ public class DatasetGUI extends JFrame {
                 console.append("minWordFreq:    " + minWordFreq + "\n");
                 console.append("seed:   " + seed + "\n");
                 console.append("count:  " + count + "\n");
-                
+
                 Collection<String> stopWords = parseInput(stopWordsText.getText());
                 Collection<String> keepWordsStartingWith = parseInput(keepWordsStartingWithText.getText());
                 Collection<String> keepWordsNotStartingWith = parseInput(keepWordsNotStartingWithText.getText());
@@ -216,7 +216,7 @@ public class DatasetGUI extends JFrame {
                 console.append("keepWordsStartingWith:  " + keepWordsStartingWith + "\n");
                 console.append("keepWordsNotStartingWith:   " + keepWordsNotStartingWith + "\n");
                 console.append("removeWordsContaining:  " + removeWordsContaining + "\n");
-                
+
                 try {
                     createDataset(endpoint, query, limit, offset, vocabFilePath, vectorFilePath, rafFilePath, rafFilePathPTR, iterations, layerSize, windowSize, minWordFreq, seed, stopWords, formatURI, keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining, count);
                     updateConsole("=========== Dataset Creation Completed Normally ===========");
@@ -226,56 +226,56 @@ public class DatasetGUI extends JFrame {
                 }
             }
         });
-        
+
     }
-    
+
     public static void createDataset(String endpoint, String query, int limit, int offset,
             String vocabFilePath, String vectorFilePath, String rafFilePath, String rafFilePathPTR,
             int iterations, int layerSize, int windowSize, int minWordFreq, int seed, Collection<String> stopWords, boolean formatURI,
             Collection< String> keepWordsStartingWith, Collection<String> keepWordsNotStartingWith, Collection<String> removeWordsContaining,
             int count) throws IOException {
-        
+
         updateConsole("=========== Dataset Creation Starting ===========");
-        
+
         SPARQLQuery sq = new SPARQLQuery();
-        sq.writeDataToFile(endpoint, query, limit, offset, vocabFilePath, formatURI);
+        sq.writeDataToFile(endpoint, query, limit, offset, vocabFilePath, formatURI, false);
         updateConsole(" === Vocabulary File Created: " + vocabFilePath);
-        
+
         updateConsole("=========== Model Training Starting ===========");
         W2VApi vec = new W2VApi(minWordFreq, layerSize, seed, windowSize, iterations, new ArrayList<>(stopWords), vocabFilePath);
         vec.train();
         updateConsole(" === Model Trained");
-        
+
         updateConsole("=========== Dataset Filtering Starting ===========");
         vec.filterVocab(keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining);
         vec.saveVectorSpace(vectorFilePath);
         updateConsole(" === Vector File Created: " + vectorFilePath);
-        
+
         updateConsole("=========== Random Access File Creation Starting ===========");
         vec.createRAF(rafFilePath, rafFilePathPTR, count);
         updateConsole(" === RAF File Created: " + rafFilePath);
-        
+
         updateConsole("=========== Creating a file with RAF contents as txt in the given directory ===========");
         RafApi raf = new RafApi(rafFilePath);
         String rafContPath = rafFilePath.replace(".txt", "CONTENTS.txt");
         raf.vocabInfoToFile(rafContPath);
         updateConsole(" === RAF Contents File Created: " + rafContPath);
     }
-    
+
     public static Collection<String> parseInput(String input) {
-        
+
         if (input == null || input.equals("")) {
             return null;
         }
-        
+
         String[] inputTokens = input.split(",");
         return Arrays.asList(inputTokens);
     }
-    
+
     public static void updateConsole(String out) {
         console.append(out + "\n");
     }
-    
+
     public static void clearConsole() {
         console.setText("");
     }

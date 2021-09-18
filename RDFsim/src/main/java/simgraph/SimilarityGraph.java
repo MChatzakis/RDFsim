@@ -42,7 +42,8 @@ public class SimilarityGraph {
     public void createGraphKGVec2go(String startingNode, int depth, int similarCount) throws ProtocolException, IOException {
         int nodeCounter = 0;
         nodes = new HashMap<>();
-
+        //thinking that starting node starts with dbr:
+        String startingNodeDBR = kgv2g.getResouceURI(startingNode);
         ArrayList<ArrayList<SimilarityNode>> levelNodes = new ArrayList<>();
 
         ArrayList<SimilarityNode> firstLevelNode = new ArrayList<>();
@@ -56,7 +57,7 @@ public class SimilarityGraph {
             ArrayList<SimilarityNode> nextLevelNodes = new ArrayList<>();
 
             for (SimilarityNode currentNode : currentLevelNodes) {
-                HashMap<String, Double> neighbours = kgv2g.getSimilarEntitiesWithValues(startingNode, similarCount);//raf.getSimilarEntitiesOfEntity(currentNode.getURI(), similarCount);
+                HashMap<String, Double> neighbours = kgv2g.getSimilarEntitiesWithValues(startingNodeDBR, similarCount);
 
                 for (Map.Entry<String, Double> entry : neighbours.entrySet()) {
                     String neighbourNodeURI = entry.getKey();
