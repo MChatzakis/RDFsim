@@ -282,7 +282,7 @@ public class RandAccessFileAPI {
             targetWriter.write(res);
             count++;
         }
-        
+
         targetWriter.close();
         resetPtr();
     }
@@ -369,4 +369,7 @@ public class RandAccessFileAPI {
         return false;
     }
 
+    public static void createRAFfromCustomDataset(String inputPath, String outputPath) {
+        
+    }
 }
