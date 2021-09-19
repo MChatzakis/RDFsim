@@ -33,8 +33,8 @@ public class Embeddings2RafGUI extends JFrame {
     private JLabel inputFIleLabel = new JLabel("Input:");
     private JLabel outputFIleLabel = new JLabel("Output:");
 
-    private JTextField inputText = new JTextField("");
-    private JTextField outputText = new JTextField("");
+    private JTextField inputText = new JTextField("C:\\tmp\\custom_sets\\test1.txt");
+    private JTextField outputText = new JTextField("C:\\tmp\\rdfsim\\rafs\\test1demo.txt");
 
     private JButton submit = new JButton("Submit");
 
