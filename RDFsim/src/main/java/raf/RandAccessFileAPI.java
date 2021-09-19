@@ -14,7 +14,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -369,7 +372,64 @@ public class RandAccessFileAPI {
         return false;
     }
 
-    public static void createRAFfromCustomDataset(String inputPath, String outputPath) {
+    public static void createRAFfromCustomDataset(String inputPath, String filenameRAF) throws FileNotFoundException, IOException {
+        /*
+        FORMAT:
+        endpoint //todo
+        prefix //todo
+        suffix URI similar1&score1_similar2&score2 ...
+        ....
+        ....
         
+        APLHABETICALLY (I wont sort them)
+         */
+        RandomAccessFile raf = new RandomAccessFile(filenameRAF, "rw");
+        raf.seek(0);
+
+        String characterPointerMappings = "";
+
+        char currentStartChar = ' ';
+        long currentOffset = 0;
+
+        BufferedReader reader;
+        reader = new BufferedReader(new FileReader(inputPath));
+        String line = reader.readLine();
+        while (line != null) {
+            String[] contents = line.split(" ");
+            String currentEntity = contents[0];
+            String currentEntityURI = contents[1];
+
+            System.out.println("Writing entity " + currentEntity + " to Raf.");
+
+            char start = currentEntity.charAt(0);
+
+            currentOffset = raf.getFilePointer();
+
+            if (start > currentStartChar || currentStartChar == ' ') {
+                currentStartChar = start;
+                characterPointerMappings += currentStartChar + "," + currentOffset + "\n";
+            }
+
+            String line2write = currentEntity + " " + currentEntityURI + " ";
+
+            HashMap<String, Double> similars = CommonUtils.parseCustomDatasetSimilars(contents[2], "_", "&");
+            for (Map.Entry<String, Double> simEntry : similars.entrySet()) {
+                line2write += simEntry.getKey() + "%%%" + simEntry.getValue() + "@";
+            }
+
+            line2write += " \n";
+
+            System.out.println(line2write);
+            raf.writeUTF(line2write);
+
+            line = reader.readLine();
+        }
+
+        reader.close();
+
+        raf.writeUTF("#end");
+        raf.close();
+
+        CommonUtils.writeStringToFile(characterPointerMappings, filenameRAF.replace(".txt", "PTR.txt"));
     }
 }

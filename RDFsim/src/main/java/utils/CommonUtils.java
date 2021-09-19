@@ -253,12 +253,10 @@ public class CommonUtils {
         }
         return dataCSV;
     }
-    
-    
+
     public static JSONObject retrieveData(String urlData) throws UnsupportedEncodingException, MalformedURLException, ProtocolException, IOException {
 
         //System.out.println("Query: " + query);
-
         //String sparqlQueryURL = endpoint + "?query=" + URLEncoder.encode(query, "utf8");
         URL url = new URL(urlData);
 
@@ -283,5 +281,18 @@ public class CommonUtils {
         is.close();
 
         return new JSONObject(resultsString);
+    }
+
+    public static HashMap<String, Double> parseCustomDatasetSimilars(String similars, String simRegex, String scoreRegex) {
+        String[] similarArr = similars.split(simRegex);
+        HashMap<String, Double>sims = new HashMap<>();
+        for (String simPair : similarArr) {
+            String[] info = simPair.split(scoreRegex);
+            String name = info[0];
+            Double score = Double.parseDouble(info[1]);
+            sims.put(name, score);
+        }
+        
+        return CommonUtils.sortEntityMap(sims);
     }
 }
