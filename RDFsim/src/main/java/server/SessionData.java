@@ -31,6 +31,7 @@ public class SessionData {
     private String entityURI = null;
     private String prefix = null;
     private String endpoint = null;
+    private String graphURL = null;
 
     private RandAccessFileAPI raf = null;
     private Kgvec2goAPI kgv2g;

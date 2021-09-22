@@ -27,6 +27,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import raf.RandAccessFileAPI;
 import sparql.SPARQLQuery;
+import utils.CommonUtils;
 
 /**
  *
@@ -42,6 +43,9 @@ public class DatasetGUI extends JFrame {
 
     private static JLabel endpointLabel = new JLabel("Endpoint:");
     private static JTextField endpointText = new JTextField("https://graphdb-test.ariadne.d4science.org/repositories/ariadneplus-ts01");
+
+    private static JLabel graphLabel = new JLabel("Graph:");
+    private static JTextField graphText = new JTextField("");
 
     private static JLabel queryLabel = new JLabel("Query:");
     private static JTextField queryText = new JTextField("select * where {?s ?p ?o . }");
@@ -102,6 +106,8 @@ public class DatasetGUI extends JFrame {
         endpointCont.setLayout(new GridLayout(0, 2));
         endpointCont.add(endpointLabel);
         endpointCont.add(endpointText);
+        endpointCont.add(graphLabel);
+        endpointCont.add(graphText);
         parametersPanel.add(endpointCont);
 
         /* Adding query form */
@@ -178,7 +184,16 @@ public class DatasetGUI extends JFrame {
 
                 String endpoint = endpointText.getText();
                 String query = queryText.getText();
+                String graph = graphText.getText();
+                boolean useGraph = true;
+                if (graph == null || graph.isEmpty() || graph.equals("")) {
+                    graph = null;
+                    useGraph = false;
+                } else {
+                    console.append("Graph:   " + graph + "\n");
+                }
                 console.append("Endpoint:   " + endpoint + "\n");
+
                 console.append("Query:  " + query + "\n");
 
                 int limit = Integer.parseInt(queryLimitText.getText());
@@ -218,7 +233,7 @@ public class DatasetGUI extends JFrame {
                 console.append("removeWordsContaining:  " + removeWordsContaining + "\n");
 
                 try {
-                    createDataset(endpoint, query, limit, offset, vocabFilePath, vectorFilePath, rafFilePath, rafFilePathPTR, iterations, layerSize, windowSize, minWordFreq, seed, stopWords, formatURI, keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining, count);
+                    createDataset(endpoint, graph, useGraph, query, limit, offset, vocabFilePath, vectorFilePath, rafFilePath, rafFilePathPTR, iterations, layerSize, windowSize, minWordFreq, seed, stopWords, formatURI, keepWordsStartingWith, keepWordsNotStartingWith, removeWordsContaining, count);
                     updateConsole("=========== Dataset Creation Completed Normally ===========");
                 } catch (Exception ex) {
                     Logger.getLogger(DatasetGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -229,7 +244,7 @@ public class DatasetGUI extends JFrame {
 
     }
 
-    public static void createDataset(String endpoint, String query, int limit, int offset,
+    public static void createDataset(String endpoint, String graph, boolean useGraph, String query, int limit, int offset,
             String vocabFilePath, String vectorFilePath, String rafFilePath, String rafFilePathPTR,
             int iterations, int layerSize, int windowSize, int minWordFreq, int seed, Collection<String> stopWords, boolean formatURI,
             Collection< String> keepWordsStartingWith, Collection<String> keepWordsNotStartingWith, Collection<String> removeWordsContaining,
@@ -260,6 +275,11 @@ public class DatasetGUI extends JFrame {
         String rafContPath = rafFilePath.replace(".txt", "CONTENTS.txt");
         raf.vocabInfoToFile(rafContPath);
         updateConsole(" === RAF Contents File Created: " + rafContPath);
+
+        updateConsole("=========== Creating the configuration file in JSON format ===========");
+        String confPath = rafFilePath.replace(".txt", "CONFIG.json");
+        CommonUtils.createJSONConfFile(confPath, endpoint, graph, useGraph);
+        updateConsole(" === Configuration File Created: " + confPath);
     }
 
     public static Collection<String> parseInput(String input) {

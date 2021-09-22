@@ -285,14 +285,27 @@ public class CommonUtils {
 
     public static HashMap<String, Double> parseCustomDatasetSimilars(String similars, String simRegex, String scoreRegex) {
         String[] similarArr = similars.split(simRegex);
-        HashMap<String, Double>sims = new HashMap<>();
+        HashMap<String, Double> sims = new HashMap<>();
         for (String simPair : similarArr) {
             String[] info = simPair.split(scoreRegex);
             String name = info[0];
             Double score = Double.parseDouble(info[1]);
             sims.put(name, score);
         }
-        
+
         return CommonUtils.sortEntityMap(sims);
+    }
+
+    public static void createJSONConfFile(String path, String endpoint, String graph, boolean useGraph) {
+        JSONObject conf = new JSONObject();
+
+        conf.put("endpoint", endpoint);
+        conf.put("useGraph", useGraph);
+
+        if (useGraph) {
+            conf.put("graph", graph);
+        }
+
+        writeStringToFile(conf.toString(2), path);
     }
 }

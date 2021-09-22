@@ -139,7 +139,8 @@ public class SPARQLQuery {
 
     public static String formatDBpediaURI(String URI) {
 
-        String[] splitters = {"/", "#"};
+        //String[] splitters = {"/", "#"};
+        String[] splitters = {"/"};
         /*Removed : as many times it was useful, etc: Star Wars: A new hope, or Thor: Dark World*/
         String[] parts;
         String result = URI;
@@ -164,7 +165,13 @@ public class SPARQLQuery {
     public static JSONArray getTriplesOfURIAsObject(String o, String endpoint, String from) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
-        String query = "select ?s ?p from <" + from + "> where { ?s ?p <" + o + ">. }";
+        String query;// = "select ?s ?p from <" + from + "> where { ?s ?p <" + o + ">. }";
+
+        if (from == null) {
+            query = "select ?s ?p where { ?s ?p <" + o + ">. }";
+        } else {
+            query = "select ?s ?p from <" + from + "> where { ?s ?p <" + o + ">. }";
+        }
 
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");
@@ -196,7 +203,13 @@ public class SPARQLQuery {
     public static JSONArray getTriplesOfURIAsSubject(String s, String endpoint, String from) throws MalformedURLException, ProtocolException, IOException {
         JSONArray jtable = new JSONArray();
 
-        String query = "select ?p ?o from <" + from + "> where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
+        String query;// = "select ?p ?o from <" + from + "> where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
+
+        if (from == null) {
+            query = "select ?p ?o where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
+        } else {
+            query = "select ?p ?o from <" + from + "> where { <" + s + "> ?p ?o. filter(isURI(?o)) }";
+        }
 
         JSONObject rawData = new SPARQLQuery().retrieveData(endpoint, query);
         JSONArray data = rawData.getJSONObject("results").getJSONArray("bindings");

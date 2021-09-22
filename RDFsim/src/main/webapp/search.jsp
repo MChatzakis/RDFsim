@@ -69,7 +69,7 @@
                     <label for="info-conf">Information service:</label>
                     <select name="info-service" id="service-selection-id">
                         <option value="0">Wikipedia</option>
-                        <option value="1">DBpedia</option>
+                        <option value="1">Corresponding URL Page</option>
                         <option value="2">Triples</option>
                     </select>
                     <br>

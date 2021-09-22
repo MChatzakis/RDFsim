@@ -34,6 +34,7 @@ public class SearchServlet extends HttpServlet {
     private final int TRIPLEGRAPH_INDEX = 2;
 
     private final String LINUX_PREFIX = "/var/lib/tomcat9/work/rdfsim/rafs/";   //change accordingly
+    private final String LINUX__DESKTOP_PREFIX = "/usr/rdfsim";   //change accordingly
     private final String WINDOWS_PREFIX = "C:\\tmp\\rdfsim\\rafs\\";
 
     private final String KGVEC2GO_REST = "http://kgvec2go.org//rest/closest-concepts";
@@ -55,6 +56,29 @@ public class SearchServlet extends HttpServlet {
         return null;
     }
 
+    private void processConfigurationFile(SessionData currentData, String name) throws IOException {
+        String linuxPath = LINUX_PREFIX + name + "CONFIG.json";
+        String windowsPath = WINDOWS_PREFIX + name + "CONFIG.json";
+
+        File lin = new File(linuxPath);
+        File win = new File(windowsPath);
+
+        JSONObject conf = null;
+
+        if (lin.exists()) {
+            conf = new JSONObject(CommonUtils.getFileContent(linuxPath));
+            currentData.setEndpoint(conf.getString("endpoint"));
+            currentData.setGraphURL(conf.getBoolean("useGraph") ? conf.getString("graph") : null);
+        } else if (win.exists()) {
+            conf = new JSONObject(CommonUtils.getFileContent(windowsPath));
+            currentData.setEndpoint(conf.getString("endpoint"));
+            currentData.setGraphURL(conf.getBoolean("useGraph") ? conf.getString("graph") : null);
+        } else {
+            currentData.setEndpoint("https://dbpedia.org/sparql");
+            currentData.setGraphURL("http://dbpedia.org");
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -73,20 +97,16 @@ public class SearchServlet extends HttpServlet {
         /*Crucial Thing: Check current raf*/
         if (dataset != null) {
             if (dataset.equals("KGVec2Go_dbpedia")) {
-                currentData.processDatasetName("dbpedia");
-                currentData.setKgv2g(new Kgvec2goAPI("http://kgvec2go.org//rest/closest-concepts", "dbpedia"));
+                currentData.setKgv2g(new Kgvec2goAPI(KGVEC2GO_REST, "dbpedia"));
             } else {
-                currentData.processDatasetName(dataset);
                 currentData.setRaf(initRaf(dataset));
             }
 
+            //process endpoint and graph (for from query)
+            processConfigurationFile(currentData, dataset);
+
         }
 
-        /*if (currentData.getRaf() == null) {
-            redirectToPage(request, response, "/error.jsp");
-            return;
-        }*/
-        
         if (entity != null) {
             if (currentData.getRaf() != null) {
                 String[] conts = (currentData.getRaf().getEntityContents(entity));
@@ -96,10 +116,6 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
-        /*if (currentData.getEntityURI() == null) {
-            redirectToPage(request, response, "/error.jsp");
-            return;
-        }*/
         if (count != null) {
             if (CommonUtils.isNumeric(count)) {
                 currentData.setCount(Integer.parseInt(count));
@@ -134,7 +150,7 @@ public class SearchServlet extends HttpServlet {
 
         if (currentData.getInfoService() == TRIPLE_ARRAY_INDEX || currentData.getVisMode() == TRIPLEGRAPH_INDEX) {
             if (currentData.getTriples() == null) {
-                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), currentData.getEndpoint(),"http://dbpedia.org"));
+                currentData.setTriples(SPARQLQuery.getAllTriplesOfURI(currentData.getEntityURI(), currentData.getEndpoint(), currentData.getGraphURL()));
             }
             requestAttributes.put("triples", currentData.getTriples());
         } else {

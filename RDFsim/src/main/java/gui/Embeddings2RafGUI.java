@@ -25,16 +25,21 @@ import raf.RandAccessFileAPI;
  */
 public class Embeddings2RafGUI extends JFrame {
 
-    private int HEIGHT = 100;
+    private int HEIGHT = 150;
     private int WIDTH = 400;
 
     private Container generalPanel = new Container();
 
     private JLabel inputFIleLabel = new JLabel("Input:");
     private JLabel outputFIleLabel = new JLabel("Output:");
+    private JLabel endpointLabel = new JLabel("Endpoint:");
+    private JLabel graphLabel = new JLabel("Graph:");
 
     private JTextField inputText = new JTextField("C:\\tmp\\custom_sets\\test1.txt");
     private JTextField outputText = new JTextField("C:\\tmp\\rdfsim\\rafs\\test1demo.txt");
+
+    private JTextField graphText = new JTextField("http://dbpedia.org");
+    private JTextField endpointText = new JTextField("https://dbpedia.org/sparql");
 
     private JButton submit = new JButton("Submit");
 
@@ -50,21 +55,37 @@ public class Embeddings2RafGUI extends JFrame {
         generalPanel.add(inputText);
         generalPanel.add(outputFIleLabel);
         generalPanel.add(outputText);
+
+        generalPanel.add(endpointLabel);
+        generalPanel.add(endpointText);
+        generalPanel.add(graphLabel);
+        generalPanel.add(graphText);
+
         generalPanel.add(submit);
 
-        addFunc2Button(inputText, outputText);
+        addFunc2Button(inputText, outputText, endpointText, graphText);
 
         setResizable(false);
         setVisible(true);
     }
 
-    public void addFunc2Button(final JTextField in, final JTextField out) {
+    public void addFunc2Button(final JTextField in, final JTextField out, final JTextField end, final JTextField g) {
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String inPath = in.getText();
                 String outPath = out.getText();
+                String endpoint = end.getText();
+                String graph = g.getText();
+                
+                boolean usingGraph = true;
+
+                if (graph == null || graph.isEmpty()) {
+                    graph = null;
+                    usingGraph = false;
+                }
+
                 try {
-                    RandAccessFileAPI.createRAFfromCustomDataset(inPath, outPath);
+                    RandAccessFileAPI.createRAFfromCustomDataset(inPath, outPath, endpoint, graph, usingGraph);
                     JOptionPane.showMessageDialog(null, "RAF created in dir: " + outPath, "RAF output", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException ex) {
                     Logger.getLogger(Embeddings2RafGUI.class.getName()).log(Level.SEVERE, null, ex);

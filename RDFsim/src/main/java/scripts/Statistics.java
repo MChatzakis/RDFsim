@@ -28,9 +28,9 @@ import utils.CommonUtils;
 public class Statistics {
 
     /* ========================== Data And Configuration ========================== */
-    public static final int SAMPLE_LIMIT = 100;
+    public static final int SAMPLE_LIMIT = 20;
     public static final TestTypes TEST_TYPE = TestTypes.EMBEDDINGS;
-    public static final boolean USING_SELECTED_SAMPLES = false;
+    public static final boolean USING_SELECTED_SAMPLES = true;
 
     public static String dbpediaEndpoint = "https://dbpedia.org/sparql";
     public static String philosophersFilepath = "C:\\tmp\\rdfsim\\rafs\\dbpedia_philosophers.txt";
@@ -48,9 +48,9 @@ public class Statistics {
     public static ArrayList<String> videoGamesSamples;
     public static ArrayList<String> programmingLangsSamples;
 
-    public static String[] selectedMoviesSamples = {"Black_Panther_(film)", "Frozen_(2013_film)"};
+    public static String[] selectedMoviesSamples = {"Up_(2009_film)"};//"Black_Panther_(film)", "Frozen_(2013_film)","Cars_(film)","WALL-E","The_Incredibles","Kung_Fu_Panda_(film)","How_to_Train_Your_Dragon_(film)"};
     public static String[] selectedPhilosophersSamples = {"Aristotle", "Plato", "Socrates", "Homer", "Pythagoras"};
-    public static String[] selectedVideoGamesSamples = {"The_Last_of_Us", "Tetris", "Pac-Man", "Uncharted_4:_A_Thief's_End", "Shadow_of_the_Colossus_(2018_video_game)", "Journey_(2012_video_game)"};
+    public static String[] selectedVideoGamesSamples = {"Pac-Man", "Tetris"};//"The_Last_of_Us", "Tetris", "Pac-Man", "Uncharted_4:_A_Thief's_End", "Shadow_of_the_Colossus_(2018_video_game)", "Journey_(2012_video_game)"};
     public static String[] selectedProgrammingLangsSamples = {"Java_(programming_language)", "JavaScript", "C++", "Python_(programming_language)", "Scala_(programming_language)"};
 
     /* ========================== Begin Testing! :)  ========================== */
@@ -104,17 +104,16 @@ public class Statistics {
     }
 
     public static void initSamples() throws IOException {
-        moviesSamples = initArrayList(queryCreator(moviesClass, 250, 500), dbpediaEndpoint, moviesFilepath);
-        System.out.println("Movies samples size: " + moviesSamples.size());
+        //moviesSamples = initArrayList(queryCreator(moviesClass, 250, 700), dbpediaEndpoint, moviesFilepath);
+        //System.out.println("Movies samples size: " + moviesSamples.size());
 
-        philosophersSamples = initArrayList(queryCreator(philosophersClass, 250, 500), dbpediaEndpoint, philosophersFilepath);
-        System.out.println("Philosophers samples size: " + philosophersSamples.size());
+        //philosophersSamples = initArrayList(queryCreator(philosophersClass, 10, 600), dbpediaEndpoint, philosophersFilepath);
+        //System.out.println("Philosophers samples size: " + philosophersSamples.size());
+        //videoGamesSamples = initArrayList(queryCreator(videoGamesClass, 50, 500), dbpediaEndpoint, videoGamesFilepath);
+        //System.out.println("Video Games samples size: " + videoGamesSamples.size());
 
-        videoGamesSamples = initArrayList(queryCreator(videoGamesClass, 250, 500), dbpediaEndpoint, videoGamesFilepath);
-        System.out.println("Video Games samples size: " + videoGamesSamples.size());
-
-        programmingLangsSamples = initArrayList(queryCreator(programmingClass, 350, 500), dbpediaEndpoint, programmingLangsFilepath);
-        System.out.println("Programming Langs samples size: " + programmingLangsSamples.size());
+        //programmingLangsSamples = initArrayList(queryCreator(programmingClass, 10, 700), dbpediaEndpoint, programmingLangsFilepath);
+        //System.out.println("Programming Langs samples size: " + programmingLangsSamples.size());
     }
 
     /* ========================== Indexing ========================== */
@@ -197,7 +196,7 @@ public class Statistics {
 
         //System.out.println("========================== Testing Programming Languages Embeddings ==========================");
         //dataCSV += "PROGRAMMING LANGUAGES\n" + embeddingTests(programmingLangsFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedProgrammingLangsSamples) : programmingLangsSamples, 10) + "\n\n";
-        //System.out.println("========================== Testing Philosophers Embeddings ==========================");
+        ///System.out.println("========================== Testing Philosophers Embeddings ==========================");
         //dataCSV += "PHILOSOPHERS\n" + embeddingTests(philosophersFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedPhilosophersSamples) : philosophersSamples, 10) + "\n\n";
         //System.out.println("========================== Testing Video Games Embeddings ==========================");
         //dataCSV += "VIDEO GAMES\n" + embeddingTests(videoGamesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedVideoGamesSamples) : videoGamesSamples, 10) + "\n\n";
