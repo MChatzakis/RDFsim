@@ -212,7 +212,7 @@ public class SearchServlet extends HttpServlet {
             String[] datasets = listing.list();
 
             for (String file : datasets) {
-                if (!file.endsWith("PTR.txt")) {
+                if (!file.endsWith("PTR.txt") && !file.endsWith(".json")) {
                     data2sent.put(file.replace(".txt", ""));
                 }
             }
