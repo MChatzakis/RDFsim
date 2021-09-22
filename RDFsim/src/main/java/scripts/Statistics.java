@@ -15,14 +15,14 @@ import utils.CommonUtils;
 
 /**
  * This class automatically does the tests and running times of the algorithmic
- * features of RDFsim. To reproduce these tests as CSV files (able to be imported
- * to spreadsheet software) configure the selection variables and run.
+ * features of RDFsim. To reproduce these tests as CSV files (able to be
+ * imported to spreadsheet software) configure the selection variables and run.
  *
- * The test offered from this class are:
- *          a) Indexing running times, by comparing sequential and random file access
- *          b) Embedding accuracy, by checking the scores, link existence and common entities         
- *          c) Graph time creation with configurable depth and count parameters
- * 
+ * The test offered from this class are: a) Indexing running times, by comparing
+ * sequential and random file access b) Embedding accuracy, by checking the
+ * scores, link existence and common entities c) Graph time creation with
+ * configurable depth and count parameters
+ *
  * @author Manos Chatzakis (chatzakis@ics.forth.gr)
  */
 public class Statistics {
@@ -48,14 +48,16 @@ public class Statistics {
     public static ArrayList<String> videoGamesSamples;
     public static ArrayList<String> programmingLangsSamples;
 
-    public static String[] selectedMoviesSamples = {"Avengers:_Endgame", "Spider-Man:_No_Way_Home", "Batman:_The_Dark_Knight_Returns_(film)"};
+    public static String[] selectedMoviesSamples = {"Black_Panther_(film)", "Frozen_(2013_film)"};
     public static String[] selectedPhilosophersSamples = {"Aristotle", "Plato", "Socrates", "Homer", "Pythagoras"};
     public static String[] selectedVideoGamesSamples = {"The_Last_of_Us", "Tetris", "Pac-Man", "Uncharted_4:_A_Thief's_End", "Shadow_of_the_Colossus_(2018_video_game)", "Journey_(2012_video_game)"};
     public static String[] selectedProgrammingLangsSamples = {"Java_(programming_language)", "JavaScript", "C++", "Python_(programming_language)", "Scala_(programming_language)"};
 
     /* ========================== Begin Testing! :)  ========================== */
     public static void main(String[] args) throws ProtocolException, IOException {
-        initSamples();
+        if (!USING_SELECTED_SAMPLES) {
+            initSamples();
+        }
 
         switch (TEST_TYPE) {
         case INDEXING:
@@ -193,15 +195,12 @@ public class Statistics {
 
         String dataCSV = "";
 
-        System.out.println("========================== Testing Programming Languages Embeddings ==========================");
-        dataCSV += "PROGRAMMING LANGUAGES\n" + embeddingTests(programmingLangsFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedProgrammingLangsSamples) : programmingLangsSamples, 10) + "\n\n";
-
-        System.out.println("========================== Testing Philosophers Embeddings ==========================");
-        dataCSV += "PHILOSOPHERS\n" + embeddingTests(philosophersFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedPhilosophersSamples) : philosophersSamples, 10) + "\n\n";
-
-        System.out.println("========================== Testing Video Games Embeddings ==========================");
-        dataCSV += "VIDEO GAMES\n" + embeddingTests(videoGamesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedVideoGamesSamples) : videoGamesSamples, 10) + "\n\n";
-
+        //System.out.println("========================== Testing Programming Languages Embeddings ==========================");
+        //dataCSV += "PROGRAMMING LANGUAGES\n" + embeddingTests(programmingLangsFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedProgrammingLangsSamples) : programmingLangsSamples, 10) + "\n\n";
+        //System.out.println("========================== Testing Philosophers Embeddings ==========================");
+        //dataCSV += "PHILOSOPHERS\n" + embeddingTests(philosophersFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedPhilosophersSamples) : philosophersSamples, 10) + "\n\n";
+        //System.out.println("========================== Testing Video Games Embeddings ==========================");
+        //dataCSV += "VIDEO GAMES\n" + embeddingTests(videoGamesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedVideoGamesSamples) : videoGamesSamples, 10) + "\n\n";
         System.out.println("========================== Testing Movies Embeddings ==========================");
         dataCSV += "MOVIES\n" + embeddingTests(moviesFilepath, (USING_SELECTED_SAMPLES) ? Arrays.asList(selectedMoviesSamples) : moviesSamples, 10) + "\n\n";
 
