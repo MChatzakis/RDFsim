@@ -186,15 +186,53 @@ public class DatasetCreator {
         System.out.println("Raf: " + elapsedTimeRaf);
     }
 
+    public static void createFraudDetectionDataset() throws IOException {
+        long start;
+        long end;
+
+        System.out.println(" \n================ Creating Video Games Dataset ================\n ");
+
+        String rafTargetPath = "C:\\temp\\FraudDetection.txt";
+        String txtSourcePath = "C:\\tmp\\rdfsim\\FraudDetection.txt";
+        String vecTargetPath = "C:\\tmp\\rdfsim\\embeddings\\FraudDetection.vec";
+
+        int count = 30;
+
+        start = System.currentTimeMillis();
+        Word2vecAPI vec = trainModel(vecTargetPath, txtSourcePath, false);
+        end = System.currentTimeMillis();
+        double elapsedTimeTrain = (end - start) * 1.0 / 1000.0;
+
+        start = System.currentTimeMillis();
+        //defaultDatasetCleanUp(vec);
+       
+        Collection<String> keepWordsNotStartingWith = new ArrayList<>();
+        keepWordsNotStartingWith.add("link:");
+        Collection<String> removeWordsContaining = new ArrayList<>();
+        removeWordsContaining.add("?");
+        removeWordsContaining.add("-");
+        removeWordsContaining.add("(address)");
+        
+
+        vec.filterVocab(null, keepWordsNotStartingWith, removeWordsContaining);
+
+        String ptrTargetPath = rafTargetPath.replace(".txt", "PTR.txt");
+        vec.createRAF(rafTargetPath, ptrTargetPath, count);
+        end = System.currentTimeMillis();
+        double elapsedTimeRaf = (end - start) * 1.0 / 1000.0;
+
+        System.out.println("FraudDetection: ");
+        System.out.println("Train: " + elapsedTimeTrain);
+        System.out.println("Raf: " + elapsedTimeRaf);
+    }
+
     public static void main(String[] args) throws IOException {
 
         //createPhilosophersDataset();
-
         //createProgrammingLanguagesDataset();
-        createMoviesDataset();
+        //createMoviesDataset();
         //createVideoGamesDataset();
+        createFraudDetectionDataset();
     }
 
-    
-    
 }
