@@ -26,4 +26,4 @@ RDFsim stable web application is available at https://demos.isl.ics.forth.gr/RDF
 This project is licenced under the regulation of software of Information Systems Laboratory, of Institute of Computer Science, FORTH.
 
 ## Contact
-For any recomendation or bug report, dont hesitate to create an issue or contact the authors. Any advice is always welcome.
+For any recommendation or bug report, dont hesitate to create an issue or contact the authors. Any advice is always welcome.
