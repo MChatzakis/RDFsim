@@ -45,7 +45,9 @@ mvn clean install
 
 3. Clean install should create a war file in the target directory. The war file can be deployed in a tomcat server.
 
+An online version of RDFsim is available [here](https://demos.isl.ics.forth.gr/RDFsim/).
+
 ## Contributors
-- [Manos Chatzakis](https://mchatzakis.github.io/)
-- [Michalis Mountantonakis](https://users.ics.forth.gr/~mountant/)
-- [Yannis Tzitzikas](https://users.ics.forth.gr/~tzitzik/)
+- [Manos Chatzakis](https://mchatzakis.github.io/) (University of Crete, FORTH)
+- [Michalis Mountantonakis](https://users.ics.forth.gr/~mountant/) (University of Crete, FORTH)
+- [Yannis Tzitzikas](https://users.ics.forth.gr/~tzitzik/) (University of Crete, FORTH)
