@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./assets/rdfsim-logo.jpg" alt="RDFsim Logo" height="230"> 
+<img src="./assets/rdfsim-logo.jpg" alt="RDFsim Logo" height="250"> 
 </p>
 
 <!--<h1 align="center">RDFsim</h1>-->
@@ -10,7 +10,7 @@ Browsing has been the core access method for the Web from its beginning. Analogo
 The paper is available here: [RDFSIM: similarity-based browsing over dbpedia using embeddings](https://mchatzakis.github.io/assets/pdf/rdfsim.pdf)
 
 <p align="center">
-<img src="./assets/rdfsim-overview.png" alt="RDFsim Overview" height="200> 
+<img src="./assets/rdfsim-overview.png" alt="RDFsim Overview" height="500"> 
 </p>
 
 ## Reference
